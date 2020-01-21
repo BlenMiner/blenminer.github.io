@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="stylesheet" type="text/css" href="style/main.css" />
-        <!-- <script src="script/main.js"></script> -->
+        <script src="script/utils.js"></script>
 
         <title>VBU4 - Widget Mastering Progress</title>
     </head>
@@ -14,14 +14,18 @@
     <body>
         <div class="content">Hi !</div>
         <script>
-            var MyWidget = {
+            var MyWidget = 
+            {
                 onLoad: function() {
                     widget.body.innerHTML= "Hello World!";
                     console.log("on load");
                 },
             }
             
-            widget.addEvent('onLoad', MyWidget.onLoad);
+            waitFor("widget", 1000, function()
+            {
+                widget.addEvent('onLoad', MyWidget.onLoad);
+            });
 
         </script>
         <div id="content"></div>
