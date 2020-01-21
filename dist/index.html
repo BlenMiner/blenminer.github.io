@@ -12,8 +12,17 @@
     </head>
 
     <body>
+        <div class="content">Hi !</div>
         <script>
-            widget.body.innerHTML= "Hello World!";
+            var MyWidget = {
+                onLoad: function() {
+                    widget.body.innerHTML= "Hello World!";
+                    console.log("on load");
+                },
+            }
+            
+            widget.addEvent('onLoad', MyWidget.onLoad);
+
         </script>
         <div id="content"></div>
     </body>
