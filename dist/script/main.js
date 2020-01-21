@@ -9,7 +9,8 @@ var data = [
     { id: "user3", firstName: "Sarah", lastName: "Connor" }
 ];
 
-var MyWidget = function() {
+var MyWidget = function() 
+{
     var me = this;
 
     // baseUrl :string
@@ -256,7 +257,7 @@ function waitFor(globalVarname, timeout, callback) {
     if (typeof window[globalVarname] !== "undefined") {
         callback();
     } else if (timeout === 0) {
-        document.body.innerHTML = "Error while trying to load widget. See console for details";
+        document.body.innerHTML = "Error while trying to load widget. See console for details<br>" + document.body.innerHTML;
         throw globalVarname + " didn't load";
     } else {
         console.warn("Waiting for " + globalVarname);
@@ -265,7 +266,8 @@ function waitFor(globalVarname, timeout, callback) {
     }
 }
 
-waitFor("widget", 1000, function() {
+waitFor("widget", 1000, function() 
+{
     var myWidget = new MyWidget();
     myWidget.start();
 });
