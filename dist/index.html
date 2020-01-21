@@ -8,63 +8,63 @@
         <link rel="stylesheet" type="text/css" href="style/main.css" />
 
         <title>VBU4 - Widget Mastering Progress</title>
+
+        <script>
+            "use strict"
+
+           function waitFor(globalVarname, timeout, callback)
+           {
+               if (typeof window[globalVarname] !== "undefined")
+               {
+                   callback();
+               }
+               else if (timeout <= 0)
+               {
+                   document.body.innerHTML = "Error while trying to load widget.";
+               }
+               else
+               {
+                   console.warn("Waiting for " + globalVarname);
+                   setTimeout(waitFor, 100, globalVarname, timeout - 100, callback);
+               }
+           }
+
+           var MyWidget = 
+           {
+               onLoad: function() {
+                   widget.body.innerHTML= "Hello World!";
+                   console.log("on load");
+               },
+
+               onRefresh: function() {
+                   widget.body.innerHTML= "Hello World! - Refresh edition";
+                   console.log("on refresh");
+               },
+           }
+           
+           waitFor("widget", 1000, function()
+           {
+               console.log("OMG JUST DID IT WORK OR NOT");
+               widget.setTitle("VBU4 - Widget Mastering Progress - Actual title");
+               widget.body.innerHTML= "Hello FUCKING World!";
+
+               widget.addEvent('onLoad', MyWidget.onLoad);
+               widget.addEvent('onRefresh', MyWidget.onRefresh);
+
+               // Setup your preferences...
+               widget.addPreference({
+                   name: "username",
+                   type: "text",
+                   label: "User name",
+                   defaultValue: "Valentin"
+               });
+           });
+
+       </script>
     </head>
 
     <body>
         <div class="content">Hi 2.1!</div>
-        <script>
-
-            function waitFor(globalVarname, timeout, callback)
-            {
-                if (typeof window[globalVarname] !== "undefined")
-                {
-                    callback();
-                }
-                else if (timeout === 0)
-                {
-                    document.body.innerHTML = "Error while trying to load widget.";
-                    throw globalVarname + " didn't load";
-                }
-                else
-                {
-                    console.warn("Waiting for " + globalVarname);
-                    var dt = 100;
-                    setTimeout(waitFor, dt, globalVarname, timeout - dt, callback);
-                }
-            }
-
-            var MyWidget = 
-            {
-                onLoad: function() {
-                    widget.body.innerHTML= "Hello World!";
-                    console.log("on load");
-                },
-
-                onRefresh: function() {
-                    widget.body.innerHTML= "Hello World! - Refresh edition";
-                    console.log("on refresh");
-                },
-            }
-            
-            waitFor("widget", 1000, function()
-            {
-                console.log("OMG JUST DID IT WORK OR NOT");
-                widget.setTitle("VBU4 - Widget Mastering Progress - Actual title");
-                widget.body.innerHTML= "Hello FUCKING World!";
-
-                widget.addEvent('onLoad', MyWidget.onLoad);
-                widget.addEvent('onRefresh', MyWidget.onRefresh);
-
-                // Setup your preferences...
-                widget.addPreference({
-                    name: "username",
-                    type: "text",
-                    label: "User name",
-                    defaultValue: "Valentin"
-                });
-            });
-
-        </script>
         <div id="content"></div>
     </body>
 </html>
