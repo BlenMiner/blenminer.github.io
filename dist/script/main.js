@@ -3,16 +3,13 @@
  * @author P13
  */
 
- "use strict"
-
 var data = [
     { id: "user1", firstName: "John", lastName: "Murphy" },
     { id: "user2", firstName: "John", lastName: "Sampson" },
     { id: "user3", firstName: "Sarah", lastName: "Connor" }
 ];
 
-var MyWidget = function() 
-{
+var MyWidget = function() {
     var me = this;
 
     // baseUrl :string
@@ -43,7 +40,6 @@ var MyWidget = function()
         }
         console.log("MyWidget: " + message);
     };
-    
     this.printTable = function(filter = null) {
         html = "<table>";
         html += "<tr><th>firstname</th><th>lastname</th></th>";
@@ -110,7 +106,6 @@ var MyWidget = function()
             document.getElementById("butReqAuth").addEventListener("click", function() {
                 me.printMsg("httpCallAuthenticated( ...pno/person)");
                 let url = data[0]["3DSpace"] + "/resources/modeler/pno/person?current=true";
-                me.printMsg(url, '#0055ff');
                 me.httpCallAuthenticated(url, {
                     onComplete: function(response, headers, xhr) {
                         me.printMsg("--> response: " + response, "#0055ff");
@@ -261,7 +256,7 @@ function waitFor(globalVarname, timeout, callback) {
     if (typeof window[globalVarname] !== "undefined") {
         callback();
     } else if (timeout === 0) {
-        document.body.innerHTML = "Error while trying to load widget. See console for details<br><br>" + document.body.innerHTML;
+        document.body.innerHTML = "Error while trying to load widget. See console for details";
         throw globalVarname + " didn't load";
     } else {
         console.warn("Waiting for " + globalVarname);
@@ -270,8 +265,7 @@ function waitFor(globalVarname, timeout, callback) {
     }
 }
 
-waitFor("widget", 1000, function() 
-{
+waitFor("widget", 1000, function() {
     var myWidget = new MyWidget();
     myWidget.start();
 });
