@@ -6,73 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="stylesheet" type="text/css" href="style/main.css" />
+        <script src="script/main.js"></script>
 
-        <title>VBU4 - Widget Mastering Progress</title>
-
-        <script>
-            this.setDroppable = function(elem, onDrop) {
-                require(["DS/DataDragAndDrop/DataDragAndDrop"], function(DataDragAndDrop) {
-                    DataDragAndDrop.droppable(elem, { drop: onDrop });
-                });
-            };
-
-            function waitFor(globalVarname, timeout, callback)
-           {
-               if (typeof window[globalVarname] !== "undefined")
-               {
-                   callback();
-               }
-               else if (timeout <= 0)
-               {
-                   document.body.innerHTML = "Error while trying to load widget.";
-               }
-               else
-               {
-                   console.warn("Waiting for " + globalVarname);
-                   setTimeout(waitFor, 100, globalVarname, timeout - 100, callback);
-               }
-           }
-
-            var MyWidget = 
-            {
-               onLoad: function() {
-                    widget.body.innerHTML= `
-                        Hello World!
-                        <br>
-                        <div id='drop' class='zone'>Drop to<br><br>here</div>`;
-
-                    setDroppable(document.getElementById("drop"), function(strData, element, event) {
-                        console.log(arguments);
-                    });
-               },
-
-               onRefresh: function() {
-                   widget.body.innerHTML= "Hello World! - Refresh edition";
-                   console.log("on refresh");
-               },
-            }
-           
-            waitFor("widget", 1000, function()
-            {
-                var baseUrl = widget.getUrl().substring(0, url.lastIndexOf("/"));;
-                widget.setIcon(baseUrl + "/assets/icons/default-widget-icon.png");
-
-                widget.addEvent('onLoad', MyWidget.onLoad);
-                widget.addEvent('onRefresh', MyWidget.onRefresh);
-
-                // Setup your preferences...
-                widget.addPreference({
-                    name: "username",
-                    type: "text",
-                    label: "User name",
-                    defaultValue: "Valentin"
-                });
-            });
-
-       </script>
+        <title>VBU4 Testing</title>
     </head>
 
     <body>
-        <div id="content">Loading widget...</div>
+        <div id="content">Loading the widget...</div>
     </body>
 </html>
