@@ -48,6 +48,9 @@
             
             waitFor("widget", 1000, function()
             {
+                console.log("OMG JUST DID IT WORK OR NOT");
+                widget.body.innerHTML= "Hello FUCKING World!";
+
                 widget.addEvent('onLoad', MyWidget.onLoad);
                 widget.addEvent('onRefresh', MyWidget.onRefresh);
             });
