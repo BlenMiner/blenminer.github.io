@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="stylesheet" type="text/css" href="style/main.css" />
-        <script src="script/utils.js"></script>
 
         <title>VBU4 - Widget Mastering Progress</title>
     </head>
@@ -14,6 +13,26 @@
     <body>
         <div class="content">Hi 2.0!</div>
         <script>
+            
+            function waitFor(globalVarname, timeout, callback)
+            {
+                if (typeof window[globalVarname] !== "undefined")
+                {
+                    callback();
+                }
+                else if (timeout === 0)
+                {
+                    document.body.innerHTML = "Error while trying to load widget.";
+                    throw globalVarname + " didn't load";
+                }
+                else
+                {
+                    console.warn("Waiting for " + globalVarname);
+                    var dt = 100;
+                    setTimeout(waitFor, dt, globalVarname, timeout - dt, callback);
+                }
+            }
+
             var MyWidget = 
             {
                 onLoad: function() {
