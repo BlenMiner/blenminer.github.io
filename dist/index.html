@@ -13,20 +13,7 @@
 
     <body>
         <script>
-            require(['DS/CAAWebAppsUserPreference/CAAWebAppsUPMngt'], function (CAAWebAppsUPMngt) 
-            {
-                'use strict';
-                var MyWidget = {
-                    onLoad: function() 
-                    {
-                        var line = CAAWebAppsUPMngt.displayUP(widget.getValue('username'),
-                                                            widget.getValue('category'),
-                                                            widget.getValue('openfile'),
-                                                            widget.getValue('nb_max_item'));
-                        console.log(line);
-                    }
-                }
-            }
+            widget.body.innerHTML= "Hello World!";
         </script>
         <div id="content"></div>
     </body>
