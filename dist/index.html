@@ -10,14 +10,12 @@
         <title>VBU4 - Widget Mastering Progress</title>
 
         <script>
-            "use strict"
-
             this.setDroppable = function(elem, onDrop) {
                 require(["DS/DataDragAndDrop/DataDragAndDrop"], function(DataDragAndDrop) {
                     DataDragAndDrop.droppable(elem, { drop: onDrop });
                 });
             };
-            
+
             function waitFor(globalVarname, timeout, callback)
            {
                if (typeof window[globalVarname] !== "undefined")
@@ -56,6 +54,9 @@
            
             waitFor("widget", 1000, function()
             {
+                var baseUrl = widget.getUrl().substring(0, url.lastIndexOf("/"));;
+                widget.setIcon(baseUrl + "/assets/icons/default-widget-icon.png");
+
                 widget.addEvent('onLoad', MyWidget.onLoad);
                 widget.addEvent('onRefresh', MyWidget.onRefresh);
 
