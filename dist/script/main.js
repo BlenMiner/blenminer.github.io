@@ -3,6 +3,8 @@
  * @author P13
  */
 
+ "use strict"
+
 var data = [
     { id: "user1", firstName: "John", lastName: "Murphy" },
     { id: "user2", firstName: "John", lastName: "Sampson" },

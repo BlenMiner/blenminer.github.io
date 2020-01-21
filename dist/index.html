@@ -6,12 +6,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link rel="stylesheet" type="text/css" href="style/main.css" />
-        <script src="script/main.js"></script>
+        <!-- <script src="script/main.js"></script> -->
 
         <title>VBU4 - Widget Mastering Progress</title>
     </head>
 
     <body>
-        <div id="content">This is the widget content</div>
+        <script>
+            require(['DS/CAAWebAppsUserPreference/CAAWebAppsUPMngt'], function (CAAWebAppsUPMngt) 
+            {
+                'use strict';
+                var MyWidget = {
+                    onLoad: function() 
+                    {
+                        var line = CAAWebAppsUPMngt.displayUP(widget.getValue('username'),
+                                                            widget.getValue('category'),
+                                                            widget.getValue('openfile'),
+                                                            widget.getValue('nb_max_item'));
+                    }
+                }
+            }
+        </script>
+        <div id="content"></div>
     </body>
 </html>
