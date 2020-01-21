@@ -20,11 +20,17 @@
                     widget.body.innerHTML= "Hello World!";
                     console.log("on load");
                 },
+
+                onRefresh: function() {
+                    widget.body.innerHTML= "Hello World! - Refresh edition";
+                    console.log("on refresh");
+                },
             }
             
             waitFor("widget", 1000, function()
             {
                 widget.addEvent('onLoad', MyWidget.onLoad);
+                widget.addEvent('onRefresh', MyWidget.onRefresh);
             });
 
         </script>
