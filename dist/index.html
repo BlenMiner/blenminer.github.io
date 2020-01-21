@@ -49,10 +49,19 @@
             waitFor("widget", 1000, function()
             {
                 console.log("OMG JUST DID IT WORK OR NOT");
+                widget.setTitle("VBU4 - Widget Mastering Progress - Actual title");
                 widget.body.innerHTML= "Hello FUCKING World!";
 
                 widget.addEvent('onLoad', MyWidget.onLoad);
                 widget.addEvent('onRefresh', MyWidget.onRefresh);
+
+                // Setup your preferences...
+                widget.addPreference({
+                    name: "username",
+                    type: "text",
+                    label: "User name",
+                    defaultValue: "Valentin"
+                });
             });
 
         </script>

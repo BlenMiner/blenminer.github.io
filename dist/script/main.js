@@ -43,6 +43,7 @@ var MyWidget = function()
         }
         console.log("MyWidget: " + message);
     };
+    
     this.printTable = function(filter = null) {
         html = "<table>";
         html += "<tr><th>firstname</th><th>lastname</th></th>";
