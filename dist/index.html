@@ -12,7 +12,13 @@
         <script>
             "use strict"
 
-           function waitFor(globalVarname, timeout, callback)
+            this.setDroppable = function(elem, onDrop) {
+                require(["DS/DataDragAndDrop/DataDragAndDrop"], function(DataDragAndDrop) {
+                    DataDragAndDrop.droppable(elem, { drop: onDrop });
+                });
+            };
+            
+            function waitFor(globalVarname, timeout, callback)
            {
                if (typeof window[globalVarname] !== "undefined")
                {
@@ -29,42 +35,43 @@
                }
            }
 
-           var MyWidget = 
-           {
+            var MyWidget = 
+            {
                onLoad: function() {
-                   widget.body.innerHTML= "Hello World!";
-                   console.log("on load");
+                    widget.body.innerHTML= `
+                        Hello World!
+                        <br>
+                        <div id='drop' class='zone'>Drop to<br><br>here</div>`;
+
+                    setDroppable(document.getElementById("drop"), function(strData, element, event) {
+                        console.log(arguments);
+                    });
                },
 
                onRefresh: function() {
                    widget.body.innerHTML= "Hello World! - Refresh edition";
                    console.log("on refresh");
                },
-           }
+            }
            
-           waitFor("widget", 1000, function()
-           {
-               console.log("OMG JUST DID IT WORK OR NOT");
-               widget.setTitle("VBU4 - Widget Mastering Progress - Actual title");
-               widget.body.innerHTML= "Hello FUCKING World!";
+            waitFor("widget", 1000, function()
+            {
+                widget.addEvent('onLoad', MyWidget.onLoad);
+                widget.addEvent('onRefresh', MyWidget.onRefresh);
 
-               widget.addEvent('onLoad', MyWidget.onLoad);
-               widget.addEvent('onRefresh', MyWidget.onRefresh);
-
-               // Setup your preferences...
-               widget.addPreference({
-                   name: "username",
-                   type: "text",
-                   label: "User name",
-                   defaultValue: "Valentin"
-               });
-           });
+                // Setup your preferences...
+                widget.addPreference({
+                    name: "username",
+                    type: "text",
+                    label: "User name",
+                    defaultValue: "Valentin"
+                });
+            });
 
        </script>
     </head>
 
     <body>
-        <div class="content">Hi 2.1!</div>
-        <div id="content"></div>
+        <div id="content">Loading widget...</div>
     </body>
 </html>
