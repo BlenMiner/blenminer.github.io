@@ -256,6 +256,10 @@ var MyWidget = function() {
                         me.printMsg('3DSpace: ' + platform['3DSpace'] + '&lt;br&gt;&lt;br&gt;');
                         me.printMsg('3DDrive: ' + platform['3DDrive'] + '&lt;br&gt;&lt;br&gt;');
                     });
+                },
+                onFailure: function (data)
+                {
+                    me.printMsg('Failed: ' + data);
                 }
             });
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
