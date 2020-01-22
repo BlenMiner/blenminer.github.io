@@ -243,6 +243,22 @@ var MyWidget = function() {
     {
         require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices)
         {
+            i3DXCompassServices.getPlatformServices({
+
+                onComplete: function (data) {
+                    me.printMsg('&lt;b&gt;Get all platforms&lt;/b&gt; &lt;br&gt;&lt;br&gt;');
+    
+                    data.forEach(function (platform) {
+                        me.printMsg('platformId: ' + platform['platformId'] + '&lt;br&gt;');
+                        me.printMsg('displayName: ' + platform['displayName'] + '&lt;br&gt;');
+                        me.printMsg('3DCompass: ' + platform['3DCompass'] + '&lt;br&gt;');
+                        me.printMsg('3DPassport: ' + platform['3DPassport'] + '&lt;br&gt;');
+                        me.printMsg('3DSwym: ' + platform['3DSwym'] + '&lt;br&gt;&lt;br&gt;');
+                        me.printMsg('3DSpace: ' + platform['3DSpace'] + '&lt;br&gt;&lt;br&gt;');
+                        me.printMsg('3DDrive: ' + platform['3DDrive'] + '&lt;br&gt;&lt;br&gt;');
+                    });
+                }
+            });
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
             if (!platformId || platformId === "") platformId = undefined;
 
