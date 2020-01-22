@@ -243,9 +243,10 @@ var MyWidget = function() {
     {
         require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices)
         {
-            i3DXCompassServices.getPlatformServices({
+            i3DXCompassServices.getPlatformServices(undefined, {
                 onComplete: function (data) {
                     me.printMsg('&lt;b&gt;Get all platforms&lt;/b&gt; &lt;br&gt;&lt;br&gt;');
+                    console.log("NOT FAILED BLEN");
     
                     data.forEach(function (platform) {
                         me.printMsg('platformId: ' + platform['platformId'] + '&lt;br&gt;');
@@ -260,12 +261,13 @@ var MyWidget = function() {
                 onFailure: function (data)
                 {
                     me.printMsg('Failed: ' + data);
+                    console.log("failed BLEN");
                 }
             });
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
             if (!platformId || platformId === "") platformId = undefined;
 
-            me.printMsg("get services 2.2: " + platformId + " " + i3DXCompassServices);
+            me.printMsg("get services 2.3: " + platformId);
 
             i3DXCompassServices.getPlatformServices({
                 platformId: platformId,
