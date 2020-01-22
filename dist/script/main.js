@@ -91,7 +91,8 @@ var MyWidget = function() {
             me.sendMessage("topicB", {});
         });
 
-        me.getPlatformServices(undefined, function(data) {
+        me.getPlatformServices(undefined, function(data) 
+        {
             me.printMsg("getPlatformServices(" + JSON.stringify(data) + ")");
             document.getElementById("butReqProx").addEventListener("click", function() {
                 me.printMsg("httpCallProxified(tuleap.net/api/users)");
@@ -238,10 +239,14 @@ var MyWidget = function() {
         });
     };
 
-    this.getPlatformServices = function(platformId, onSuccess, onFailure) {
-        require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices) {
+    this.getPlatformServices = function(platformId, onSuccess, onFailure) 
+    {
+        require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices)
+        {
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
             if (!platformId || platformId === "") platformId = undefined;
+
+            me.printMsg("get services: " + platformId);
 
             i3DXCompassServices.getPlatformServices({
                 platformId: platformId,
