@@ -244,7 +244,6 @@ var MyWidget = function() {
         require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices)
         {
             i3DXCompassServices.getPlatformServices({
-
                 onComplete: function (data) {
                     me.printMsg('&lt;b&gt;Get all platforms&lt;/b&gt; &lt;br&gt;&lt;br&gt;');
     
@@ -262,7 +261,7 @@ var MyWidget = function() {
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
             if (!platformId || platformId === "") platformId = undefined;
 
-            me.printMsg("get services: " + platformId);
+            me.printMsg("get services 2.0: " + platformId);
 
             i3DXCompassServices.getPlatformServices({
                 platformId: platformId,
