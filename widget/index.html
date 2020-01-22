@@ -2,6 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
     <head>
+        <widget:preferences>
+            <widget:preference name="OperationChoice" type="list" label="Operation" defaultValue="NFirst" >
+                <widget:option label="NFirst" value="NFirst"></widget:option>
+                <widget:option label="Abs" value="Abs"></widget:option>
+            </widget:preference>
+        </widget:preferences>
+
     <script>
         /* global widget */
         (
@@ -15,7 +22,7 @@
                         widget.body.innerHTML= "Hello World! from script";					
                     }
                 };
-                
+
                 widget.addEvent('onLoad', myWidget.onLoad);
             }() 
         );
