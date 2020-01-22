@@ -21,30 +21,29 @@
                     onLoad: function() {
                         widget.body.innerHTML= "Hello World! from script";
                         
-                        require(["DS/i3DXCompassServices/i3DXCompassServices"], function(i3DXCompassServices)
-                        {
-                            i3DXCompassServices.getPlatformServices(undefined, {
-                                onComplete: function (data) 
-                                {
-                                    console.log("NOT FAILED BLEN");
-                    
-                                    /*data.forEach(function (platform)
-                                    {
-                                        me.printMsg('platformId: ' + platform['platformId'] + '&lt;br&gt;');
-                                        me.printMsg('displayName: ' + platform['displayName'] + '&lt;br&gt;');
-                                        me.printMsg('3DCompass: ' + platform['3DCompass'] + '&lt;br&gt;');
-                                        me.printMsg('3DPassport: ' + platform['3DPassport'] + '&lt;br&gt;');
-                                        me.printMsg('3DSwym: ' + platform['3DSwym'] + '&lt;br&gt;&lt;br&gt;');
-                                        me.printMsg('3DSpace: ' + platform['3DSpace'] + '&lt;br&gt;&lt;br&gt;');
-                                        me.printMsg('3DDrive: ' + platform['3DDrive'] + '&lt;br&gt;&lt;br&gt;');
-                                    });*/
-                                },
-                                onFailure: function ()
-                                {
-                                    console.log("failed BLEN");
-                                }
-                            });
-                        });
+                        require(['DS/i3DXCompassServices/i3DXCompassServices'],
+                            function (i3DXCompassServices) {
+                                'use strict';
+
+                                i3DXCompassServices.getPlatformServices({
+
+                                    onComplete: function (data) {
+                                        console.log('&lt;b&gt;Get all platforms&lt;/b&gt; &lt;br&gt;&lt;br&gt;');
+
+                                        data.forEach(function (platform) {
+
+                                            console.log('platformId: ' + platform['platformId'] + '&lt;br&gt;');
+                                            console.log('displayName: ' + platform['displayName'] + '&lt;br&gt;');
+                                            console.log('3DCompass: ' + platform['3DCompass'] + '&lt;br&gt;');
+                                            console.log('3DPassport: ' + platform['3DPassport'] + '&lt;br&gt;');
+                                            console.log('3DSwym: ' + platform['3DSwym'] + '&lt;br&gt;&lt;br&gt;');
+                                            console.log('3DSpace: ' + platform['3DSpace'] + '&lt;br&gt;&lt;br&gt;');
+                                            console.log('3DDrive: ' + platform['3DDrive'] + '&lt;br&gt;&lt;br&gt;');
+                                        });
+                                    }
+                                });
+                            }
+                        );
                     }
                 };
 
