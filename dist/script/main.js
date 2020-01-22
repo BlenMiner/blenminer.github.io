@@ -265,7 +265,7 @@ var MyWidget = function() {
             if (!platformId || platformId === "") platformId = widget.getValue("PlatFormInstanceId");
             if (!platformId || platformId === "") platformId = undefined;
 
-            me.printMsg("get services 2.0: " + platformId);
+            me.printMsg("get services 2.1: " + platformId);
 
             i3DXCompassServices.getPlatformServices({
                 platformId: platformId,
