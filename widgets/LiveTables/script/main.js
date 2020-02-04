@@ -472,24 +472,25 @@ var MyWidget = function()
 
                 onComplete: function(response, headers, xhr)
                 {
+                    console.log(response);
                     let info = JSON.parse(response).data[0].dataelements;
-                    
-                    /*me.httpCallAuthenticated(info.ticketURL, 
-                        {
-                            method: "POST",
-                            headers: {
-                                "__fcs__jobTicket": info.ticket,
-                                "file-name": "C:\\pack_3530346.jpg",
-                                "file-0": "C:\\pack_3530346.jpg",
-                                "file-title": preview_row.name
-                            },
-                
-                            onComplete: function(response, headers, xhr)
-                            {
-                                me.printMsg(response);
-                            }
-                        }
-                    );*/
+
+                    var formData = new FormData();
+
+                    formData.append('noOfFiles', '1');
+                    formData.append('__fcs__jobTicket', args.ticket.exportString);
+                    formData.append('fileName0', args.ticket.filename);
+                    formData.append('format0', args.ticket.fileformat);
+                    formData.append('bfile0', args.file, args.ticket.filename);
+        
+                    var opts = {};
+                    opts.method = 'POST';
+                    opts.data = formData;
+                    opts.onComplete = args.onComplete;
+                    opts.onFailure = args.onFailure;
+                    opts.timeout = 0;
+        
+                    return WAFData.request(args.ticket.actionURL, opts);
                 }
             }
         );
