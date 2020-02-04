@@ -541,6 +541,9 @@ var MyWidget = function()
             _3DSpace = data[1]["3DSpace"];
             _3DDrive =  data[1]["3DDrive"];
 
+            console.log(_3DDrive);
+            console.log(_3DSpace);
+
             //Load all the information for the first time
             me.updateAllData();
         });
