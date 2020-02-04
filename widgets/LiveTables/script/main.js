@@ -10,6 +10,7 @@ var preview_row = undefined;
 
 var _3DSpace = undefined;
 var _3DDrive = undefined;
+var _3DPlatform = undefined;
 
 var search_pat = "";
 var tag_pat = [];
@@ -502,6 +503,11 @@ var MyWidget = function()
         widget.setIcon(WIDGET_ROOT + "assets/default-widget-icon.png");
         widget.setTitle("LiveTables");
 
+        _3DPlatform = widget.getUrl();
+        _3DPlatform = _3DPlatform.substring(0, _3DPlatform.lastIndexOf('/'));
+
+        Console.log("Platform URL: " + _3DPlatform);
+
         // fill 'content' div
         var content = document.querySelector("div#content");
         content.innerHTML = `
@@ -536,9 +542,12 @@ var MyWidget = function()
         me.getPlatformServices(undefined, function(data) 
         {
             Console.log(data);
-            
+
             _3DSpace = data[0]["3DSpace"];
             _3DDrive =  data[0]["3DDrive"];
+
+            if (_3DSpace === undefined) _3DSpace = _3DPlatform;
+            if (_3DDrive === undefined) _3DDrive = _3DPlatform;
 
             //Load all the information for the first time
             me.updateAllData();
