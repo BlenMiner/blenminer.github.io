@@ -465,6 +465,7 @@ var MyWidget = function()
     this.uploadFileData = function(row, file)
     {
         let url = _3DSpace + `/resources/v1/modeler/documents/${row.id}/files/CheckinTicket`;
+        me.printMsg("uploadFileData()");
         me.httpCallAuthenticated(url, 
             {
                 method: "PUT",
