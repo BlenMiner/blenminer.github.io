@@ -508,7 +508,7 @@ var MyWidget = function()
     this.onLoad = function()
     {
         // set icon and title
-        widget.setIcon(WIDGET_ROOT + "assets/default-widget-icon.png");
+        widget.setIcon(WIDGET_ROOT + "assets/favicon.ico");
         widget.setTitle("LiveTables");
 
         // fill 'content' div
