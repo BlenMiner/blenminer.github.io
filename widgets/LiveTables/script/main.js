@@ -535,6 +535,8 @@ var MyWidget = function()
 
         me.getPlatformServices(undefined, function(data) 
         {
+            Console.log(data);
+            
             _3DSpace = data[0]["3DSpace"];
             _3DDrive =  data[0]["3DDrive"];
 
