@@ -119,8 +119,8 @@ function DrawCSVTable(csv_text)
 
     var CONTEXT_MENU = `
     <div class='window'>
-        <img id='back_preview' src='https://mywidgetfactory/resources/assets/LiveTables/close_red.png'></img>
-        <img id='upload_preview' src='https://mywidgetfactory/resources/assets/LiveTables/upload.png'></img>
+        <img id='back_preview' src='${WIDGET_ROOT}assets/close_red.png'></img>
+        <img id='upload_preview' src='${WIDGET_ROOT}assets/upload.png'></img>
     </div>`;
 
     var html = CONTEXT_MENU + `<center><table class='window' id='csv_table'><tr>`;

@@ -17,7 +17,7 @@ var platformUrl = "";
 
 var BACK_BUTTON = `
             <div class='window'>
-                <img id='back_preview' src='/LiveTables/assets/close_red.png'></img>
+                <img id='back_preview' src='${WIDGET_ROOT}/assets/close_red.png'></img>
             </div>`;
 
 var MyWidget = function() 
@@ -499,7 +499,7 @@ var MyWidget = function()
     this.onLoad = function()
     {
         // set icon and title
-        widget.setIcon("assets/default-widget-icon.png");
+        widget.setIcon(WIDGET_ROOT + "assets/default-widget-icon.png");
         widget.setTitle("LiveTables");
 
         // fill 'content' div

@@ -8,6 +8,8 @@
 
 		<script>
 		
+			var WIDGET_ROOT = 'https://blenminer.github.io/widgets/LiveTables/';
+
 			function load_js(file)
 			{
 				var newScript = document.createElement('script');
@@ -21,7 +23,7 @@
 				var newScript = document.createElement('link');
 				newScript.rel = 'stylesheet';
 				newScript.type = 'text/css';
-				newScript.href = file + '?v=' + Math.random();;
+				newScript.href = WIDGET_ROOT + file + '?v=' + Math.random();;
 				document.getElementsByTagName('head')[0].appendChild(newScript);
 			}
 
