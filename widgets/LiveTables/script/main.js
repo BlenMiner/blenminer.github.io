@@ -476,22 +476,29 @@ var MyWidget = function()
                     console.log(response);
                     let info = JSON.parse(response).data[0].dataelements;
 
-                    var formData = new FormData();
-
+                    let formData = new FormData();
+                    
                     formData.append('noOfFiles', '1');
-                    formData.append('__fcs__jobTicket', args.ticket.exportString);
-                    formData.append('fileName0', args.ticket.filename);
-                    formData.append('format0', args.ticket.fileformat);
-                    formData.append('bfile0', args.file, args.ticket.filename);
+                    formData.append('__fcs__jobTicket', info.ticket);
+                    formData.append('fileName0', preview_row.name);
+                    formData.append('format0', "");
+                    formData.append('bfile0', "C:\\Users\\VBU4\\Desktop\\3DDrive - VBU4\\3DDrive_DSEXT001\\Internal\\good_bad_news.csv", preview_row.name);
         
                     var opts = {};
                     opts.method = 'POST';
                     opts.data = formData;
-                    opts.onComplete = args.onComplete;
-                    opts.onFailure = args.onFailure;
+
+                    opts.onComplete = function(response) {
+                        me.printMsg("Success!!! " + response);
+                    };
+
+                    opts.onFailure = function(response) {
+                        me.printMsg("Failed to upload... " + response);
+                    };
+
                     opts.timeout = 0;
         
-                    return WAFData.request(args.ticket.actionURL, opts);
+                    me.httpCallAuthenticated(info.ticketURL, opts);
                 }
             }
         );
