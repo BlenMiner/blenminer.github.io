@@ -6,8 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="expires" content="0">
 
-        <link rel="stylesheet" type="text/css" href="style/main.css" />
-
 		<script>
 		
 			function load_js(file)
@@ -17,6 +15,17 @@
 				newScript.src = file + '?v=' + Math.random();;
 				document.getElementsByTagName('head')[0].appendChild(newScript);
 			}
+
+			function load_css(file)
+			{
+				var newScript = document.createElement('link');
+				newScript.rel = 'stylesheet';
+				newScript.type = 'text/css';
+				newScript.href = file + '?v=' + Math.random();;
+				document.getElementsByTagName('head')[0].appendChild(newScript);
+			}
+
+			load_css('style/main.css');
 			
 			load_js("script/csv_api.js");
 			load_js("script/main.js");
