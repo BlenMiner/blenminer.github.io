@@ -506,7 +506,7 @@ var MyWidget = function()
         _3DPlatform = widget.getUrl();
         _3DPlatform = _3DPlatform.substring(0, _3DPlatform.lastIndexOf('/'));
 
-        Console.log("Platform URL: " + _3DPlatform);
+        console.log("Platform URL: " + _3DPlatform);
 
         // fill 'content' div
         var content = document.querySelector("div#content");
@@ -541,7 +541,7 @@ var MyWidget = function()
 
         me.getPlatformServices(undefined, function(data) 
         {
-            Console.log(data);
+            console.log(data);
 
             _3DSpace = data[0]["3DSpace"];
             _3DDrive =  data[0]["3DDrive"];
