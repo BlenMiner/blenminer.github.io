@@ -1,0 +1,167 @@
+#content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+#clear_prefs {
+    color: red;
+    background-color: blanchedalmond;
+}
+
+.zone {
+    padding: 2em;
+    margin: 1.2em;
+
+    text-align: center;
+
+    width: 70%;
+    height: 5em;
+
+    outline: 4px dashed lightgray;
+
+    background-image: url(/LiveTables/assets/cloud.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #f7f7f7;
+}
+
+#data {
+    padding: 0.8em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.rejected {
+    opacity: 20%;
+}
+
+#toolbar {
+    height: 1em;
+    padding: 1.2em;
+}
+
+#toolbar a {
+    border: solid 1px #005685;
+    background: #1498df;
+    margin: 0.5em;
+    padding: 0.5em;
+    color: #FFFFFF;
+}
+
+#customers
+{
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 70%;
+}
+
+#csv_table
+{
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+#customers td, #customers th 
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+#customers tr:nth-child(even)
+{
+    background-color: #f2f2f2;
+}
+
+#customers th
+{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #005685;
+    color: white;
+}
+
+#csv_table td, #csv_table th 
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+#csv_table tr:nth-child(even)
+{
+    background-color: #f2f2f2;
+}
+
+#csv_table th
+{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: left;
+    background-color: #0b8500;
+    color: white;
+}
+
+#back_preview
+{
+    height: 30px;
+    float: right;
+    cursor: pointer;
+}
+
+#upload_preview
+{
+    height: 30px;
+    float: right;
+    cursor: pointer;
+}
+
+.window
+{
+    background-color: #f4f5f6;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    overflow: auto;
+}
+
+.delete 
+{
+    background-color: #af4c4c;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 20px;
+}
+
+.fetch
+{
+    background-color: #54c466;
+    border: none;
+    color: black;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 20px;
+}
