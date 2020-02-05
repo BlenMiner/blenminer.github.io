@@ -508,7 +508,7 @@ var MyWidget = function()
                         {
                             method: "PUT",
                             headers: { ENO_CSRF_TOKEN: preview_row.csrf },
-                            data: {
+                            data: JSON.stringify({
                                 data: [{
                                     id: preview_row.id,
                                     relateddata: {
@@ -525,7 +525,7 @@ var MyWidget = function()
                                     },
                                     tempId: tempId
                                 }]
-                            },
+                            }),
 
                             type: "json",
 
@@ -533,16 +533,15 @@ var MyWidget = function()
                                 me.printMsg(response);
                             },
 
-                            onFailure: function(response) {
+                            onFailure: function() {
                                 me.printMsg("Failed to update the file...");
                             }
                         };
 
-                        me.printMsg(JSON.stringify(options.data));
                         me.httpCallAuthenticated(`/resources/v1/modeler/documents`, options);
                     };
 
-                    opts.onFailure = function(response) {
+                    opts.onFailure = function() {
                         me.printMsg("Failed to upload... ");
                     };
 
