@@ -515,7 +515,7 @@ var MyWidget = function()
                                             dataelements: 
                                             {
                                                 title: filename,
-                                                receipt: response
+                                                receipt: response.replace("\n", ""),
                                             },
                                             updateAction: "REVISE"
                                         }]
