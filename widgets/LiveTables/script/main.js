@@ -498,11 +498,11 @@ var MyWidget = function()
                                 method = 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
 
-                                onComplete = function(response) {
+                                onComplete: function(response) {
                                     me.printMsg(response);
                                 },
 
-                                onFailure = function() {
+                                onFailure: function() {
                                     me.printMsg("Failed to put");
                                 }
                             }
