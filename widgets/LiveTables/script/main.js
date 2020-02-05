@@ -496,6 +496,7 @@ var MyWidget = function()
 
                     opts.onComplete = function(response) {
                         me.printMsg("Sent file info.");
+                        
                         //Update the FCS file receipt
                         let tempId = "temp_" + Date.now();
                         let options = 
