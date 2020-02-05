@@ -484,7 +484,6 @@ var MyWidget = function()
 
                     let info = JSON.parse(response).data[0].dataelements;
                     let formData = new FormData();
-
                     let filename = preview_row.name + "." + preview_row.extension;
                     let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')]);
                     
