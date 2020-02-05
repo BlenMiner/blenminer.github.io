@@ -327,10 +327,8 @@ var MyWidget = function()
                         row = data[row_id];
                         row.csrf = info.csrf.value;
 
-                        row.dataelements = element.dataelements;
-                        row.relateddata = element.relateddata;
-
                         file = element.relateddata.files[0];
+                        row.file = file;
 
                         if (element.dataelements.image)
                             row.icon = element.dataelements.image;
@@ -487,7 +485,7 @@ var MyWidget = function()
                     let info = JSON.parse(response).data[0].dataelements;
                     
                     let formData = new FormData();
-                    
+
                     let filename = preview_row.name + "." + preview_row.extension;
                     
                     formData.append('noOfFiles', '1');
@@ -505,8 +503,8 @@ var MyWidget = function()
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
 
-                        let dataelmnt = preview_row.dataelements;
-                        dataelmnt.receipt = response;
+                        let file_data = preview_row.file;
+                        file_data.dataelements.receipt = response;
 
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
@@ -514,14 +512,9 @@ var MyWidget = function()
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
                                 data: JSON.stringify( 
                                     {
-                                    data: [
+                                        data: [
                                             {
-                                                id: preview_row.id,
-                                                cestamp: preview_row.cestamp,
-                                                type: preview_row.type,
-
-                                                dataelements: dataelmnt,
-                                                relateddata: preview_row.relateddata
+                                                file_data
                                             }
                                         ]
                                     }
