@@ -484,9 +484,6 @@ var MyWidget = function()
                     formData.append('format0', "generic");
                     let csv_string = ArrayToCSV(preview_csv_data, ',');
                     formData.append('bfile0', new Blob([csv_string]), preview_row.name);
-
-                    me.printMsg("Uploading file name: " + preview_row.name);
-                    me.printMsg("With data:" + csv_string);
         
                     var opts = {};
                     opts.method = 'POST';
@@ -494,6 +491,22 @@ var MyWidget = function()
 
                     opts.onComplete = function(response) {
                         me.printMsg("Success!!! " + response);
+                        //Call checkin with receipt.
+
+                        me.httpCallAuthenticated(info.ticketURL,
+                            {
+                                method = 'PUT',
+                                headers: {ENO_CSRF_TOKEN: preview_row.csrf},
+
+                                onComplete = function(response) {
+                                    me.printMsg(response);
+                                },
+
+                                onFailure = function() {
+                                    me.printMsg("Failed to put");
+                                }
+                            }
+                        );
                     };
 
                     opts.onFailure = function(response) {
