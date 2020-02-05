@@ -479,7 +479,6 @@ var MyWidget = function()
                 onComplete: function(response, headers, xhr)
                 {
                     let info = JSON.parse(response).data[0].dataelements;
-
                     let formData = new FormData();
                     let filename = preview_row.name + "." + preview_row.extension;
                     
