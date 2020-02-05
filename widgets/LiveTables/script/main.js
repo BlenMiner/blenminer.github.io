@@ -482,7 +482,7 @@ var MyWidget = function()
                     formData.append('__fcs__jobTicket', info.ticket);
                     formData.append('fileName0', preview_row.name);
                     formData.append('format0', "");
-                    formData.append('bfile0', "C:\\Users\\VBU4\\Desktop\\3DDrive - VBU4\\3DDrive_DSEXT001\\Internal\\good_bad_news.csv", preview_row.name);
+                    formData.append('bfile0', new Block([ArrayToCSV(preview_csv_data, ',')]), preview_row.name);
         
                     var opts = {};
                     opts.method = 'POST';
