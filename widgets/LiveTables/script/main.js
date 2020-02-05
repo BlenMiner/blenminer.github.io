@@ -481,16 +481,16 @@ var MyWidget = function()
                 onComplete: function(response, headers, xhr)
                 {
                     let info = JSON.parse(response).data[0].dataelements;
-                    
+
                     let formData = new FormData();
                     let filename = preview_row.name + "." + preview_row.extension;
                     let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')]);
                     
-                    formData.append('noOfFiles', '1');
                     formData.append('__fcs__jobTicket', info.ticket);
-                    formData.append('fileName0', filename);
-                    formData.append('format0', "generic");
-                    formData.append('bfile0', csv_file);
+                    formData.append('file-description', filename);
+                    formData.append('file-name', filename);
+                    formData.append('file-title', filename);
+                    formData.append('file_0', new File([csv_file], filename));
         
                     var opts = {};
                     opts.method = 'POST';
