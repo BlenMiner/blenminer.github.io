@@ -98,7 +98,9 @@ function ArrayToCSV (arrayData, delimiter=',')
             if (j < len - 1) result += delimiter;
         }
         
-        if (i < rows - 1) result += '\n';
+        if (i < rows - 1) {
+            result += '\n';
+        }
     }
 
     return result;
