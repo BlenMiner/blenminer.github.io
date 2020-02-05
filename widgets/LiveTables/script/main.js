@@ -522,8 +522,8 @@ var MyWidget = function()
                                     me.printMsg(response);
                                 },
 
-                                onFailure: function() {
-                                    me.printMsg("Failed to put ");
+                                onFailure: function(response) {
+                                    me.printMsg("Failed to put " + response);
                                 }
                             }
                         );
