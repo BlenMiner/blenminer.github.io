@@ -481,7 +481,7 @@ var MyWidget = function()
                     me.printMsg(response);
 
                     let info = JSON.parse(response).data[0].dataelements;
-                    
+
                     let formData = new FormData();
                     let filename = preview_row.name + "." + preview_row.extension;
                     
@@ -490,7 +490,7 @@ var MyWidget = function()
                     formData.append('fileName0', filename);
                     formData.append('format0', "generic");
                     let csv_string = ArrayToCSV(preview_csv_data, ',');
-                    formData.append('bfile0', new File([new Blob([csv_string])], filename), filename);
+                    formData.append('bfile0', new Blob([csv_string]));
         
                     var opts = {};
                     opts.method = 'POST';
@@ -500,24 +500,14 @@ var MyWidget = function()
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
 
+                        let formData = new FormData();
+                        formData.append('receipt', response);
+
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                data: 
-                                {
-                                    data:
-                                    [
-                                        {
-                                            id:preview_row.id,
-                                            type:"update",
-                                            updateAction:"Commiting changes from Live Tables.",
-                                            dataelements: {
-                                                receipt: response
-                                            }
-                                        }
-                                    ]
-                                },
+                                formData,
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
