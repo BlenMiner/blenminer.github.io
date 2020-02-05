@@ -497,10 +497,9 @@ var MyWidget = function()
                         me.printMsg("Success!!! " + response);
                         //Call checkin with receipt.
 
-                        me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}`,
+                        me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
-                                headers: {ENO_CSRF_TOKEN: preview_row.csrf},
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
