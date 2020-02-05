@@ -535,6 +535,8 @@ var MyWidget = function()
                                 me.printMsg("Failed to update the file...");
                             }
                         };
+
+                        me.printMsg(options);
                         me.httpCallAuthenticated(`/resources/v1/modeler/documents`, options);
                     };
 
