@@ -469,6 +469,10 @@ var MyWidget = function()
         }
     };
 
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
+
     this.uploadFileData = function(row, file)
     {
         let url = _3DSpace + `/resources/v1/modeler/documents/${row.id}/files/CheckinTicket`;
@@ -514,7 +518,7 @@ var MyWidget = function()
                                             dataelements: 
                                             {
                                                 title: filename,
-                                                receipt: response.replace("\n", ""),
+                                                receipt: replaceAll(response, "\n", ""),
                                             },
                                             updateAction: "REVISE"
                                         }]
