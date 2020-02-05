@@ -499,25 +499,27 @@ var MyWidget = function()
                     opts.data = formData;
 
                     opts.onComplete = function(response) {
-                        me.printMsg("Success!!!");
-                        //Call checkin with receipt.
 
                         let file_data = preview_row.file;
                         file_data.dataelements.receipt = response;
+
+                        let answer = JSON.stringify( 
+                            {
+                                data: [
+                                    {
+                                        file_data
+                                    }
+                                ]
+                            }
+                        );
+
+                        me.printMsg("Replying: \n" + answer);
 
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                data: JSON.stringify( 
-                                    {
-                                        data: [
-                                            {
-                                                file_data
-                                            }
-                                        ]
-                                    }
-                                ),
+                                data: answer,
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
