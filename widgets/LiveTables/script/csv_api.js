@@ -104,9 +104,8 @@ function ArrayToCSV (arrayData, delimiter=',')
     return result;
 }
 
-function DrawCSVTable(csv_text)
+function DrawCSVTable(table)
 {
-    var table = CSVToArray(csv_text, ",");
     var csvDiv = document.querySelector("div#preview_data");
 
     //Clear old data
@@ -144,8 +143,6 @@ function DrawCSVTable(csv_text)
 
     html += "</table></center>";
     csvDiv.innerHTML = html;
-
-    return table;
 }
 
 function sanitize(string) {

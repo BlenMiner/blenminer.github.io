@@ -127,7 +127,8 @@ var MyWidget = function()
 
     this.printCSV = function(csv_text)
     {
-        preview_csv_data = DrawCSVTable(csv_text);
+        preview_csv_data = CSVToArray(csv_text, ',');
+        DrawCSVTable(preview_csv_data);
 
         document.getElementById("back_preview").addEventListener("click", function()
         {
