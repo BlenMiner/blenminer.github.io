@@ -536,7 +536,7 @@ var MyWidget = function()
                             }
                         };
 
-                        me.printMsg(options);
+                        me.printMsg(JSON.stringify(options.data));
                         me.httpCallAuthenticated(`/resources/v1/modeler/documents`, options);
                     };
 
