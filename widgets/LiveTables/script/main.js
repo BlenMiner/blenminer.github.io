@@ -499,14 +499,23 @@ var MyWidget = function()
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
 
-                        let formData = new FormData();
-                        formData.append('receipt', response);
-
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                data: formData,
+                                data: JSON.stringify({
+                                    data:
+                                    [
+                                        {
+                                            id:preview_row.id,
+                                            type:"update",
+                                            updateAction:"Commiting changes from Live Tables.",
+                                            dataelements: {
+                                                receipt: response
+                                            }
+                                        }
+                                    ]
+                                }),
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
