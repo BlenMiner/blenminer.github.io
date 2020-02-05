@@ -448,6 +448,7 @@ var MyWidget = function()
                 onComplete: function(response, headers, xhr)
                 {
                     let info = JSON.parse(response);
+                    
                     console.log(response);
     
                     if (info.success == true)
