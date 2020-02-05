@@ -330,6 +330,7 @@ var MyWidget = function()
 
                         if (file) {
                             row.extension = file.dataelements.title.split('.').pop();
+                            row.icon = file.dataelements.image;
                         }
                         else if (row.type == "Issue") {
                             row.extension = "issue";
