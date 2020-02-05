@@ -503,7 +503,6 @@ var MyWidget = function()
                     opts.onComplete = function(response) {
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
-
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
