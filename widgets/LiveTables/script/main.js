@@ -535,7 +535,6 @@ var MyWidget = function()
                                 me.printMsg("Failed to update the file...");
                             }
                         };
-
                         me.httpCallAuthenticated(options.url, options);
                     };
 
