@@ -490,7 +490,7 @@ var MyWidget = function()
                     formData.append('file-description', filename);
                     formData.append('file-name', filename);
                     formData.append('file-title', filename);
-                    formData.append('file_0', new File([csv_file], filename));
+                    formData.append('file_0', new File([csv_file], { type: 'text/plain' }, filename));
         
                     var opts = {};
                     opts.method = 'POST';
@@ -498,34 +498,6 @@ var MyWidget = function()
 
                     opts.onComplete = function(response) {
                         me.printMsg("Sent file info.");
-                        /*let file_data = preview_row.file;
-                        file_data.dataelements.receipt = response;
-                        file_data.dataelements.fileSize = csv_file.size;
-                        file_data.dataelements.fileObjectId = preview_row.id;
-
-                        let answer = JSON.stringify( 
-                            {
-                                data: [ file_data ]
-                            }
-                        );
-
-                        me.printMsg("Replying: \n" + answer);
-
-                        me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
-                            {
-                                method: 'PUT',
-                                headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                data: answer,
-
-                                onComplete: function(response) {
-                                    me.printMsg(response);
-                                },
-
-                                onFailure: function(response) {
-                                    me.printMsg("Failed to put " + response);
-                                }
-                            }
-                        );*/
                     };
 
                     opts.onFailure = function(response) {
