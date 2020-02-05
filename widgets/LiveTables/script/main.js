@@ -538,7 +538,7 @@ var MyWidget = function()
                             }
                         };
 
-                        me.httpCallAuthenticated(`/resources/v1/modeler/documents`, options);
+                        me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents`, options);
                     };
 
                     opts.onFailure = function() {
