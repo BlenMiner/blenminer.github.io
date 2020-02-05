@@ -518,7 +518,7 @@ var MyWidget = function()
                                             dataelements: 
                                             {
                                                 title: filename,
-                                                receipt: replaceAll(response, "\n", ""),
+                                                receipt: response,
                                             },
                                             updateAction: "REVISE"
                                         }]
@@ -527,7 +527,6 @@ var MyWidget = function()
                                 }]
                             },
 
-                            contentType: "application/json",
                             type: "json",
 
                             onComplete: function(response) {
