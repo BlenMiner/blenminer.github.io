@@ -314,7 +314,7 @@ var MyWidget = function()
             onComplete: function(response, headers, xhr)
             {
                 info = JSON.parse(response);
-
+                
                 me.printMsg(response);
                 
                 for (i = 0; i < info.data.length; i++)
@@ -327,8 +327,8 @@ var MyWidget = function()
                         row = data[row_id];
                         row.csrf = info.csrf.value;
 
-                        /*row.dataelements = element.dataelements;
-                        row.relateddata = element.relateddata;*/
+                        row.dataelements = element.dataelements;
+                        row.relateddata = element.relateddata;
 
                         file = element.relateddata.files[0];
 
@@ -503,6 +503,10 @@ var MyWidget = function()
                     opts.onComplete = function(response) {
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
+
+                        let dataelmnt = preview_row.dataelements;
+                        dataelmnt.receipt = response;
+
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
