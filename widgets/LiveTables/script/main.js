@@ -475,7 +475,6 @@ var MyWidget = function()
 
                 onComplete: function(response, headers, xhr)
                 {
-                    console.log("Using the new blob method");
                     let info = JSON.parse(response).data[0].dataelements;
 
                     let formData = new FormData();
@@ -483,8 +482,12 @@ var MyWidget = function()
                     formData.append('noOfFiles', '1');
                     formData.append('__fcs__jobTicket', info.ticket);
                     formData.append('fileName0', preview_row.name);
-                    formData.append('format0', "csv");
-                    formData.append('bfile0', new Blob([ArrayToCSV(preview_csv_data, ',')]), preview_row.name);
+                    formData.append('format0', "generic");
+                    let csv_string = ArrayToCSV(preview_csv_data, ',');
+                    formData.append('bfile0', new Blob([csv_string]), preview_row.name);
+
+                    me.printMsg("Uploading file name: " + preview_row.name);
+                    me.printMsg("With data:" + csv_string);
         
                     var opts = {};
                     opts.method = 'POST';
