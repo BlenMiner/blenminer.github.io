@@ -486,13 +486,12 @@ var MyWidget = function()
                     let formData = new FormData();
 
                     let filename = preview_row.name + "." + preview_row.extension;
-                    let csv_file = new Blob([csv_string]);
+                    let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')]);
                     
                     formData.append('noOfFiles', '1');
                     formData.append('__fcs__jobTicket', info.ticket);
                     formData.append('fileName0', filename);
                     formData.append('format0', "generic");
-                    let csv_string = ArrayToCSV(preview_csv_data, ',');
                     formData.append('bfile0', csv_file);
         
                     var opts = {};
