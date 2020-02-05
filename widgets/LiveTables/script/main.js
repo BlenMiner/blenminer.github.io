@@ -448,6 +448,7 @@ var MyWidget = function()
                 onComplete: function(response, headers, xhr)
                 {
                     let info = JSON.parse(response);
+                    console.log(response);
     
                     if (info.success == true)
                     {
@@ -482,7 +483,7 @@ var MyWidget = function()
                     formData.append('noOfFiles', '1');
                     formData.append('__fcs__jobTicket', info.ticket);
                     formData.append('fileName0', preview_row.name);
-                    formData.append('format0', "");
+                    formData.append('format0', "csv");
                     formData.append('bfile0', new Blob([ArrayToCSV(preview_csv_data, ',')]), preview_row.name);
         
                     var opts = {};
