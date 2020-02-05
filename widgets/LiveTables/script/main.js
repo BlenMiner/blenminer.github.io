@@ -507,7 +507,7 @@ var MyWidget = function()
                             {
                                 method: 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                formData,
+                                data: formData,
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
