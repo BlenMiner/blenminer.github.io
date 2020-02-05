@@ -15,6 +15,8 @@ var search_pat = "";
 var tag_pat = [];
 var platformUrl = "";
 
+var tenant = undefined;
+
 var BACK_BUTTON = `
             <div class='window'>
                 <img id='back_preview' src='${WIDGET_ROOT}/assets/close_red.png'></img>
@@ -595,6 +597,8 @@ var MyWidget = function()
 
             _3DSpace = data[1]["3DSpace"];
             _3DDrive =  data[1]["3DDrive"];
+
+            tenant = data[1]["platformId"];
 
             console.log(_3DDrive);
             console.log(_3DSpace);
