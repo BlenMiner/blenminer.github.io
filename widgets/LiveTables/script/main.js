@@ -497,8 +497,8 @@ var MyWidget = function()
                     opts.data = formData;
 
                     opts.onComplete = function(response) {
-
-                        let file_data = preview_row.file;
+                        me.printMsg("Sent file info.");
+                        /*let file_data = preview_row.file;
                         file_data.dataelements.receipt = response;
                         file_data.dataelements.fileSize = csv_file.size;
                         file_data.dataelements.fileObjectId = preview_row.id;
@@ -525,7 +525,7 @@ var MyWidget = function()
                                     me.printMsg("Failed to put " + response);
                                 }
                             }
-                        );
+                        );*/
                     };
 
                     opts.onFailure = function(response) {
