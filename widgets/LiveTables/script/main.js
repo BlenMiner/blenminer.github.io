@@ -473,7 +473,7 @@ var MyWidget = function()
 
                 onComplete: function(response, headers, xhr)
                 {
-                    console.log(response);
+                    console.log("Using the new blob method");
                     let info = JSON.parse(response).data[0].dataelements;
 
                     let formData = new FormData();
