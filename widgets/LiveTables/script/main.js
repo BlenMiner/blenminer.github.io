@@ -503,7 +503,7 @@ var MyWidget = function()
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
-                                headers: {ENO_CSRF_TOKEN: row.csrf},
+                                headers: {ENO_CSRF_TOKEN: preview_row.csrf},
                                 data: 
                                 {
                                     data:
