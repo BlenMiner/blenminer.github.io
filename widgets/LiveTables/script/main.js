@@ -315,8 +315,6 @@ var MyWidget = function()
             {
                 info = JSON.parse(response);
                 
-                me.printMsg(response);
-                
                 for (i = 0; i < info.data.length; i++)
                 {
                     element = info.data[i];
@@ -496,10 +494,51 @@ var MyWidget = function()
 
                     opts.onComplete = function(response) {
                         me.printMsg("Sent file info.");
+
+                        //Update the FCS file receipt
+                        let tempId = "temp_" + Date.now();
+
+                        let options = 
+                        {
+                            url: `/resources/v1/modeler/documents`, // /${docId}/files/${fileId}, Note here : 19xfd01 parameters in the query are not working, it has to go in the request payload it seems
+                            tenant: tenant,
+                            method: "PUT",
+                            headers: {ENO_CSRF_TOKEN: preview_row.csrf}, 
+                            data: {
+                                //CSRF token will be added by the _doCallWithCSRF function call
+                                data: [{
+                                    id: preview_row.id,
+                                    relateddata: {
+                                        files: [
+                                        {
+                                            id: preview_row.file.id,
+                                            dataelements: 
+                                            {
+                                                title: fileName,
+                                                receipt: response
+                                            },
+                                            updateAction: "REVISE"
+                                        }]
+                                    },
+                                    tempId: tempId
+                                }]
+                            },
+
+                            contentType: "application/json",
+                            type: "json",
+
+                            onComplete: function(response) {
+                                me.printMsg(response);
+                            },
+
+                            onFailure: function(response) {
+                                me.printMsg("Failed to update the file...");
+                            }
+                        };
                     };
 
                     opts.onFailure = function(response) {
-                        me.printMsg("Failed to upload... " + response);
+                        me.printMsg("Failed to upload... ");
                     };
 
                     opts.timeout = 0;
@@ -565,8 +604,6 @@ var MyWidget = function()
 
         me.setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
-            me.printMsg(strData);
-
             let jsonObject = JSON.parse(strData);
 
             switch (jsonObject.protocol)
