@@ -326,6 +326,9 @@ var MyWidget = function()
                         row = data[row_id];
                         row.csrf = info.csrf.value;
 
+                        row.dataelements = element.dataelements;
+                        row.relateddata = element.relateddata;
+
                         file = element.relateddata.files[0];
 
                         if (element.dataelements.image)
@@ -500,23 +503,25 @@ var MyWidget = function()
                         me.printMsg("Success!!!");
                         //Call checkin with receipt.
 
+                        let dataelmnt = preview_row.dataelements;
+                        dataelmnt.receipt = response;
+
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
                                 headers: {ENO_CSRF_TOKEN: preview_row.csrf},
-                                data: JSON.stringify({
-                                    data:
+                                data: JSON.stringify(
                                     [
                                         {
-                                            id:preview_row.id,
-                                            type:"update",
-                                            updateAction:"Commiting changes from Live Tables.",
-                                            dataelements: {
-                                                receipt: response
-                                            }
+                                            id: preview_row.id,
+                                            cestamp: preview_row.cestamp,
+                                            type: preview_row.type,
+
+                                            dataelements: dataelmnt,
+                                            relateddata: preview_row.relateddata
                                         }
                                     ]
-                                }),
+                                ),
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
