@@ -503,7 +503,7 @@ var MyWidget = function()
                                 },
 
                                 onFailure: function() {
-                                    me.printMsg("Failed to put");
+                                    me.printMsg("Failed to put ");
                                 }
                             }
                         );
