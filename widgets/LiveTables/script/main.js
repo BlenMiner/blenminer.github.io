@@ -498,7 +498,6 @@ var MyWidget = function()
                         me.printMsg("Sent file info.");
                         //Update the FCS file receipt
                         let tempId = "temp_" + Date.now();
-
                         let options = 
                         {
                             url: `/resources/v1/modeler/documents`, // /${docId}/files/${fileId}, Note here : 19xfd01 parameters in the query are not working, it has to go in the request payload it seems
