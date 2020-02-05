@@ -496,17 +496,14 @@ var MyWidget = function()
 
                     opts.onComplete = function(response) {
                         me.printMsg("Sent file info.");
-                        
+
                         //Update the FCS file receipt
                         let tempId = "temp_" + Date.now();
                         let options = 
                         {
-                            url: `/resources/v1/modeler/documents`, // /${docId}/files/${fileId}, Note here : 19xfd01 parameters in the query are not working, it has to go in the request payload it seems
-                            tenant: tenant,
                             method: "PUT",
-                            headers: {ENO_CSRF_TOKEN: preview_row.csrf}, 
+                            headers: { ENO_CSRF_TOKEN: preview_row.csrf },
                             data: {
-                                //CSRF token will be added by the _doCallWithCSRF function call
                                 data: [{
                                     id: preview_row.id,
                                     relateddata: {
@@ -526,6 +523,7 @@ var MyWidget = function()
                             },
 
                             contentType: "application/json",
+                            responseType: "application/json",
                             type: "json",
 
                             onComplete: function(response) {
@@ -536,7 +534,7 @@ var MyWidget = function()
                                 me.printMsg("Failed to update the file...");
                             }
                         };
-                        me.httpCallAuthenticated(options.url, options);
+                        me.httpCallAuthenticated(`/resources/v1/modeler/documents`, options);
                     };
 
                     opts.onFailure = function(response) {
