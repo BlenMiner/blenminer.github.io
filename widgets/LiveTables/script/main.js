@@ -500,7 +500,6 @@ var MyWidget = function()
                         //Update the FCS file receipt
                         let tempId = "temp_" + Date.now();
                         let filename = preview_row.name + "." + preview_row.extension;
-
                         let options = 
                         {
                             method: "PUT",
