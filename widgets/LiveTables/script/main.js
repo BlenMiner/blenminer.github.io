@@ -515,7 +515,7 @@ var MyWidget = function()
                                             id: preview_row.file.id,
                                             dataelements: 
                                             {
-                                                title: fileName,
+                                                title: filename,
                                                 receipt: response
                                             },
                                             updateAction: "REVISE"
