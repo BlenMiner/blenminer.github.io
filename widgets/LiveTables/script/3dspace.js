@@ -1,4 +1,5 @@
-function _httpCallAuthenticated(url, options) {
+function _httpCallAuthenticated(url, options)
+{
     require(["DS/WAFData/WAFData"], function(WAFData) {
         WAFData.authenticatedRequest(url, options);
     });
