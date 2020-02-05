@@ -466,6 +466,11 @@ var MyWidget = function()
                     }
                 }
             });
+
+            _3dspace_file_url(_3DSpace, row.id, function(url)
+            {
+                me.printMsg("Proper API: " + url);
+            });
         }
     };
 
