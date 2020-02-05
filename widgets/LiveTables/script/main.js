@@ -328,9 +328,11 @@ var MyWidget = function()
 
                         file = element.relateddata.files[0];
 
+                        if (element.dataelements.image)
+                            row.icon = element.dataelements.image;
+
                         if (file) {
                             row.extension = file.dataelements.title.split('.').pop();
-                            row.icon = file.dataelements.image;
                         }
                         else if (row.type == "Issue") {
                             row.extension = "issue";
