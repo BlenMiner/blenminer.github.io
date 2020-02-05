@@ -531,6 +531,7 @@ var MyWidget = function()
 
                             onComplete: function(response) {
                                 me.printMsg(response);
+                                me.updateID_3DSpace(preview_row);
                             },
 
                             onFailure: function() {
