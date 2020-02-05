@@ -94,7 +94,7 @@ function ArrayToCSV (arrayData, delimiter=',')
         {
             let content = arrayData[i][j];
 
-            result += `"${content.replace('"', '""')}"`;
+            result += `"${content.toString().replace('"', '""')}"`;
             if (j < len - 1) result += delimiter;
         }
         
