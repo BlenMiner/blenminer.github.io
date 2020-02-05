@@ -502,7 +502,6 @@ var MyWidget = function()
                     opts.onComplete = function(response) {
 
                         let file_data = preview_row.file;
-
                         file_data.dataelements.receipt = response;
                         file_data.dataelements.fileSize = csv_file.size;
                         file_data.dataelements.fileObjectId = preview_row.id;
