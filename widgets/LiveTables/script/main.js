@@ -482,19 +482,28 @@ var MyWidget = function()
                 {
                     let info = JSON.parse(response).data[0].dataelements;
 
-                    let formData = new FormData();
+                    //let formData = new FormData();
+
                     let filename = preview_row.name + "." + preview_row.extension;
                     let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')], { type: 'text/plain' });
                     
-                    formData.append('__fcs__jobTicket', info.ticket);
+                    /*formData.append('__fcs__jobTicket', info.ticket);
                     formData.append('file-description', filename);
                     formData.append('file-name', filename);
                     formData.append('file-title', filename);
-                    formData.append('file_0', new File([csv_file], filename));
+                    formData.append('file_0', new File([csv_file], filename));*/
         
                     var opts = {};
                     opts.method = 'POST';
-                    opts.data = formData;
+                    opts.data = JSON.stringify(
+                        {
+                            "__fcs__jobTicket": info.ticket,
+                            "file-description": filename,
+                            "file-name": filename,
+                            "file-title": filename,
+                            "file_0": new File([csv_file], filename),
+                        }
+                    );
 
                     opts.onComplete = function(response) {
                         me.printMsg("Sent file info.");
