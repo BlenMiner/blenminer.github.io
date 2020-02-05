@@ -314,6 +314,7 @@ var MyWidget = function()
             onComplete: function(response, headers, xhr)
             {
                 info = JSON.parse(response);
+                
                 me.printMsg(response);
                 
                 for (i = 0; i < info.data.length; i++)
