@@ -479,7 +479,7 @@ var MyWidget = function()
                 onComplete: function(response, headers, xhr)
                 {
                     let info = JSON.parse(response).data[0].dataelements;
-                    
+
                     let formData = new FormData();
                     let filename = preview_row.name + "." + preview_row.extension;
                     
@@ -501,6 +501,7 @@ var MyWidget = function()
                         me.httpCallAuthenticated(_3DSpace + `/resources/v1/modeler/documents/${preview_row.id}/files`,
                             {
                                 method: 'PUT',
+                                headers: {ENO_CSRF_TOKEN: row.csrf},
 
                                 onComplete: function(response) {
                                     me.printMsg(response);
