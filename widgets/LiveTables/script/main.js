@@ -488,10 +488,7 @@ var MyWidget = function()
                     let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')], { type: 'text/plain' });
                     
                     formData.append('__fcs__jobTicket', info.ticket);
-                    formData.append('file-description', filename);
-                    formData.append('file-name', filename);
-                    formData.append('file-title', filename);
-                    formData.append('file_0', csv_file);
+                    formData.append('file_0', csv_file, filename);
         
                     var opts = {};
                     opts.method = 'POST';
