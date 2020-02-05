@@ -1,8 +1,14 @@
+function _httpCallAuthenticated(url, options) {
+    require(["DS/WAFData/WAFData"], function(WAFData) {
+        WAFData.authenticatedRequest(url, options);
+    });
+};
+
 function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
 {
     let url = host + `/resources/v1/modeler/documents/${docid}`;
 
-    me.httpCallAuthenticated(url, 
+    _httpCallAuthenticated(url, 
         {
             onComplete: function(response, headers, xhr) {
                 info = JSON.parse(response);
@@ -21,7 +27,7 @@ function _3dspace_file_url(host, docid, onDone = undefined, onError = undefined)
     let url = host + `/resources/v1/modeler/documents/${docid}/files/DownloadTicket`;
     _3dspace_get_csrf(host, docid, function(csrf)
     {
-        me.httpCallAuthenticated(url, 
+        _httpCallAuthenticated(url, 
             {
                 method: "PUT",
                 headers: {ENO_CSRF_TOKEN: csrf}, 
