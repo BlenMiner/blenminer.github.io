@@ -33,18 +33,17 @@ var MyWidget = function()
                         let data = document.getElementById("data");
 
                         DrawCSVTable(table, data);
-                        clearInterval(id);
                     }
                 });
 
                 var elem = document.getElementById("myBar");
-                
+
                 elem.className = "";
                 elem.style.width = "0%";
 
-                task.addEventListener("progress", progress);
-                task.addEventListener("load", done);
-                task.addEventListener("error", done);
+                task.xhr.addEventListener("progress", progress);
+                task.xhr.addEventListener("load", done);
+                task.xhr.addEventListener("error", done);
 
                 function progress(oEvent)
                 {
