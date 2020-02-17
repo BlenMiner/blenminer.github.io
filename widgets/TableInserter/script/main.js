@@ -48,8 +48,9 @@ var MyWidget = function()
                 _TenantOpts.push(`${_Tenants[i].platformId} - ${_Tenants[i].displayName}`);
 
             //_3DSpace = data[1]["3DSpace"];
-        });
 
+        });
+ 
         // Setup your preferences...
         widget.addPreference({
             name: "_data",
