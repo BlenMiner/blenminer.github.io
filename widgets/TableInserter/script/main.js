@@ -15,6 +15,9 @@ var MyWidget = function()
 
     this.updatePreview = function()
     {
+        console.log(_TenantId);
+        console.log(_Tenants[_TenantId]);
+        
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
             {
