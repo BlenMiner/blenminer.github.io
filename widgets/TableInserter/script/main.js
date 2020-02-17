@@ -36,20 +36,23 @@ var MyWidget = function()
         _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
             function(result)
             {
-                elem.style.width = "100%";
+                elem.style.width = "90%";
                 DrawCSVTable(_TableData, data);
-                if (btn) btn.disabled = false;
+                me.queueUpdatePreview(function (crf)
+                {
+                    if (btn) btn.disabled = false;
+                });
             },
             function(error)
             {
                 elem.style.width = "0%";
                 document.getElementById("form_spot").innerHTML = "failed";
-                me.queueUpdatePreview();
+                me.queueUpdatePreview(me.updatePreview);
             }
         );
     }
 
-    this.queueUpdatePreview = function()
+    this.queueUpdatePreview = function(onDone)
     {
         var elem = document.getElementById("myBar");
         elem.style.width = "10%";
@@ -57,7 +60,8 @@ var MyWidget = function()
         _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
         {
             _TargetFile.fileId = info.data[0].relateddata.files[0].id;
-            me.updatePreview(info.csrf.value);
+            if (onDone) onDone(info.csrf.value);
+            else elem.style.width = "100%";
         },
         function (error)
         {
@@ -191,7 +195,7 @@ var MyWidget = function()
 
                 if (targetfile && targetfile != '') {
                     _TargetFile = JSON.parse(targetfile);
-                    me.queueUpdatePreview();
+                    me.queueUpdatePreview(me.updatePreview);
                 }
                 else {
                     me.toggleDropbox(true);
@@ -213,7 +217,7 @@ var MyWidget = function()
                         _TargetFile = {objectId: item.objectId, displayName: item.displayName, fileId: null};
 
                         widget.setValue("_TargetFile_", JSON.stringify(_TargetFile));
-                        me.queueUpdatePreview();
+                        me.queueUpdatePreview(me.updatePreview);
 
                         break;
                     }
@@ -230,7 +234,7 @@ var MyWidget = function()
         if (_TargetFile) 
         {
             _TenantId = widget.getValue("_TenantsData_");
-            me.queueUpdatePreview();
+            me.queueUpdatePreview(me.updatePreview);
         }
     };
 
