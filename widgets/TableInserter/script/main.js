@@ -56,20 +56,20 @@ var MyWidget = function()
 
         });
 
-        console.log("pra 2");
+        console.log("pra pri");
 
         console.log(_TenantOpts);
  
         // Setup your preferences...
         widget.addPreference({
-            name: "_data",
+            name: "_TargetFile",
             type: "hidden",
             label: "File",
-            defaultValue: JSON.stringify(_TargetFile)
+            defaultValue: ''
         });
 
         widget.addPreference({
-            name: "tenants_list",
+            name: "_TenantsData",
             type: "list",
             label: "Tenant",
             defaultValue: `${_TenantId}`,
@@ -98,10 +98,10 @@ var MyWidget = function()
 
         //Loads the prefs if available
         {
-            let prefs = widget.getValue("_data");
+            let prefs = widget.getValue("_TargetFile");
 
             if (prefs != undefined)
-                data = JSON.parse(prefs);
+                _TargetFile = JSON.parse(prefs);
         }
     };
 
