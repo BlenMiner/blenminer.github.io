@@ -63,10 +63,10 @@ var MyWidget = function()
         // fill 'content' div
         var content = document.querySelector("div#content");
         content.innerHTML = `
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
             <center>
-                <div id="myProgress">
-                    <div id="myBar"></div>
-                </div>
                 <div id='main_body'>
                     <h3>Table Inserter [VBU4]</h3>
                     <div id='drop' class='zone'></div>
