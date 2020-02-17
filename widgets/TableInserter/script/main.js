@@ -77,13 +77,13 @@ var MyWidget = function()
         });
 
         widget.addPreference({
-            name: "test",
-            type: "list",
-            label: "Test",
-            defaultValue: 'ZERO',
-            options: [  {value: 'ZERO', label: 'ZERO'},
-                        {value: 'ONE', label: 'ONE'},
-                        {value: 'TWO', label: 'TWO'}]
+            name: "test2",
+            type: "list2",
+            label: "Test 2",
+            defaultValue: 0,
+            options: [  {value: 0, label: 'ZERO'},
+                        {value: 1, label: 'ONE'},
+                        {value: 2, label: 'TWO'}]
         });
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
