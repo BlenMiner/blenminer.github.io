@@ -13,7 +13,7 @@ var MyWidget = function()
 {
     var me = this;
 
-    this.toggleDropbox= function(enable)
+    this.toggleDropbox = function(enable)
     {
         let drop = document.getElementById("drop");
         drop.className = enable ? '' : 'hidden';
