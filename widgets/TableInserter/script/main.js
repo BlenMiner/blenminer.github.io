@@ -13,7 +13,7 @@ var MyWidget = function()
 {
     var me = this;
 
-    this.updatePreview()
+    this.updatePreview = function()
     {
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
