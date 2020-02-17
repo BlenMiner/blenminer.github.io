@@ -25,6 +25,7 @@ var MyWidget = function()
     this.uploadChanges = function(crs)
     {
         var elem = document.getElementById("myBar");
+        elem.style.width = "0%";
 
         let filename = _TargetFile.displayName;
         let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
@@ -32,19 +33,19 @@ var MyWidget = function()
         var btn = document.getElementById("add_entry_button");
         btn.disabled = true;
 
-        elem.style.width = "0%";
-
         _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
             function(result)
             {
                 elem.style.width = "100%";
                 DrawCSVTable(_TableData, data);
-                if (btn) btn.disabled = true;
+                if (btn) btn.disabled = false;
             },
             function(error)
             {
-                console.log('Something went wrong :( ' + error);
-                if (btn) btn.disabled = true;
+                elem.style.width = "100%";
+                document.getElementById("form_spot").innerHTML = "";
+                me.queueUpdatePreview();
+                if (btn) btn.disabled = false;
             }
         );
     }
