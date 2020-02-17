@@ -76,6 +76,14 @@ var MyWidget = function()
                 });
             }
 
+            // Setup your preferences...
+            widget.addPreference({
+                name: "_TargetFile_",
+                type: "hidden",
+                label: "File",
+                defaultValue: ''
+            });
+
             widget.addPreference({
                 name: "_TenantsData_",
                 type: "list",
@@ -97,14 +105,6 @@ var MyWidget = function()
                 prefs = widget.getValue("_TenantsData_");
                 if (prefs) _TenantId = prefs;
             }
-        });
- 
-        // Setup your preferences...
-        widget.addPreference({
-            name: "_TargetFile_",
-            type: "hidden",
-            label: "File",
-            defaultValue: ''
         });
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
