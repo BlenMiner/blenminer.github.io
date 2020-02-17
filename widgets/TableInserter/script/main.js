@@ -58,6 +58,10 @@ var MyWidget = function()
         {
             _TargetFile.fileId = info.data[0].relateddata.files[0].id;
             me.updatePreview(info.csrf.value);
+        },
+        function (error)
+        {
+            elem.style.width = "0%";
         });
     }
 
