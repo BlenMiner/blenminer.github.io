@@ -27,7 +27,7 @@ var MyWidget = function()
                         let table = CSVToArray(RESULT_CONTENT, ',');
 
                         let drop = document.getElementById("drop");
-                        if (drop) drop.parentElement.removeChild(element);
+                        if (drop) drop.parentElement.removeChild(drop);
 
                         let data = document.getElementById("data");
                         DrawCSVTable(table, data);
@@ -101,7 +101,7 @@ var MyWidget = function()
                     _TargetFile = JSON.parse(prefs);
                     me.updatePreview();
                 }
-                
+
                 _TenantId = widget.getValue("_TenantsData_");
             }
         });
@@ -134,9 +134,9 @@ var MyWidget = function()
 
     // Widget Reload button or Preference changed
     this.onRefresh = function() {
-        if (_TargetFile) {
+        if (_TargetFile) 
+        {
             me.updatePreview();
-
             _TenantId = widget.getValue("_TenantsData_");
         }
     };
