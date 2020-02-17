@@ -76,8 +76,6 @@ var MyWidget = function()
                 });
             }
 
-            //_3DSpace = data[1]["3DSpace"];
-            
             widget.addPreference({
                 name: "_TenantsData_",
                 type: "list",
@@ -85,6 +83,20 @@ var MyWidget = function()
                 defaultValue: `${_TenantId}`,
                 options: _TenantOpts
             });
+
+            //Loads the prefs if available
+            {
+                let prefs = widget.getValue("_TargetFile_");
+
+                if (prefs && prefs != '')
+                {
+                    _TargetFile = JSON.parse(prefs);
+                    me.updatePreview();
+                }
+
+                prefs = widget.getValue("_TenantsData_");
+                if (prefs) _TenantId = prefs;
+            }
         });
  
         // Setup your preferences...
@@ -119,20 +131,6 @@ var MyWidget = function()
             }
 
         });
-
-        //Loads the prefs if available
-        {
-            let prefs = widget.getValue("_TargetFile_");
-
-            if (prefs && prefs != '')
-            {
-                _TargetFile = JSON.parse(prefs);
-                me.updatePreview();
-            }
-
-            prefs = widget.getValue("_TenantsData_");
-            if (prefs) _TenantId = prefs;
-        }
     };
 
     // Widget Reload button or Preference changed
