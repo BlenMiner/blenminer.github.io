@@ -43,7 +43,7 @@ var MyWidget = function()
             function(error)
             {
                 elem.style.width = "0%";
-                document.getElementById("form_spot").innerHTML = "";
+                document.getElementById("form_spot").innerHTML = "failed";
                 me.queueUpdatePreview();
             }
         );
