@@ -33,6 +33,7 @@ var MyWidget = function()
             function(result)
             {
                 elem.style.width = "100%";
+                DrawCSVTable(_TableData, data);
                 me.printMsg('Uploaded file correctly!');
             },
             function(error)
