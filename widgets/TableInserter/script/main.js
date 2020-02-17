@@ -24,6 +24,8 @@ var MyWidget = function()
 
     this.uploadChanges = function()
     {
+        var elem = document.getElementById("myBar");
+        
         let filename = _TargetFile.displayName;
         let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
 
