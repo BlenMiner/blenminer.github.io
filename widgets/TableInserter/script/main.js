@@ -51,6 +51,9 @@ var MyWidget = function()
 
     this.queueUpdatePreview = function()
     {
+        var elem = document.getElementById("myBar");
+        elem.style.width = "10%";
+
         _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
         {
             _TargetFile.fileId = info.data[i].relateddata.files[0].id;
@@ -65,7 +68,7 @@ var MyWidget = function()
         me.toggleDropbox(false);
 
         //Get the file URL & download it
-        elem.style.width = "10%";
+        elem.style.width = "20%";
         _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
             function(RESULT_URl)
             {
@@ -184,7 +187,7 @@ var MyWidget = function()
 
                 if (targetfile && targetfile != '') {
                     _TargetFile = JSON.parse(targetfile);
-                    me.updatePreview();
+                    me.queueUpdatePreview();
                 }
                 else {
                     me.toggleDropbox(true);
@@ -206,7 +209,7 @@ var MyWidget = function()
                         _TargetFile = {objectId: item.objectId, displayName: item.displayName, fileId: null};
 
                         widget.setValue("_TargetFile_", JSON.stringify(_TargetFile));
-                        me.updatePreview();
+                        me.queueUpdatePreview();
 
                         break;
                     }
@@ -223,7 +226,7 @@ var MyWidget = function()
         if (_TargetFile) 
         {
             _TenantId = widget.getValue("_TenantsData_");
-            me.updatePreview();
+            me.queueUpdatePreview();
         }
     };
 
