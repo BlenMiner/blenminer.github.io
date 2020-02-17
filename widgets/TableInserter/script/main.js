@@ -13,7 +13,7 @@ var MyWidget = function()
 {
     var me = this;
 
-    this.toggleDropbox(enable)
+    this.toggleDropbox= function(enable)
     {
         let drop = document.getElementById("drop");
         drop.className = enable ? '' : 'hidden';
@@ -34,7 +34,7 @@ var MyWidget = function()
                     {
                         let table = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
-                        
+
                         DrawCSVTable(table, data);
                     }
                 });
