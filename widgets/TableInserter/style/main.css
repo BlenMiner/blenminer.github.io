@@ -113,7 +113,7 @@ input[type=submit]:disabled {
 {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 70%;
+    width: 100%;
 }
 
 #csv_table

@@ -116,7 +116,7 @@ function DrawCSVTable(table, csvDiv)
         return;
     }
 
-    var html = `<table class='window' id='csv_table'><tr>`;
+    var html = `<table class='window' id='customers'><tr>`;
 
     //Setup header
     for (let j = 0; j < table[0].length; j++) {
