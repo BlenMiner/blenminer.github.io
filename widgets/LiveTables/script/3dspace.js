@@ -6,7 +6,7 @@ function _httpCallAuthenticated(url, options)
     });
 };
 
-// Replies with onDone(CSRF raw ticket)
+// Replies with onDone(CSRF ticket)
 function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
 {
     let url = host + `/resources/v1/modeler/documents/${docid}`;
