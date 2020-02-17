@@ -57,7 +57,7 @@ var MyWidget = function()
         });
 
         console.log("pra");
-        
+
         console.log(_TenantOpts);
  
         // Setup your preferences...
@@ -74,6 +74,16 @@ var MyWidget = function()
             label: "Tenant",
             defaultValue: _TenantId,
             options: _TenantOpts
+        });
+
+        widget.addPreference({
+            name: "test",
+            type: "list",
+            label: "Test",
+            defaultValue: 'ZERO',
+            options: [  {value: 'ZERO', label: 'ZERO'},
+                        {value: 'ONE', label: 'ONE'},
+                        {value: 'TWO', label: 'TWO'}]
         });
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
