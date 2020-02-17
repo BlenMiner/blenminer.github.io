@@ -45,7 +45,7 @@ var MyWidget = function()
             _Tenants = data;
             
             for (i = 0; i < _Tenants.length; i++)
-                _TenantOpts.push(`${data.platformId} - ${data.displayName}`);
+                _TenantOpts.push(`${_Tenants[i].platformId} - ${_Tenants[i].displayName}`);
 
             //_3DSpace = data[1]["3DSpace"];
         });
@@ -67,7 +67,7 @@ var MyWidget = function()
         });
 
         console.log(_TenantOpts);
-        
+
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
