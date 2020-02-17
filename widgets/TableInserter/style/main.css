@@ -21,10 +21,13 @@
     width: 70%;
     height: 5em;
 
-    outline: 4px dashed lightgray;
+    border-style: dashed;
+    border-color: lightgray;
+    border-width: 4px;
+    border-radius: 20%;
 
     background-image: url(https://blenminer.github.io/widgets/LiveTables/assets/cloud.png);
-    background-size: contain;
+    background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
     background-color: #f7f7f7;
