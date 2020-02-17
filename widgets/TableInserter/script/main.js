@@ -140,8 +140,8 @@ var MyWidget = function()
     this.onRefresh = function() {
         if (_TargetFile) 
         {
-            me.updatePreview();
             _TenantId = widget.getValue("_TenantsData_");
+            me.updatePreview();
         }
     };
 
