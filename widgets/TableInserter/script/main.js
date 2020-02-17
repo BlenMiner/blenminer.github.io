@@ -37,15 +37,14 @@ var MyWidget = function()
             function(result)
             {
                 elem.style.width = "100%";
-                DrawCSVTable(_TableData, data);
-                if (btn) btn.disabled = false;
+                me.downloadTableData(info.csrf.value, me.updatePreview);
+                //if (btn) btn.disabled = false;
             },
             function(error)
             {
                 elem.style.width = "100%";
-                document.getElementById("form_spot").innerHTML = "";
-                me.queueUpdatePreview();
-                if (btn) btn.disabled = false;
+                me.downloadTableData(info.csrf.value, me.updatePreview);
+                //if (btn) btn.disabled = false;
             }
         );
     }
