@@ -56,7 +56,7 @@ var MyWidget = function()
 
         _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
         {
-            _TargetFile.fileId = info.data[i].relateddata.files[0].id;
+            _TargetFile.fileId = info.data[0].relateddata.files[0].id;
             me.updatePreview(info.csrf.value);
         });
     }
