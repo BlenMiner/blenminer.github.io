@@ -27,9 +27,12 @@ var MyWidget = function()
         let filename = _TargetFile.displayName;
         let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
 
+        elem.style.width = "0%";
+
         _3dspace_file_update(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.objectId, csv_file, filename,
             function(result)
             {
+                elem.style.width = "100%";
                 me.printMsg('Uploaded file correctly!');
             },
             function(error)
