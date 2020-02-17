@@ -21,40 +21,25 @@ var MyWidget = function()
 
     this.updatePreview = function()
     {
+        var elem = document.getElementById("myBar");
         me.toggleDropbox(false);
 
+        elem.style.width = "0%";
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
             {
-                let task = _httpCallAuthenticated(RESULT_URl, {
+                elem.style.width = "50%";
+                _httpCallAuthenticated(RESULT_URl, {
                     onComplete: function(RESULT_CONTENT)
                     {
                         let table = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
 
                         DrawCSVTable(table, data);
+
+                        elem.style.width = "100%";
                     }
                 });
-
-                var elem = document.getElementById("myBar");
-
-                elem.className = "";
-                elem.style.width = "0%";
-
-                task.xhr.addEventListener("progress", progress);
-                task.xhr.addEventListener("load", done);
-                task.xhr.addEventListener("error", done);
-
-                function progress(oEvent)
-                {
-                    var percentComplete = oEvent.loaded / oEvent.total * 100;
-                    elem.style.width = percentComplete + "%";
-                }
-
-                function done(evt)
-                {
-                    elem.className = "hidden";
-                }
             }
         );
     }
