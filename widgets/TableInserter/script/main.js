@@ -37,49 +37,27 @@ var MyWidget = function()
             function(result)
             {
                 elem.style.width = "100%";
-                me.downloadTableData(info.csrf.value, me.updatePreview);
-                //if (btn) btn.disabled = false;
+                DrawCSVTable(_TableData, data);
+                if (btn) btn.disabled = false;
             },
             function(error)
             {
-                elem.style.width = "100%";
-                me.downloadTableData(info.csrf.value, me.updatePreview);
-                //if (btn) btn.disabled = false;
-            }
-        );
-    }
-
-    this.downloadTableData = function(crs, onDone)
-    {
-        var elem = document.getElementById("myBar");
-        _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
-            function(RESULT_URl)
-            {
-                elem.style.width = "50%";
-                _httpCallAuthenticated(RESULT_URl, 
-                {
-                    onComplete: function(RESULT_CONTENT)
-                    {
-                        elem.style.width = "100%";
-                        _TableData = CSVToArray(RESULT_CONTENT, ',');
-                        onDone(crs);
-                    }
-                });
+                elem.style.width = "0%";
+                document.getElementById("form_spot").innerHTML = "";
+                me.queueUpdatePreview();
             }
         );
     }
 
     this.queueUpdatePreview = function()
     {
-        me.toggleDropbox(false);
-
         var elem = document.getElementById("myBar");
         elem.style.width = "10%";
 
         _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
         {
             _TargetFile.fileId = info.data[0].relateddata.files[0].id;
-            me.downloadTableData(info.csrf.value, me.updatePreview);
+            me.updatePreview(info.csrf.value);
         },
         function (error)
         {
@@ -90,39 +68,61 @@ var MyWidget = function()
     //Downloads & displays the table's content
     this.updatePreview = function(crs)
     {
-        let data = document.getElementById("data");
-        let form = document.getElementById("form_spot");
+        var elem = document.getElementById("myBar");
+        me.toggleDropbox(false);
 
-        DrawCSVTable(_TableData, data);
-
-        //Add the form to be able to add a new element
-        let form_html = "<div id='form'>";
-
-        for (i = 0; i < _TableData[0].length; i++)
-            form_html += `<input type="text" id="${_TableData[0][i]}" placeholder="${_TableData[0][i]} ...">`;
-        
-        form_html += `<input type="submit" value="Add Entry" id="add_entry_button">`;
-        form_html += "</div>";
-
-        form.innerHTML = form_html;
-
-        //Add the ability to add new lines
-        document.getElementById("add_entry_button").addEventListener("click",
-        function()
-        {
-            let line = [];
-
-            for (i = 0; i < _TableData[0].length; i++)
+        //Get the file URL & download it
+        elem.style.width = "20%";
+        _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
+            function(RESULT_URl)
             {
-                let elmnt = document.getElementById(_TableData[0][i]);
-                
-                line.push(sanitize(elmnt.value));
-                elmnt.value = "";
-            }
+                elem.style.width = "50%";
+                _httpCallAuthenticated(RESULT_URl, {
+                    onComplete: function(RESULT_CONTENT)
+                    {
+                        //Convert the csv to an array & display its content
+                        _TableData = CSVToArray(RESULT_CONTENT, ',');
+                        let data = document.getElementById("data");
+                        let form = document.getElementById("form_spot");
 
-            _TableData.push(line);
-            me.uploadChanges(crs);
-        });
+                        DrawCSVTable(_TableData, data);
+
+                        //Add the form to be able to add a new element
+                        let form_html = "<div id='form'>";
+
+                        for (i = 0; i < _TableData[0].length; i++)
+                            form_html += `<input type="text" id="${_TableData[0][i]}" placeholder="${_TableData[0][i]} ...">`;
+                        
+                        form_html += `<input type="submit" value="Add Entry" id="add_entry_button">`;
+                        form_html += "</div>";
+
+                        form.innerHTML = form_html;
+
+                        //Add the ability to add new lines
+                        document.getElementById("add_entry_button").addEventListener("click",
+                        function()
+                        {
+                            let line = [];
+
+                            for (i = 0; i < _TableData[0].length; i++)
+                            {
+                                let elmnt = document.getElementById(_TableData[0][i]);
+                                
+                                line.push(sanitize(elmnt.value));
+                                elmnt.value = "";
+                            }
+
+                            _TableData.push(line);
+                            //DrawCSVTable(_TableData, data);
+                            me.uploadChanges(crs);
+                        });;
+
+                        //Display some visual progress
+                        elem.style.width = "100%";
+                    }
+                });
+            }
+        );
     }
 
     // Widget constructor function (before widget is loaded)
