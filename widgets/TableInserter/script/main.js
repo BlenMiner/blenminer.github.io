@@ -9,39 +9,6 @@ var _Tenants = [];
 var _TenantOpts = [];
 var _TenantId = 0;
 
-const _toaster = window.createNotification({
-    // options here
-});
-
-function TOAST(title, msg)
-{
-    _toaster({ 
-        title: title,
-        message: msg,
-
-        // close on click
-        closeOnClick: true,
-      
-        // displays close button
-        displayCloseButton: false,
-      
-        // nfc-top-left
-        // nfc-bottom-right
-        // nfc-bottom-left
-        positionClass: 'nfc-top-right',
-      
-        // callback
-        onclick: false,
-      
-        // timeout in milliseconds
-        showDuration: 3500,
-      
-        // success, info, warning, error, and none
-        theme: 'success'
-        
-    });
-}
-
 var MyWidget = function() 
 {
     var me = this;
@@ -66,6 +33,7 @@ var MyWidget = function()
         var content = document.querySelector("div#content");
         content.innerHTML = `
             <center>
+                <div id="notif" class="notifyjs-corner">Test</div>
                 <div id='main_body'>
                     <h3>Table Inserter [VBU4]</h3>
                     <div id='drop' class='zone'></div>
@@ -88,9 +56,8 @@ var MyWidget = function()
             //_3DSpace = data[1]["3DSpace"];
 
         });
-
-        TOAST("Tittle of the toast", "pra pri 2");
-
+        
+        console.log("omg");
         console.log(_TenantOpts);
  
         // Setup your preferences...
