@@ -9,6 +9,39 @@ var _Tenants = [];
 var _TenantOpts = [];
 var _TenantId = 0;
 
+const _toaster = window.createNotification({
+    // options here
+});
+
+function TOAST(title, msg)
+{
+    _toaster({ 
+        title: title,
+        message: msg,
+
+        // close on click
+        closeOnClick: true,
+      
+        // displays close button
+        displayCloseButton: false,
+      
+        // nfc-top-left
+        // nfc-bottom-right
+        // nfc-bottom-left
+        positionClass: 'nfc-top-right',
+      
+        // callback
+        onclick: false,
+      
+        // timeout in milliseconds
+        showDuration: 3500,
+      
+        // success, info, warning, error, and none
+        theme: 'success'
+        
+    });
+}
+
 var MyWidget = function() 
 {
     var me = this;
@@ -56,23 +89,23 @@ var MyWidget = function()
 
         });
 
-        console.log("pra pri");
+        TOAST("Tittle of the toast", "pra pri 2");
 
         console.log(_TenantOpts);
  
         // Setup your preferences...
         widget.addPreference({
-            name: "_TargetFile",
+            name: "_TargetFile_",
             type: "hidden",
             label: "File",
-            defaultValue: ''
+            defaultValue: 'undefined'
         });
 
         widget.addPreference({
-            name: "_TenantsData",
+            name: "_TenantsData_",
             type: "list",
             label: "Tenant",
-            defaultValue: `${_TenantId}`,
+            defaultValue: `${_Tenants[0].platformId} - ${_Tenants[0].displayName}`,
             options: _TenantOpts
         });
 
