@@ -89,7 +89,7 @@ var MyWidget = function()
             name: "_TargetFile_",
             type: "hidden",
             label: "File",
-            defaultValue: 'undefined'
+            defaultValue: ''
         });
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
@@ -121,14 +121,14 @@ var MyWidget = function()
         {
             let prefs = widget.getValue("_TargetFile_");
 
-            if (prefs != undefined)
+            if (prefs && prefs != '')
             {
                 _TargetFile = JSON.parse(prefs);
                 me.updatePreview();
             }
 
             prefs = widget.getValue("_TenantsData_");
-            if (prefs != undefined) _TenantId = prefs;
+            if (prefs) _TenantId = prefs;
         }
     };
 
