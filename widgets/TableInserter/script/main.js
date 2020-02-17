@@ -45,11 +45,18 @@ var MyWidget = function()
             _Tenants = data;
             
             for (i = 0; i < _Tenants.length; i++)
-                _TenantOpts.push(`${_Tenants[i].platformId} - ${_Tenants[i].displayName}`);
+            {
+                _TenantOpts.push({
+                    value : i,
+                    label : `${_Tenants[i].platformId} - ${_Tenants[i].displayName}`
+                });
+            }
 
             //_3DSpace = data[1]["3DSpace"];
 
         });
+
+        console.log(_TenantOpts);
  
         // Setup your preferences...
         widget.addPreference({
