@@ -40,6 +40,7 @@ var MyWidget = function()
                 DrawCSVTable(_TableData, data);
                 me.queueUpdatePreview(function (crf)
                 {
+                    elem.style.width = "100%";
                     if (btn) btn.disabled = false;
                 });
             },
@@ -143,7 +144,7 @@ var MyWidget = function()
     {
         // set icon and title
         widget.setIcon(WIDGET_ROOT + "assets/favicon.ico");
-        widget.setTitle("Table Inserter v1.02");
+        widget.setTitle("Table Inserter v1.03");
 
         // fill 'content' div
         var content = document.querySelector("div#content");
