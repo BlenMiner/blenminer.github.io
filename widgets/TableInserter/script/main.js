@@ -39,18 +39,18 @@ var MyWidget = function()
                         _TableData = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
 
-                        DrawCSVTable(table, data);
+                        DrawCSVTable(_TableData, data);
 
                         //Add the form to be able to add a new element
                         let form_html = "<div id='form'>";
 
-                        for (i = 0; i < table[0].length; i++)
-                            form_html += `<input type="text" id="${table[0][i]}" placeholder="${table[0][i]} ...">`;
+                        for (i = 0; i < _TableData[0].length; i++)
+                            form_html += `<input type="text" id="${_TableData[0][i]}" placeholder="${_TableData[0][i]} ...">`;
                         
                         form_html += `<input type="submit" value="Submit" id="add_entry_button">`;
                         form_html += "</div>";
 
-                        table.innerHTML += form_html;
+                        data.innerHTML += form_html;
 
                         //Add the ability to upload the data
                         document.getElementById("add_entry_button").addEventListener("click",
@@ -58,9 +58,9 @@ var MyWidget = function()
                         {
                             let line = [];
 
-                            for (i = 0; i < table[0].length; i++)
+                            for (i = 0; i < _TableData[0].length; i++)
                             {
-                                let elmnt = document.getElementById(table[0][i]);
+                                let elmnt = document.getElementById(_TableData[0][i]);
                                 
                                 line.push(elmnt.value);
                                 elmnt.value = "";
@@ -108,7 +108,7 @@ var MyWidget = function()
                     <div id='data'></div>
                 </div>
             </center>`;
-            
+
         _getPlatformServices(undefined, function(data) 
         {
             _Tenants = data;
