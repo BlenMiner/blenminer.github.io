@@ -56,7 +56,7 @@ var MyWidget = function()
 
         });
 
-        console.log("pra");
+        console.log("pra 2");
 
         console.log(_TenantOpts);
  
