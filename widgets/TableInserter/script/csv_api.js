@@ -106,10 +106,8 @@ function ArrayToCSV (arrayData, delimiter=',')
     return result;
 }
 
-function DrawCSVTable(table)
+function DrawCSVTable(table, csvDiv)
 {
-    var csvDiv = document.querySelector("div#preview_data");
-
     //Clear old data
     csvDiv.innerHTML = "";
     
@@ -118,13 +116,7 @@ function DrawCSVTable(table)
         return;
     }
 
-    var CONTEXT_MENU = `
-    <div class='window'>
-        <img id='back_preview' src='${WIDGET_ROOT}assets/close_red.png'></img>
-        <img id='upload_preview' src='${WIDGET_ROOT}assets/upload.png'></img>
-    </div>`;
-
-    var html = CONTEXT_MENU + `<center><table class='window' id='csv_table'><tr>`;
+    var html = `<table class='window' id='csv_table'><tr>`;
 
     //Setup header
     for (let j = 0; j < table[0].length; j++) {
@@ -143,7 +135,7 @@ function DrawCSVTable(table)
         html += "</tr>";
     }
 
-    html += "</table></center>";
+    html += "</table>";
     csvDiv.innerHTML = html;
 }
 
