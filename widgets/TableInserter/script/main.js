@@ -20,7 +20,7 @@ var MyWidget = function()
             {
                 _httpCallAuthenticated(RESULT_URl, {
                     onComplete: function(RESULT_CONTENT)
-                    {
+                    { 
                         let table = CSVToArray(RESULT_CONTENT, ',');
 
                         let drop = document.getElementById("drop");
