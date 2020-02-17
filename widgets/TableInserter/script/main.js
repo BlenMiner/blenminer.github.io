@@ -33,7 +33,6 @@ var MyWidget = function()
         var content = document.querySelector("div#content");
         content.innerHTML = `
             <center>
-                <div id="notif" class="notifyjs-corner">Test</div>
                 <div id='main_body'>
                     <h3>Table Inserter [VBU4]</h3>
                     <div id='drop' class='zone'></div>
@@ -54,11 +53,15 @@ var MyWidget = function()
             }
 
             //_3DSpace = data[1]["3DSpace"];
-
+            
+            widget.addPreference({
+                name: "_TenantsData_",
+                type: "list",
+                label: "Tenant",
+                defaultValue: `${_TenantId}`,
+                options: _TenantOpts
+            });
         });
-        
-        console.log("omg");
-        console.log(_TenantOpts);
  
         // Setup your preferences...
         widget.addPreference({
@@ -66,14 +69,6 @@ var MyWidget = function()
             type: "hidden",
             label: "File",
             defaultValue: 'undefined'
-        });
-
-        widget.addPreference({
-            name: "_TenantsData_",
-            type: "list",
-            label: "Tenant",
-            defaultValue: `${_Tenants[0].platformId} - ${_Tenants[0].displayName}`,
-            options: _TenantOpts
         });
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
