@@ -70,7 +70,7 @@ function _3dspace_file_update(host, docid, fileid, data, filename, onDone = unde
 function _3dspace_file_update_csr(host, docid, fileid, data, filename, csr, onDone = undefined, onError = undefined)
 {
     let url = host + `/resources/v1/modeler/documents/${docid}/files/CheckinTicket`;
-    me.httpCallAuthenticated(url, 
+    _httpCallAuthenticated(url, 
         {
             method: "PUT",
             headers: {ENO_CSRF_TOKEN: csr}, 
