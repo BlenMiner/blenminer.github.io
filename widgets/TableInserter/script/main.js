@@ -24,7 +24,7 @@ var MyWidget = function()
         var elem = document.getElementById("myBar");
         me.toggleDropbox(false);
 
-        elem.style.width = "0%";
+        elem.style.width = "10%";
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
             {
