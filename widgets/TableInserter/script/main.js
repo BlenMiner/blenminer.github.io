@@ -67,10 +67,10 @@ var MyWidget = function()
         });
 
         widget.addPreference({
-            name: "_tenants",
+            name: "tenants",
             type: "list",
             label: "Tenant",
-            defaultValue: _TenantOpts[_TenantId],
+            defaultValue: _TenantId,
             options: _TenantOpts
         });
 
