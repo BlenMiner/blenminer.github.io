@@ -101,9 +101,8 @@ var MyWidget = function()
                     _TargetFile = JSON.parse(prefs);
                     me.updatePreview();
                 }
-
-                prefs = widget.getValue("_TenantsData_");
-                if (prefs) _TenantId = prefs;
+                
+                _TenantId = widget.getValue("_TenantsData_");
             }
         });
 
@@ -137,6 +136,8 @@ var MyWidget = function()
     this.onRefresh = function() {
         if (_TargetFile) {
             me.updatePreview();
+
+            _TenantId = widget.getValue("_TenantsData_");
         }
     };
 
