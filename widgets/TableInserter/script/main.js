@@ -24,6 +24,7 @@ var MyWidget = function()
         var elem = document.getElementById("myBar");
         me.toggleDropbox(false);
 
+        //Get the file URL & download it
         elem.style.width = "10%";
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
@@ -32,11 +33,24 @@ var MyWidget = function()
                 _httpCallAuthenticated(RESULT_URl, {
                     onComplete: function(RESULT_CONTENT)
                     {
+                        //Convert the csv to an array & display its content
                         let table = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
 
                         DrawCSVTable(table, data);
 
+                        //Add the form to be able to add a new element
+                        let form_html = "<div id='form'>";
+
+                        for (i = 0; i < table[0].length; i++)
+                            form_html += `<input type="text" id="${table[0][i]}" placeholder="${table[0][i]} ...">`;
+                        
+                        form_html += `<input type="submit" value="Submit" id="add_entry_button" onclick="alert('test');`;
+                        form_html += "</div>";
+
+                        table.innerHTML += form_html;
+
+                        //Display some visual progress
                         elem.style.width = "100%";
                     }
                 });
@@ -56,6 +70,8 @@ var MyWidget = function()
     // Widget Start point
     this.onLoad = function()
     {
+        me.toggleDropbox(false);
+
         // set icon and title
         widget.setIcon(WIDGET_ROOT + "assets/favicon.ico");
         widget.setTitle("Table Inserter");
@@ -107,10 +123,12 @@ var MyWidget = function()
                 let targetfile = widget.getValue("_TargetFile_");
                 _TenantId = widget.getValue("_TenantsData_");
 
-                if (targetfile && targetfile != '')
-                {
+                if (targetfile && targetfile != '') {
                     _TargetFile = JSON.parse(targetfile);
                     me.updatePreview();
+                }
+                else {
+                    me.toggleDropbox(true);
                 }
             }
         });

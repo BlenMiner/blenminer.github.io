@@ -4,7 +4,6 @@ function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
     let url = host + `/resources/v1/modeler/documents/${docid}`;
 
     _httpCallAuthenticated(url, {
-
             onComplete: function(response, headers, xhr) {
                 info = JSON.parse(response);
                 if (onDone) onDone(info.csrf.value);
@@ -13,7 +12,6 @@ function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
             onFailure: function(response) {
                 if (onError) onError(response);
             }
-
         }
     );
 }
