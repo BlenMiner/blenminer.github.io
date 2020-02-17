@@ -18,7 +18,7 @@ var MyWidget = function()
     this.toggleDropbox = function(enable)
     {
         let drop = document.getElementById("drop");
-        drop.className = enable ? '' : 'hidden';
+        drop.className = enable ? 'zone' : 'hidden';
     }
 
     this.updatePreview = function()
@@ -91,8 +91,6 @@ var MyWidget = function()
     // Widget Start point
     this.onLoad = function()
     {
-        me.toggleDropbox(false);
-
         // set icon and title
         widget.setIcon(WIDGET_ROOT + "assets/favicon.ico");
         widget.setTitle("Table Inserter");
@@ -106,11 +104,11 @@ var MyWidget = function()
             <center>
                 <div id='main_body'>
                     <h3>Table Inserter [VBU4]</h3>
-                    <div id='drop' class='zone'></div>
+                    <div id='drop' class='hidden'></div>
                     <div id='data'></div>
                 </div>
             </center>`;
-
+            
         _getPlatformServices(undefined, function(data) 
         {
             _Tenants = data;
