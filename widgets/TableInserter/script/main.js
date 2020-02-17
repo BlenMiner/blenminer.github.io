@@ -15,12 +15,14 @@ var MyWidget = function()
 {
     var me = this;
 
+    //Toggles the drop box element on & off
     this.toggleDropbox = function(enable)
     {
         let drop = document.getElementById("drop");
         drop.className = enable ? 'zone' : 'hidden';
     }
 
+    //Downloads & displays the table's content
     this.updatePreview = function()
     {
         var elem = document.getElementById("myBar");
@@ -67,6 +69,8 @@ var MyWidget = function()
                             }
 
                             _TableData.push(line);
+                            DrawCSVTable(_TableData, data);
+                            
                             console.log(_TableData);
                             //Proceed to upload data here
                         });;
