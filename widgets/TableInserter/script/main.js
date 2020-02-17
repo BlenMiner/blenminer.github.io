@@ -47,7 +47,7 @@ var MyWidget = function()
             for (i = 0; i < _Tenants.length; i++)
             {
                 _TenantOpts.push({
-                    value : i,
+                    value : 'i',
                     label : `${_Tenants[i].platformId} - ${_Tenants[i].displayName}`
                 });
             }
@@ -69,23 +69,13 @@ var MyWidget = function()
         });
 
         widget.addPreference({
-            name: "tenants",
+            name: "tenants_list",
             type: "list",
             label: "Tenant",
-            defaultValue: _TenantId,
+            defaultValue: '_TenantId',
             options: _TenantOpts
         });
-
-        widget.addPreference({
-            name: "test2",
-            type: "list2",
-            label: "Test 2",
-            defaultValue: 0,
-            options: [  {value: 0, label: 'ZERO'},
-                        {value: 1, label: 'ONE'},
-                        {value: 2, label: 'TWO'}]
-        });
-
+        
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
             let jsonObject = JSON.parse(strData);
