@@ -56,6 +56,7 @@ var MyWidget = function()
 
         });
 
+        console.log("pra");
         console.log(_TenantOpts);
  
         // Setup your preferences...
