@@ -22,6 +22,11 @@ var MyWidget = function()
         drop.className = enable ? 'zone' : 'hidden';
     }
 
+    this.uploadChanges = function()
+    {
+
+    }
+
     //Downloads & displays the table's content
     this.updatePreview = function()
     {
@@ -40,6 +45,7 @@ var MyWidget = function()
                         //Convert the csv to an array & display its content
                         _TableData = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
+                        let form = document.getElementById("form_spot");
 
                         DrawCSVTable(_TableData, data);
 
@@ -49,12 +55,12 @@ var MyWidget = function()
                         for (i = 0; i < _TableData[0].length; i++)
                             form_html += `<input type="text" id="${_TableData[0][i]}" placeholder="${_TableData[0][i]} ...">`;
                         
-                        form_html += `<input type="submit" value="Submit" id="add_entry_button">`;
+                        form_html += `<input type="submit" value="Add Entry" id="add_entry_button">`;
                         form_html += "</div>";
 
-                        data.innerHTML += form_html;
+                        form.innerHTML = form_html;
 
-                        //Add the ability to upload the data
+                        //Add the ability to add new lines
                         document.getElementById("add_entry_button").addEventListener("click",
                         function()
                         {
@@ -70,9 +76,6 @@ var MyWidget = function()
 
                             _TableData.push(line);
                             DrawCSVTable(_TableData, data);
-                            
-                            console.log(_TableData);
-                            //Proceed to upload data here
                         });;
 
                         //Display some visual progress
@@ -110,6 +113,7 @@ var MyWidget = function()
                     <h3>Table Inserter [VBU4]</h3>
                     <div id='drop' class='hidden'></div>
                     <div id='data'></div>
+                    <div id='form_spot'></div>
                 </div>
             </center>`;
 
