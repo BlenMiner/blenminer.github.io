@@ -6,7 +6,7 @@ function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
     _httpCallAuthenticated(url, {
             onComplete: function(response, headers, xhr) {
                 info = JSON.parse(response);
-                if (onDone) onDone(info.csrf.value);
+                if (onDone) onDone(info);
             },
 
             onFailure: function(response) {
@@ -20,10 +20,10 @@ function _3dspace_get_csrf(host, docid, onDone = undefined, onError = undefined)
 function _3dspace_file_url(host, docid, onDone = undefined, onError = undefined) 
 {
     let url = host + `/resources/v1/modeler/documents/${docid}/files/DownloadTicket`;
-    _3dspace_get_csrf(host, docid, function(csrf) {
+    _3dspace_get_csrf(host, docid, function(info) {
         _httpCallAuthenticated(url, {
                 method: "PUT",
-                headers: {ENO_CSRF_TOKEN: csrf}, 
+                headers: {ENO_CSRF_TOKEN: info.csrf.value}, 
     
                 onComplete: function(response) {
                     let info = JSON.parse(response);
@@ -47,12 +47,40 @@ function _3dspace_file_url(host, docid, onDone = undefined, onError = undefined)
     }, onError);
 }
 
+// Replies with onDone(URL)
+function _3dspace_file_url_csr(host, docid, csr, onDone = undefined, onError = undefined) 
+{
+    let url = host + `/resources/v1/modeler/documents/${docid}/files/DownloadTicket`;
+    _httpCallAuthenticated(url, {
+        method: "PUT",
+        headers: {ENO_CSRF_TOKEN: csr}, 
+
+        onComplete: function(response) {
+            let info = JSON.parse(response);
+
+            if (info.success == true)
+            {
+                try {
+                    file_url = info.data[0].dataelements.ticketURL;
+                    if (onDone) onDone(file_url);
+                } catch(err) {
+                    if (onError) onError(err);
+                }
+            }
+        },
+
+        onFailure: function(response) {
+            if (onError) onError(response);
+        }
+    });
+}
+
 function _3dspace_file_update(host, docid, fileid, data, filename, onDone = undefined, onError = undefined)
 {
     _3dspace_get_csrf(host, docid,
-    function (response)
+    function (info)
     {
-        _3dspace_file_update_csr(host, docid, fileid, data, filename, response, onDone, onError);
+        _3dspace_file_update_csr(host, docid, fileid, data, filename, info.csrf.value, onDone, onError);
     },
     onError);
 }

@@ -22,7 +22,7 @@ var MyWidget = function()
         drop.className = enable ? 'zone' : 'hidden';
     }
 
-    this.uploadChanges = function()
+    this.uploadChanges = function(crs)
     {
         var elem = document.getElementById("myBar");
 
@@ -34,7 +34,7 @@ var MyWidget = function()
 
         elem.style.width = "0%";
 
-        _3dspace_file_update(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.objectId, csv_file, filename,
+        _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
             function(result)
             {
                 elem.style.width = "100%";
@@ -49,15 +49,24 @@ var MyWidget = function()
         );
     }
 
+    this.queueUpdatePreview = function()
+    {
+        _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
+        {
+            _TargetFile.fileId = info.data[i].relateddata.files[0].id;
+            me.updatePreview(info.csrf.value);
+        });
+    }
+
     //Downloads & displays the table's content
-    this.updatePreview = function()
+    this.updatePreview = function(crs)
     {
         var elem = document.getElementById("myBar");
         me.toggleDropbox(false);
 
         //Get the file URL & download it
         elem.style.width = "10%";
-        _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
+        _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
             function(RESULT_URl)
             {
                 elem.style.width = "50%";
@@ -98,7 +107,7 @@ var MyWidget = function()
 
                             _TableData.push(line);
                             //DrawCSVTable(_TableData, data);
-                            me.uploadChanges();
+                            me.uploadChanges(crs);
                         });;
 
                         //Display some visual progress
