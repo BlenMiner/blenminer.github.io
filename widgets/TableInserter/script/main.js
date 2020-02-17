@@ -39,12 +39,11 @@ var MyWidget = function()
             {
                 elem.style.width = "100%";
                 DrawCSVTable(_TableData, data);
-                me.printMsg('Uploaded file correctly!');
                 if (btn) btn.disabled = true;
             },
             function(error)
             {
-                me.printMsg('Something went wrong :( ' + error);
+                console.log('Something went wrong :( ' + error);
                 if (btn) btn.disabled = true;
             }
         );
