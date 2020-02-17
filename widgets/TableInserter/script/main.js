@@ -13,6 +13,19 @@ var MyWidget = function()
 {
     var me = this;
 
+    this.updatePreview()
+    {
+        _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function()
+        {
+            var content = document.querySelector("div#content");
+            content.innerHTML = `
+                <center>
+
+                </center>
+            `;
+        })
+    }
+
     // Widget constructor function (before widget is loaded)
     this.start = function()
     {
@@ -82,7 +95,12 @@ var MyWidget = function()
                     for (i = 0; i < items.length; i++)
                     {
                         item = items[i];
-                        console.log(item);
+                        _TargetFile = item;
+
+                        widget.setValue("_TargetFile_", JSON.stringify(_TargetFile));
+                        me.updatePreview();
+
+                        break;
                     }
                     break;
                 default:
@@ -93,15 +111,24 @@ var MyWidget = function()
 
         //Loads the prefs if available
         {
-            let prefs = widget.getValue("_TargetFile");
+            let prefs = widget.getValue("_TargetFile_");
 
             if (prefs != undefined)
+            {
                 _TargetFile = JSON.parse(prefs);
+                me.updatePreview();
+            }
+
+            prefs = widget.getValue("_TenantsData_");
+            if (prefs != undefined) _TenantId = prefs;
         }
     };
 
     // Widget Reload button or Preference changed
     this.onRefresh = function() {
+        if (_TargetFile) {
+            me.updatePreview();
+        }
     };
 
     // Dashboard Search event
