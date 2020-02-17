@@ -2,13 +2,11 @@
  * @author VBU4
  */
 
-var _3DSpace = undefined;
 var _TargetFile = undefined;
 
 var _Tenants = [];
 var _TenantOpts = [];
 var _TenantId = 0;
-
 
 var _TableData = [];
 
@@ -39,10 +37,10 @@ var MyWidget = function()
             {
                 elem.style.width = "90%";
                 DrawCSVTable(_TableData, data);
+                if (btn) btn.disabled = false;
                 me.queueUpdatePreview(function (crf)
                 {
                     elem.style.width = "100%";
-                    if (btn) btn.disabled = false;
                 });
             },
             function(error)
