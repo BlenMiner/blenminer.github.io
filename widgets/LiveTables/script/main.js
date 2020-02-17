@@ -446,30 +446,9 @@ var MyWidget = function()
         else {
             url = _3DSpace + `/resources/v1/modeler/documents/${row.id}/files/DownloadTicket`;
 
-            me.httpCallAuthenticated(url, 
-            {
-                method: "PUT",
-                headers: {ENO_CSRF_TOKEN: row.csrf}, 
-    
-                onComplete: function(response, headers, xhr)
-                {
-                    let info = JSON.parse(response);
-    
-                    if (info.success == true)
-                    {
-                        try {
-                            file_url = info.data[0].dataelements.ticketURL;
-                            me.previewFile(file_url, row.extension);
-                        } catch(err) {
-                            me.printMsg("Failed to fetch the ticket's URL.");
-                        }
-                    }
-                }
-            });
-
             _3dspace_file_url(_3DSpace, row.id, function(url)
             {
-                me.printMsg("Proper API: " + url);
+                me.previewFile(url, row.extension);
             });
         }
     };
