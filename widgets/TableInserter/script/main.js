@@ -47,7 +47,7 @@ var MyWidget = function()
             for (i = 0; i < _Tenants.length; i++)
             {
                 _TenantOpts.push({
-                    value : 'i',
+                    value : `${i}`,
                     label : `${_Tenants[i].platformId} - ${_Tenants[i].displayName}`
                 });
             }
@@ -72,10 +72,10 @@ var MyWidget = function()
             name: "tenants_list",
             type: "list",
             label: "Tenant",
-            defaultValue: '_TenantId',
+            defaultValue: `${_TenantId}`,
             options: _TenantOpts
         });
-        
+
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
             let jsonObject = JSON.parse(strData);
