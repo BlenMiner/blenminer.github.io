@@ -23,21 +23,39 @@ var MyWidget = function()
     {
         me.toggleDropbox(false);
 
-        console.log(_TenantId);
-        console.log(_Tenants[_TenantId]);
-        
         _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
             function(RESULT_URl)
             {
-                _httpCallAuthenticated(RESULT_URl, {
+                let task = _httpCallAuthenticated(RESULT_URl, {
                     onComplete: function(RESULT_CONTENT)
                     {
                         let table = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
 
                         DrawCSVTable(table, data);
+                        clearInterval(id);
                     }
                 });
+
+                var elem = document.getElementById("myBar");
+                
+                elem.className = "";
+                elem.style.width = "0%";
+
+                task.addEventListener("progress", progress);
+                task.addEventListener("load", done);
+                task.addEventListener("error", done);
+
+                function progress(oEvent)
+                {
+                    var percentComplete = oEvent.loaded / oEvent.total * 100;
+                    elem.style.width = percentComplete + "%";
+                }
+
+                function done(evt)
+                {
+                    elem.className = "hidden";
+                }
             }
         );
     }
@@ -62,6 +80,9 @@ var MyWidget = function()
         var content = document.querySelector("div#content");
         content.innerHTML = `
             <center>
+                <div id="myProgress">
+                    <div id="myBar"></div>
+                </div>
                 <div id='main_body'>
                     <h3>Table Inserter [VBU4]</h3>
                     <div id='drop' class='zone'></div>
