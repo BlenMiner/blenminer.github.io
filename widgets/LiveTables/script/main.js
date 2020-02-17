@@ -480,7 +480,20 @@ var MyWidget = function()
 
     this.uploadFileData = function(row, file)
     {
-        let url = _3DSpace + `/resources/v1/modeler/documents/${row.id}/files/CheckinTicket`;
+        let filename = preview_row.name + "." + preview_row.extension;
+        let csv_file = new Blob([ArrayToCSV(preview_csv_data, ',')], { type: 'text/plain' });
+
+        _3dspace_file_update(_3DSpace, row.id, row.file.id, csv_file, filename,
+            function(result)
+            {
+                me.printMsg('Uploaded file correctly!');
+            },
+            function(error)
+            {
+                me.printMsg('Something went wrong :( ' + error);
+            }
+        );
+        /*let url = _3DSpace + `/resources/v1/modeler/documents/${row.id}/files/CheckinTicket`;
 
         me.httpCallAuthenticated(url, 
             {
@@ -556,7 +569,7 @@ var MyWidget = function()
                     me.httpCallAuthenticated(info.ticketURL, opts);
                 }
             }
-        );
+        );*/
     }
 
     // Widget Start point
