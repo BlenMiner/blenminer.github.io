@@ -9,6 +9,8 @@ var _Tenants = [];
 var _TenantOpts = [];
 var _TenantId = 0;
 
+var _TableData = [];
+
 var MyWidget = function() 
 {
     var me = this;
@@ -34,7 +36,7 @@ var MyWidget = function()
                     onComplete: function(RESULT_CONTENT)
                     {
                         //Convert the csv to an array & display its content
-                        let table = CSVToArray(RESULT_CONTENT, ',');
+                        _TableData = CSVToArray(RESULT_CONTENT, ',');
                         let data = document.getElementById("data");
 
                         DrawCSVTable(table, data);
@@ -45,10 +47,29 @@ var MyWidget = function()
                         for (i = 0; i < table[0].length; i++)
                             form_html += `<input type="text" id="${table[0][i]}" placeholder="${table[0][i]} ...">`;
                         
-                        form_html += `<input type="submit" value="Submit" id="add_entry_button" onclick="alert('test');`;
+                        form_html += `<input type="submit" value="Submit" id="add_entry_button">`;
                         form_html += "</div>";
 
                         table.innerHTML += form_html;
+
+                        //Add the ability to upload the data
+                        document.getElementById("add_entry_button").addEventListener("click",
+                        function()
+                        {
+                            let line = [];
+
+                            for (i = 0; i < table[0].length; i++)
+                            {
+                                let elmnt = document.getElementById(table[0][i]);
+                                
+                                line.push(elmnt.value);
+                                elmnt.value = "";
+                            }
+
+                            _TableData.push(line);
+                            console.log(_TableData);
+                            //Proceed to upload data here
+                        });;
 
                         //Display some visual progress
                         elem.style.width = "100%";
