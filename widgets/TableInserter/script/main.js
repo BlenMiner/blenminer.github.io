@@ -27,7 +27,7 @@ var MyWidget = function()
         var elem = document.getElementById("myBar");
         elem.style.width = "0%";
 
-        let filename = _TargetFile.displayName;
+        let filename = _TargetFile.displayName + ".csv";
         let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
 
         var btn = document.getElementById("add_entry_button");
