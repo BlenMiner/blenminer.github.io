@@ -143,7 +143,7 @@ var MyWidget = function()
     {
         // set icon and title
         widget.setIcon(WIDGET_ROOT + "assets/favicon.ico");
-        widget.setTitle("Table Inserter v1.03");
+        widget.setTitle("Table Inserter v1.04");
 
         // fill 'content' div
         var content = document.querySelector("div#content");
