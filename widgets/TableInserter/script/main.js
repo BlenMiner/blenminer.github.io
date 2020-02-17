@@ -15,22 +15,23 @@ var MyWidget = function()
 
     this.updatePreview()
     {
-        _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(RESULT_URl)
-        {
-            _httpCallAuthenticated(RESULT_URl,
+        _3dspace_file_url(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId,
+            function(RESULT_URl)
             {
-                onComplete: function(RESULT_CONTENT)
-                {
-                    let table = CSVToArray(RESULT_CONTENT, ',');
+                _httpCallAuthenticated(RESULT_URl, {
+                    onComplete: function(RESULT_CONTENT)
+                    {
+                        let table = CSVToArray(RESULT_CONTENT, ',');
 
-                    let drop = document.getElementById("drop");
-                    if (drop) drop.parentElement.removeChild(element);
+                        let drop = document.getElementById("drop");
+                        if (drop) drop.parentElement.removeChild(element);
 
-                    let data = document.getElementById("data");
-                    DrawCSVTable(table, data);
-                }
+                        let data = document.getElementById("data");
+                        DrawCSVTable(table, data);
+                    }
+                });
             }
-        })
+        );
     }
 
     // Widget constructor function (before widget is loaded)
