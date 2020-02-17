@@ -128,9 +128,9 @@ function DrawCSVTable(table, csvDiv)
     //Setup the table's body
     for (let i = 1; i < table.length; i++)
     {
-        html += "<tr>";
+        html += `<tr>`;
         for (let j = 0; j < table[i].length; j++) {
-            html += `<td class='cell' id='${i}-${j}' >${table[i][j]}</td>`;
+            html += `<td class='cell' id='${i}-${j}'>${table[i][j]}</td>`;
         }
         html += "</tr>";
     }

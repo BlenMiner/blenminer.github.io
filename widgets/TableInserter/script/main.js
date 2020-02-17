@@ -24,7 +24,19 @@ var MyWidget = function()
 
     this.uploadChanges = function()
     {
+        let filename = _TargetFile.displayName;
+        let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
 
+        _3dspace_file_update(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.objectId, csv_file, filename,
+            function(result)
+            {
+                me.printMsg('Uploaded file correctly!');
+            },
+            function(error)
+            {
+                me.printMsg('Something went wrong :( ' + error);
+            }
+        );
     }
 
     //Downloads & displays the table's content
@@ -70,12 +82,13 @@ var MyWidget = function()
                             {
                                 let elmnt = document.getElementById(_TableData[0][i]);
                                 
-                                line.push(elmnt.value);
+                                line.push(sanitize(elmnt.value));
                                 elmnt.value = "";
                             }
 
                             _TableData.push(line);
-                            DrawCSVTable(_TableData, data);
+                            //DrawCSVTable(_TableData, data);
+                            me.uploadChanges();
                         });;
 
                         //Display some visual progress
