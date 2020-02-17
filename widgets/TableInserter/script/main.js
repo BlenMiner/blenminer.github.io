@@ -67,6 +67,7 @@ var MyWidget = function()
         });
 
         console.log(_TenantOpts);
+        
 
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
