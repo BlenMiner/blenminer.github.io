@@ -66,6 +66,8 @@ var MyWidget = function()
             options: _TenantOpts
         });
 
+        console.log(_TenantOpts);
+
         _setDroppable(document.getElementById("drop"), function(strData, element, event) 
         {
             let jsonObject = JSON.parse(strData);
