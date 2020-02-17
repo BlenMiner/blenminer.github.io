@@ -43,6 +43,10 @@
     visibility: hidden;
 }
 
+#hidden {
+    visibility: hidden;
+}
+
 .rejected {
     opacity: 20%;
 }

@@ -13,8 +13,16 @@ var MyWidget = function()
 {
     var me = this;
 
+    this.toggleDropbox(enable)
+    {
+        let drop = document.getElementById("drop");
+        drop.className = enable ? '' : 'hidden';
+    }
+
     this.updatePreview = function()
     {
+        me.toggleDropbox(false);
+
         console.log(_TenantId);
         console.log(_Tenants[_TenantId]);
         
@@ -25,11 +33,8 @@ var MyWidget = function()
                     onComplete: function(RESULT_CONTENT)
                     {
                         let table = CSVToArray(RESULT_CONTENT, ',');
-
-                        let drop = document.getElementById("drop");
-                        if (drop) drop.parentElement.removeChild(drop);
-
                         let data = document.getElementById("data");
+                        
                         DrawCSVTable(table, data);
                     }
                 });
@@ -94,15 +99,14 @@ var MyWidget = function()
 
             //Loads the prefs if available
             {
-                let prefs = widget.getValue("_TargetFile_");
+                let targetfile = widget.getValue("_TargetFile_");
+                _TenantId = widget.getValue("_TenantsData_");
 
-                if (prefs && prefs != '')
+                if (targetfile && targetfile != '')
                 {
-                    _TargetFile = JSON.parse(prefs);
+                    _TargetFile = JSON.parse(targetfile);
                     me.updatePreview();
                 }
-
-                _TenantId = widget.getValue("_TenantsData_");
             }
         });
 
