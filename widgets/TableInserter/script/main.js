@@ -25,9 +25,12 @@ var MyWidget = function()
     this.uploadChanges = function()
     {
         var elem = document.getElementById("myBar");
-        
+
         let filename = _TargetFile.displayName;
         let csv_file = new Blob([ArrayToCSV(_TableData, ',')], { type: 'text/plain' });
+
+        var btn = document.getElementById("add_entry_button");
+        btn.disabled = true;
 
         elem.style.width = "0%";
 
@@ -37,10 +40,12 @@ var MyWidget = function()
                 elem.style.width = "100%";
                 DrawCSVTable(_TableData, data);
                 me.printMsg('Uploaded file correctly!');
+                if (btn) btn.disabled = true;
             },
             function(error)
             {
                 me.printMsg('Something went wrong :( ' + error);
+                if (btn) btn.disabled = true;
             }
         );
     }

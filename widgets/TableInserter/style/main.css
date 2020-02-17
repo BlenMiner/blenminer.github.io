@@ -28,8 +28,9 @@ input[type=submit] {
   cursor: pointer;
 }
 
-input[type=submit]:hover {
-  background-color: #45a049;
+input[type=submit]:disabled {
+    background-color: rgb(165, 165, 165);
+    text-decoration: line-through;
 }
 
 #form {
