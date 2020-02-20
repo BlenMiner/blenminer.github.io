@@ -1,0 +1,11 @@
+widgets/widget-template-vue/.eslintignore
+widgets/widget-template-vue/.eslintrc.json
+widgets/widget-template-vue/.gitlab-ci.yml
+widgets/widget-template-vue/.markdownlint.json
+widgets/widget-template-vue/.prettierrc
+widgets/widget-template-vue/.zipignore
+widgets/widget-template-vue/README.md
+widgets/widget-template-vue/.vscode/extensions.json
+widgets/widget-template-vue/.vscode/launch.json
+widgets/widget-template-vue/.vscode/settings.json
+widgets/widget-template-vue/node_modules/*
