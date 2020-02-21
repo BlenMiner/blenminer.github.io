@@ -8,6 +8,4 @@ widgets/widget-template-vue/README.md
 widgets/widget-template-vue/.vscode/extensions.json
 widgets/widget-template-vue/.vscode/launch.json
 widgets/widget-template-vue/.vscode/settings.json
-widgets/widget-template-vue/src/*
-widgets/widget-template-vue/test/*
-widgets/widget-template-vue/webpack/*
+widgets/widget-template-vue/node_modules/*
