@@ -24,7 +24,7 @@
                                 tile
                                 size="60"
                             >
-                                <v-img src="./static/images/project.png" class="white--text align-end" />
+                                <v-img src="static/images/project.png" class="white--text align-end" />
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title class="mb-2">{{ project.name }}</v-list-item-title>
@@ -42,7 +42,6 @@
 
 <script>
 
-import mainApp from "./app.vue";
 import { EventBus } from "../plugins/vuetify";
 
 export default {

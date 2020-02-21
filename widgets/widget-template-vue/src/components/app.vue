@@ -55,6 +55,12 @@ body {
 import projectGrid from "./project-grid.vue";
 import { EventBus } from "../plugins/vuetify";
 
+function httpCallAuthenticated(url, options) {
+    requirejs(["DS/WAFData/WAFData"], (WAFData) => {
+        WAFData.authenticatedRequest(url, options);
+    });
+}
+
 export default {
     name: "App",
     components: {
@@ -90,14 +96,12 @@ export default {
         if (widget.id === undefined) {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
         } else {
-            const rqst = requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
+            requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
                     onComplete: this.tenantDataLoaded
                 });
             });
-
-            console.log(rqst);
         }
     },
     methods: {
@@ -110,16 +114,19 @@ export default {
 
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
-            this.loadingbar = false;
-            this.tenants = data;
+            this.tenants = [];
             const _TenantOpts = [];
 
+            let j = 0;
+
             // Load all the tenants
-            for (let i = 0; i < this.tenants.length; i++) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]["3DSpace"] === undefined) continue;
                 _TenantOpts.push({
-                    value: `${i}`,
-                    label: `${this.tenants[i].platformId} - ${this.tenants[i].displayName}`
+                    value: `${j++}`,
+                    label: `${data[i].platformId} - ${data[i].displayName}`
                 });
+                this.tenants.push(data[i]);
             }
 
             // Setup your preferences...
@@ -134,7 +141,31 @@ export default {
             // Loads the prefs if available
             this.tenantId = widget.getValue("_CurrentTenantID_");
 
-            console.log(this.tenantId);
+            EventBus.$emit("toast", this.tenantId);
+
+            if (widget.id !== undefined) this.retrieveAllProjects();
+            else this.loadingbar = false;
+        },
+
+        retrieveAllProjects() {
+            projectGrid.projects.clear();
+
+            const _3dspace = this.tenants[this.tenantId]["3DSpace"];
+            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",
+            {
+                method: "GET",
+
+                onComplete: (response) => {
+                    const data = JSON.parse(response);
+                    console.log(data);
+
+                    this.loadingbar = false;
+                },
+
+                onFailure: () => {
+                    this.loadingbar = false;
+                }
+            });
         }
     }
 };
