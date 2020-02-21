@@ -38,7 +38,7 @@
             <!-- actual widget's content -->
             <v-list-item>
                 <projectGrid :projects="projects" />
-                <projectView :items="tabs" />
+                <projectView :items="tabs" :url="enoviaUrl" objectid="" />
             </v-list-item>
         </v-content>
     </v-app>
@@ -81,341 +81,13 @@ export default {
 
             loadingbar: true,
 
+            enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
+
             projects:
             [
                 {
                     name: "Project Purple Planet",
                     owner: "My Mom",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
                     role: "Animator",
                     deadline: "20/09/1997"
                 },
@@ -430,12 +102,12 @@ export default {
             tabs:
             [
                 {
-                    name: "Something",
-                    url: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia/common/emxNavigator.jsp?appName=ENOPRPR_AP&tenant=R1132100006595&collabSpace=Test+VBU4"
+                    name: "Schedule Status",
+                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId=39264.9142.59902.4297"
                 },
                 {
-                    name: "Else",
-                    url: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia/common/emxNavigator.jsp?appName=ENOPRPR_AP&tenant=R1132100006595&collabSpace=Test+VBU4"
+                    name: "Bussiness Status",
+                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId=39264.9142.59902.4297"
                 }
             ]
         };
@@ -501,8 +173,16 @@ export default {
                 options: _TenantOpts
             });
 
+            widget.addPreference({
+                name: "_Enovia_",
+                type: "text",
+                label: "Enovia URL",
+                defaultValue: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia"
+            });
+
             // Loads the prefs if available
             this.tenantId = widget.getValue("_CurrentTenantID_");
+            this.enoviaUrl = widget.getValue("_Enovia_");
 
             EventBus.$emit("toast", this.tenantId);
 
@@ -520,7 +200,8 @@ export default {
 
                 onComplete: (response) => {
                     const data = JSON.parse(response);
-                    console.log(data);
+                    console.log("THIS IS THE JSON HERE: " + response);
+                    console.log("THIS IS THE OBJECT HERE: " + data);
                     this.loadingbar = false;
                 },
 

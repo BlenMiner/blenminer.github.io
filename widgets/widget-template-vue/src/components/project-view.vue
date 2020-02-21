@@ -2,7 +2,7 @@
     <v-card style="width: 100%;">
         <v-tabs
             v-model="tab"
-            background-color="primary"
+            background-color="#005685"
             dark
         >
             <v-tab
@@ -19,7 +19,7 @@
                 :key="index"
             >
                 <v-card flat>
-                    <iframe :src="item.url" width="100%" style="height: calc(100vh - 120px);"></iframe>
+                    <iframe :src="url + item.url + objectid" width="100%" style="height: calc(100vh - 120px);"></iframe>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>
@@ -30,7 +30,9 @@
 
 export default {
     props: {
-        items: Array
+        items: Array,
+        url: String,
+        objectid: String
     },
 
     data: function() {
