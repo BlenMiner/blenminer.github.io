@@ -1,17 +1,20 @@
 <template>
-    <v-container fluid>
+    <v-container
+        style="height: calc(100vh - 75px); width:415px;"
+        class="overflow-y-auto"
+    >
         <v-row no-gutters>
             <v-col>
                 <v-row
                     align="start"
                     justify="start"
-                    class="grey lighten-5"
+                    class="grey lighten-3"
                     no-gutters
                 >
                     <v-card
                         v-for="(project, index) in projects"
                         :key="index"
-                        max-width="260"
+                        max-width="296"
                         max-height="150"
                         outlined
                         tile
