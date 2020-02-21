@@ -14,7 +14,7 @@
                     <v-card
                         v-for="(project, index) in projects"
                         :key="index"
-                        max-width="296"
+                        max-width="100%"
                         max-height="150"
                         outlined
                         tile

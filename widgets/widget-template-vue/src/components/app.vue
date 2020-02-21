@@ -38,7 +38,7 @@
             <!-- actual widget's content -->
             <v-list-item>
                 <projectGrid :projects="projects" />
-                <projectView :items="tabs" :url="enoviaUrl" objectid="" />
+                <projectView :items="tabs" :url="enoviaUrl" :objectid="objectid" />
             </v-list-item>
         </v-content>
     </v-app>
@@ -49,7 +49,6 @@
 html, body {
     overflow-y: auto !important;
     height: 100%;
-    margin: 10;
 }
 </style>
 
@@ -87,7 +86,7 @@ export default {
             projects:
             [
                 {
-                    id: "pfft",
+                    id: "C745A4D6DB8A000080B84F5E43A50500",
                     name: "Project Purple Planet",
                     description: "efe",
                     deadline: "20/09/1997"
@@ -104,11 +103,11 @@ export default {
             [
                 {
                     name: "Schedule Status",
-                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId=39264.9142.59902.4297"
+                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId="
                 },
                 {
                     name: "Bussiness Status",
-                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId=39264.9142.59902.4297"
+                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId="
                 }
             ]
         };
@@ -129,7 +128,8 @@ export default {
         });
 
         EventBus.$on("selection_project", (value) => {
-            this.objectid = this.projects[value].id;
+            that.objectid = that.projects[value].id;
+            that.toast("hmm");
         });
 
         // Start loading bar aswell
