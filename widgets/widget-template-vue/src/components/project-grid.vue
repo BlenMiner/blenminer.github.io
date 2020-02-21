@@ -20,7 +20,7 @@
                         tile
                         class="ma-1 pa-1"
                         hover
-                        @click="toast('pra ' + index)"
+                        @click="select(index)"
                     >
                         <v-list-item>
                             <v-list-item-avatar tile size="60">
@@ -28,8 +28,7 @@
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title class="mb-2">{{ project.name }}</v-list-item-title>
-                                <v-list-item-subtitle>Owner: {{ project.owner }}</v-list-item-subtitle>
-                                <v-list-item-subtitle>Role: {{ project.role }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>Owner: {{ project.description }}</v-list-item-subtitle>
                                 <v-list-item-subtitle>Date: {{ project.deadline }}</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
@@ -49,8 +48,8 @@ export default {
         projects: Array
     },
     methods: {
-        toast(text) {
-            EventBus.$emit("toast", text);
+        select(index) {
+            EventBus.$emit("selection_project", index);
         }
     }
 };

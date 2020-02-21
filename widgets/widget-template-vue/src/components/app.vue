@@ -80,21 +80,22 @@ export default {
             tenantId: 0,
 
             loadingbar: true,
+            objectid: "",
 
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
             projects:
             [
                 {
+                    id: "pfft",
                     name: "Project Purple Planet",
-                    owner: "My Mom",
-                    role: "Animator",
+                    description: "efe",
                     deadline: "20/09/1997"
                 },
                 {
+                    id: "pfft",
                     name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
+                    description: "fef",
                     deadline: "20/09/1997"
                 }
             ],
@@ -125,6 +126,10 @@ export default {
 
         EventBus.$on("toast", (value) => {
             that.toast(value);
+        });
+
+        EventBus.$on("selection_project", (value) => {
+            this.objectid = this.projects[value].id;
         });
 
         // Start loading bar aswell
@@ -191,17 +196,25 @@ export default {
         },
 
         retrieveAllProjects() {
+            const that = this;
             this.projects = [];
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",
             {
-                method: "GET",
-
                 onComplete: (response) => {
                     const data = JSON.parse(response);
-                    console.log("THIS IS THE JSON HERE: " + response);
-                    console.log("THIS IS THE OBJECT HERE: " + data);
+
+                    for (let i = 0; i < data.data.length; i++) {
+                        const prjt = data.data[i];
+                        that.projects.push({
+                            id: prjt.id,
+                            name: prjt.dataelements.name,
+                            description: prjt.dataelements.description,
+                            deadline: prjt.dataelements.estimatedFinishDate
+                        });
+                    }
+
                     this.loadingbar = false;
                 },
 
