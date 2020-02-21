@@ -1,11 +1,17 @@
 <template>
     <v-app>
         <div>
-            <v-app-bar dark>
+            <v-app-bar dark height="50px">
                 <v-toolbar-title class="headline">
                     WPM - Widget Project Management
                 </v-toolbar-title>
                 <v-spacer />
+                <v-btn class="mx-2" dark fab x-small color="green darken-1">
+                    <v-icon dark>mdi-cached</v-icon>
+                </v-btn>
+                <v-btn class="mx-2" fab x-small color="cyan darken-1" @click="toast('Created by VBU4')">
+                    <v-icon dark>mdi-information-variant</v-icon>
+                </v-btn>
             </v-app-bar>
         </div>
         <v-content>
@@ -30,14 +36,7 @@
             </v-snackbar>
 
             <!-- actual widget's content -->
-            <h1>{{ title }}</h1>
             <projectGrid />
-
-            <v-btn
-                @click="toast('pra 1')"
-            >
-                Test
-            </v-btn>
         </v-content>
     </v-app>
 </template>
@@ -54,6 +53,7 @@ body {
 <script>
 /* eslint-disable no-console */
 import projectGrid from "./project-grid.vue";
+import { EventBus } from "../plugins/vuetify";
 
 export default {
     name: "App",
@@ -62,8 +62,6 @@ export default {
     },
     data: function() {
         return {
-            title: "3DExperience Widget :)",
-
             snackbar: false,
             snackbarMsg: "Bro",
 
@@ -82,9 +80,14 @@ export default {
 
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
+        const that = this;
+
+        EventBus.$on("toast", (value) => {
+            that.toast(value);
+        });
+
         // Start loading bar aswell
         if (widget.id === undefined) {
-            const that = this;
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
         } else {
             const rqst = requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
