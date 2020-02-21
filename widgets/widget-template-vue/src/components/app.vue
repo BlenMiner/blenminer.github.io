@@ -36,7 +36,7 @@
             </v-snackbar>
 
             <!-- actual widget's content -->
-            <projectGrid />
+            <projectGrid :projects="projects" />
         </v-content>
     </v-app>
 </template>
@@ -74,7 +74,23 @@ export default {
             tenants: [],
             tenantId: 0,
 
-            loadingbar: true
+            loadingbar: true,
+
+            projects:
+            [
+                {
+                    name: "Project Purple Planet",
+                    owner: "My Mom",
+                    role: "Animator",
+                    deadline: "20/09/1997"
+                },
+                {
+                    name: "Project Red Planet",
+                    owner: "Me myself & I",
+                    role: "Animator",
+                    deadline: "20/09/1997"
+                }
+            ]
         };
     },
     computed: {
@@ -148,7 +164,7 @@ export default {
         },
 
         retrieveAllProjects() {
-            projectGrid.projects.clear();
+            this.projects.clear();
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",

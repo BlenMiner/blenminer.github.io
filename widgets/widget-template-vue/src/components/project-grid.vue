@@ -20,11 +20,8 @@
                         @click="toast('pra ' + index)"
                     >
                         <v-list-item>
-                            <v-list-item-avatar
-                                tile
-                                size="60"
-                            >
-                                <v-img src="static/images/project.png" class="white--text align-end" />
+                            <v-list-item-avatar tile size="60">
+                                <v-img src="https://blenminer.github.io/widgets/widget-template-vue/dist/static/images/project.png" class="white--text align-end" />
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title class="mb-2">{{ project.name }}</v-list-item-title>
@@ -45,24 +42,8 @@
 import { EventBus } from "../plugins/vuetify";
 
 export default {
-    data: function() {
-        return {
-            projects:
-            [
-                {
-                    name: "Project Purple Planet",
-                    owner: "My Mom",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                },
-                {
-                    name: "Project Red Planet",
-                    owner: "Me myself & I",
-                    role: "Animator",
-                    deadline: "20/09/1997"
-                }
-            ]
-        };
+    props: {
+        projects: Array
     },
     methods: {
         toast(text) {
