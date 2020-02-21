@@ -9,6 +9,15 @@
             </v-app-bar>
         </div>
         <v-content>
+            <!-- header progress bar -->
+            <v-progress-linear
+                color="blue accent-4"
+                indeterminate
+                height="10"
+                :active="loadingbar"
+            />
+
+            <!-- widget notifaction module -->
             <v-snackbar v-model="snackbar">
                 {{ snackbarMsg }}
                 <v-btn
@@ -20,6 +29,7 @@
                 </v-btn>
             </v-snackbar>
 
+            <!-- actual widget's content -->
             <h1>{{ title }}</h1>
             <projectGrid />
 
@@ -45,9 +55,6 @@ body {
 /* eslint-disable no-console */
 import projectGrid from "./project-grid.vue";
 
-// widget object is available everywhere !
-console.debug(widget);
-
 export default {
     name: "App",
     components: {
@@ -56,10 +63,14 @@ export default {
     data: function() {
         return {
             title: "3DExperience Widget :)",
+
             snackbar: false,
             snackbarMsg: "Bro",
+
             tenants: [],
-            tenantId: 0
+            tenantId: 0,
+
+            loadingbar: true
         };
     },
     computed: {
@@ -68,26 +79,35 @@ export default {
         }
     },
     watch: {},
+
+    // As soon as we get mounted start searching the tenant list
     mounted: function () {
-        try {
-            requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
+        // Start loading bar aswell
+        if (widget.id === undefined) {
+            const that = this;
+            setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
+        } else {
+            const rqst = requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
                     onComplete: this.tenantDataLoaded
                 });
             });
-        } catch (e) {
-            console.log("failed to load DS api");
+
+            console.log(rqst);
         }
     },
     methods: {
 
+        // Displays a fun notification
         toast(text) {
             this.snackbarMsg = text;
             this.snackbar = true;
         },
 
+        // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
+            this.loadingbar = false;
             this.tenants = data;
             const _TenantOpts = [];
 
@@ -111,7 +131,7 @@ export default {
             // Loads the prefs if available
             this.tenantId = widget.getValue("_CurrentTenantID_");
 
-            console.lof(this.tenantId);
+            console.log(this.tenantId);
         }
     }
 };

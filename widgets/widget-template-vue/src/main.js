@@ -4,21 +4,19 @@ import App from "./components/app.vue";
 import vuetify from "./plugins/vuetify";
 import { store } from "./store";
 
-let mainComponent;
-
 function start() {
     x3DDashboardUtils.disableCSS(true);
 
     window.title = "Widget Project Management";
     widget.setTitle(window.title);
 
-    mainComponent = new Vue({
+    const main = new Vue({
         store,
         vuetify,
         render: h => h(App)
     });
 
-    mainComponent.$mount("app");
+    main.$mount("app");
 
     requirejs(["DS/PlatformAPI/PlatformAPI"], PlatformAPI => {
         // use 3DDashboard APIs
@@ -33,6 +31,6 @@ export default function() {
         start();
     });
     widget.addEvent("onRefresh", () => {
-        mainComponent.toast("test refresh");
+        App.toast("test");
     });
 }
