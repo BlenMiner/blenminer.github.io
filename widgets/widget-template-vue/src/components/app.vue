@@ -158,7 +158,6 @@ export default {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
                     console.log(data);
-
                     this.loadingbar = false;
                 },
 
