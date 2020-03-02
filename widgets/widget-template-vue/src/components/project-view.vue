@@ -1,5 +1,5 @@
 <template>
-    <v-slide-x-transition>
+    <v-expand-x-transition>
         <!-- header progress bar -->
         <v-card v-if="project !== null" style="width: 100%; padding: 0;height: 100vh;" flat>
             <v-progress-linear
@@ -35,7 +35,7 @@
                 </v-tab-item>
             </v-tabs-items>
         </v-card>
-    </v-slide-x-transition>
+    </v-expand-x-transition>
 </template>
 
 <script>

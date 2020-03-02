@@ -163,6 +163,8 @@ export default {
 
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
+            const that = this;
+
             this.tenants = [];
             const _TenantOpts = [];
 
@@ -194,6 +196,19 @@ export default {
                 type: "text",
                 label: "Enovia URL",
                 defaultValue: "eu1-space.3dexperience.3ds.com/enovia"
+            });
+
+            widget.addPreference({
+                name: "_TabCount_",
+                type: "range",
+                label: "Tab Count",
+                defaultValue: "2",
+                step: "1",
+                min: "1",
+                max: "10",
+                onchange: function () {
+                    that.toast("on change");
+                }
             });
 
             // Loads the prefs if available
