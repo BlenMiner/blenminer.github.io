@@ -29,7 +29,7 @@
                     :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
                 <template>
-                    <projectView :items="tabs" :url="tenants == null ? 'about:blank' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
+                    <projectView :items="tabs" :url="(!tenants || !tenants[tenantId]) ? 'about:blank' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
                 </template>
             </v-list-item>
         </v-content>

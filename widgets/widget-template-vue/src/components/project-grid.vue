@@ -30,7 +30,7 @@
                             </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title class="mb-2">{{ project.name }}</v-list-item-title>
-                                <v-list-item-subtitle>Owner: {{ project.description }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>{{ project.description }}</v-list-item-subtitle>
                                 <v-list-item-subtitle>Date: {{ project.deadline }}</v-list-item-subtitle>
                             </v-list-item-content>
                         </v-list-item>
