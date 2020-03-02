@@ -144,6 +144,7 @@ export default {
         if (widget.id === undefined) {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
         } else {
+            this.projects = [];
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
