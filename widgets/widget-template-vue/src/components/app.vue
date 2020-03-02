@@ -190,7 +190,7 @@ export default {
                 name: "_Enovia_",
                 type: "text",
                 label: "Enovia URL",
-                defaultValue: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia"
+                defaultValue: "eu1-space.3dexperience.3ds.com/enovia"
             });
 
             // Loads the prefs if available
