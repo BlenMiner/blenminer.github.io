@@ -203,6 +203,7 @@ export default {
 
         retrieveAllProjects() {
             const that = this;
+            this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",
