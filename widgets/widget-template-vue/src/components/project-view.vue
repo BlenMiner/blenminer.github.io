@@ -17,7 +17,7 @@
             dark
         >
             <v-tab
-                v-for="(item, index) in items"
+                v-for="(item, index) in tabs"
                 :key="index"
             >
                 {{ item.name }}
@@ -26,7 +26,7 @@
 
         <v-tabs-items v-model="tab">
             <v-tab-item
-                v-for="(item, index) in items"
+                v-for="(item, index) in tabs"
                 :key="index"
             >
                 <v-card flat>
@@ -44,9 +44,10 @@ import { EventBus } from "../plugins/vuetify";
 export default {
     props: {
         project: Object,
-        items: Array,
+        tabs: Array,
         url: String,
-        objectid: String
+        objectid: String,
+        tabcount: Number
     },
 
     data: function() {

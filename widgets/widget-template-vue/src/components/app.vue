@@ -30,7 +30,7 @@
                     :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
                 <template>
-                    <projectView :items="tabs" :url="(!tenants || !tenants[tenantId]) ? 'about:blank' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
+                    <projectView :tabcount="tabCount" :tabs="myTabs" :url="(!tenants || !tenants[tenantId]) ? 'about:blank' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
                 </template>
             </v-list-item>
         </v-content>
@@ -114,7 +114,8 @@ export default {
                     url: "/webapps/ENOGantt/gantt-widget.html?objectId="
                 }
             ],
-            tabsOpts: []
+            tabsOpts: [],
+            myTabs: []
         };
     },
     computed: {
@@ -146,11 +147,30 @@ export default {
             that.objectid = "";
         });
 
+        EventBus.$on("myTabsUpdated", (value) => {
+            for (let i = 0; i < that.tabCount; i++) {
+                const search = widget.getValue(`_Tab${i}_Url_`);
+                let myurl = that.tabs[0].url;
+
+                for (let j = 0; j < that.tabs.length; j++) {
+                    if (search === that.tabs[j].name) {
+                        myurl = that.tabs[j].url;
+                        break;
+                    }
+                }
+
+                that.myTabs[i] = {
+                    name: widget.getValue(`_Tab${i}_Name_`),
+                    url: myurl
+                };
+            }
+        });
+
         EventBus.$on("reloadwidget", (value) => {
             // Loads the prefs if available
             that.tenantId = widget.getValue("_CurrentTenantID_");
             that.enoviaUrl = widget.getValue("_Enovia_");
-            that.tabCount = widget.getValue("_TabCount_");
+            that.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
 
             for (let i = 0; i < that.tabCount; i++) {
                 widget.addPreference({
@@ -164,15 +184,16 @@ export default {
                     defaultValue: "Schedule Status"
                 });
             }
-
             that.retrieveAllProjects();
         });
 
         // Start loading bar aswell
         if (widget.id === undefined) {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
+            this.myTabs = this.tabs;
         } else {
             this.projects = [];
+            EventBus.$emit("myTabsUpdated");
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
@@ -236,7 +257,7 @@ export default {
             if (widget.id !== undefined) {
                 this.tenantId = widget.getValue("_CurrentTenantID_");
                 this.enoviaUrl = widget.getValue("_Enovia_");
-                this.tabCount = widget.getValue("_TabCount_");
+                this.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
             }
             if (widget.id !== undefined) this.retrieveAllProjects();
             else this.loadingbar = false;

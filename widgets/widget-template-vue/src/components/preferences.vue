@@ -84,6 +84,7 @@ export default {
                 }
             }
             this.dialog = false;
+            EventBus.$emit("myTabsUpdated");
         }
     }
 };
