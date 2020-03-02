@@ -1,9 +1,10 @@
 <template>
     <v-container
-        style="height: calc(100vh - 75px); width:415px;"
-        class="overflow-y-auto"
+        style="padding: 0;"
     >
-        <v-row no-gutters>
+        <v-row
+            no-gutters
+        >
             <v-col>
                 <v-row
                     align="start"
@@ -14,11 +15,12 @@
                     <v-card
                         v-for="(project, index) in projects"
                         :key="index"
-                        max-width="100%"
-                        max-height="150"
                         outlined
                         tile
+                        max-width="350px"
+                        height="100px"
                         class="ma-1 pa-1"
+                        :style="selection == project ? 'background-color:lightgray;' : ''"
                         hover
                         @click="select(index)"
                     >
@@ -45,7 +47,8 @@ import { EventBus } from "../plugins/vuetify";
 
 export default {
     props: {
-        projects: Array
+        projects: Array,
+        selection: Object
     },
     methods: {
         select(index) {

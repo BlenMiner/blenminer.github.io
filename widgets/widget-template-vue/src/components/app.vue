@@ -1,19 +1,5 @@
 <template>
     <v-app>
-        <div>
-            <v-app-bar dark height="50px">
-                <v-toolbar-title class="headline">
-                    WPM - Widget Project Management
-                </v-toolbar-title>
-                <v-spacer />
-                <v-btn class="mx-2" dark fab x-small color="green darken-1">
-                    <v-icon dark>mdi-cached</v-icon>
-                </v-btn>
-                <v-btn class="mx-2" fab x-small color="cyan darken-1" @click="toast('Created by VBU4')">
-                    <v-icon dark>mdi-information-variant</v-icon>
-                </v-btn>
-            </v-app-bar>
-        </div>
         <v-content>
             <!-- header progress bar -->
             <v-progress-linear
@@ -36,9 +22,15 @@
             </v-snackbar>
 
             <!-- actual widget's content -->
-            <v-list-item>
-                <projectGrid :projects="projects" />
-                <projectView :items="tabs" :url="enoviaUrl" :objectid="objectid" />
+            <v-list-item style="padding: 0;">
+                <projectGrid
+                    :projects="projects"
+                    :selection="currentProject"
+                    :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
+                />
+                <template>
+                    <projectView :items="tabs" :url="enoviaUrl" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
+                </template>
             </v-list-item>
         </v-content>
     </v-app>
@@ -48,7 +40,10 @@
 <style>
 html, body {
     overflow-y: auto !important;
-    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color:#eeeeee;
 }
 </style>
 
@@ -80,6 +75,7 @@ export default {
 
             loadingbar: true,
             objectid: "",
+            currentProject: null,
 
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
@@ -129,7 +125,12 @@ export default {
 
         EventBus.$on("selection_project", (value) => {
             that.objectid = that.projects[value].id;
-            that.toast("hmm");
+            that.currentProject = that.projects[value];
+        });
+
+        EventBus.$on("removeProjectSelection", (value) => {
+            that.currentProject = null;
+            that.objectid = "";
         });
 
         // Start loading bar aswell
@@ -189,7 +190,7 @@ export default {
             this.tenantId = widget.getValue("_CurrentTenantID_");
             this.enoviaUrl = widget.getValue("_Enovia_");
 
-            EventBus.$emit("toast", this.tenantId);
+            EventBus.$emit("toast", "Hello world!");
 
             if (widget.id !== undefined) this.retrieveAllProjects();
             else this.loadingbar = false;
