@@ -29,7 +29,7 @@
                     :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
                 <template>
-                    <projectView :items="tabs" :url="enoviaUrl" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
+                    <projectView :items="tabs" :url="'https://' + tenantId + '-' + enoviaUrl" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
                 </template>
             </v-list-item>
         </v-content>
@@ -134,6 +134,9 @@ export default {
         });
 
         EventBus.$on("reloadwidget", (value) => {
+            // Loads the prefs if available
+            this.tenantId = widget.getValue("_CurrentTenantID_");
+            this.enoviaUrl = widget.getValue("_Enovia_");
             that.retrieveAllProjects();
         });
 
@@ -194,21 +197,19 @@ export default {
             this.tenantId = widget.getValue("_CurrentTenantID_");
             this.enoviaUrl = widget.getValue("_Enovia_");
 
-            EventBus.$emit("toast", "Hello world!");
-
             if (widget.id !== undefined) this.retrieveAllProjects();
             else this.loadingbar = false;
         },
 
         retrieveAllProjects() {
             const that = this;
-            this.projects = [];
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
+                    that.projects = [];
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
