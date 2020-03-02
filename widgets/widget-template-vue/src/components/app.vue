@@ -171,8 +171,6 @@ export default {
                     name: widget.getValue(`_Tab${i}_Name_`),
                     url: myurl
                 };
-
-                console.log(that.myTabs[i]);
             }
             that.$forceUpdate();
         });
@@ -281,6 +279,8 @@ export default {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
                     that.projects = [];
+
+                    console.log(data.data);
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
