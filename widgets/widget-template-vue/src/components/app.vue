@@ -86,7 +86,7 @@ export default {
             loadingbar: true,
             objectid: "",
             currentProject: null,
-            tabCount: 3,
+            tabCount: 4,
 
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
@@ -119,6 +119,10 @@ export default {
                 {
                     name: "Gantt",
                     url: "/webapps/ENOGantt/gantt-widget.html?objectId="
+                },
+                {
+                    name: "Phase View",
+                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId="
                 }
             ],
             tabsOpts: [],
@@ -139,6 +143,8 @@ export default {
         for (let i = 0; i < this.tabs.length; i++) {
             this.tabsOpts[i] = this.tabs[i].name;
         }
+
+        this.toast("Aloha from VBU4");
 
         EventBus.$on("toast", (value) => {
             that.toast(value);
