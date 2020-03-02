@@ -148,6 +148,7 @@ export default {
         });
 
         EventBus.$on("myTabsUpdated", (value) => {
+            that.myTabs = [];
             for (let i = 0; i < that.tabCount; i++) {
                 const search = widget.getValue(`_Tab${i}_Url_`);
                 let myurl = that.tabs[0].url;
@@ -164,6 +165,7 @@ export default {
                     url: myurl
                 };
             }
+            that.$forceUpdate();
         });
 
         EventBus.$on("reloadwidget", (value) => {
@@ -184,6 +186,7 @@ export default {
                     defaultValue: "Schedule Status"
                 });
             }
+
             that.retrieveAllProjects();
         });
 
@@ -258,9 +261,8 @@ export default {
                 this.tenantId = widget.getValue("_CurrentTenantID_");
                 this.enoviaUrl = widget.getValue("_Enovia_");
                 this.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
-            }
-            if (widget.id !== undefined) this.retrieveAllProjects();
-            else this.loadingbar = false;
+                this.retrieveAllProjects();
+            } else this.loadingbar = false;
         },
 
         retrieveAllProjects() {

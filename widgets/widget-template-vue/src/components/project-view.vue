@@ -17,20 +17,20 @@
             dark
         >
             <v-tab
-                v-for="(item, index) in tabs"
-                :key="index"
+                v-for="i in tabcount"
+                :key="i"
             >
-                {{ item.name }}
+                {{ tabs[i].name }}
             </v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
             <v-tab-item
-                v-for="(item, index) in tabs"
-                :key="index"
+                v-for="i in tabcount"
+                :key="i"
             >
                 <v-card flat>
-                    <iframe :src="url + item.url + objectid" width="100%" style="height: calc(100vh - 90.51px);" @load="doneLoading()"></iframe>
+                    <iframe :src="url + tabs[i].url + objectid" width="100%" style="height: calc(100vh - 90.51px);" @load="doneLoading()"></iframe>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>

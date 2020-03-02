@@ -79,6 +79,17 @@ export default {
         savesettings: function () {
             if (widget.id) {
                 for (let i = 0; i < this.tablength; i++) {
+                    widget.addPreference({
+                        name: `_Tab${i}_Name_`,
+                        type: "hidden",
+                        defaultValue: "New tab " + (i + 1)
+                    });
+                    widget.addPreference({
+                        name: `_Tab${i}_Url_`,
+                        type: "hidden",
+                        defaultValue: "Schedule Status"
+                    });
+
                     widget.setValue(`_Tab${i}_Name_`, this.tabNames[i]);
                     widget.setValue(`_Tab${i}_Url_`, this.tabUrls[i]);
                 }
