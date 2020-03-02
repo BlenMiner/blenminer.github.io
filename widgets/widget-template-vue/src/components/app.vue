@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <preferences :tabs="tabs" :tabsopts="tabsOpts" :tabcount="tabCount" />
+        <preferences :tabsopts="tabsOpts" :tabcount="tabCount" />
         <v-content>
             <!-- header progress bar -->
             <v-progress-linear
@@ -177,12 +177,12 @@ export default {
             for (let i = 0; i < that.tabCount; i++) {
                 widget.addPreference({
                     name: `_Tab${i}_Name_`,
-                    type: "hidden",
+                    type: "text",
                     defaultValue: "New tab " + (i + 1)
                 });
                 widget.addPreference({
                     name: `_Tab${i}_Url_`,
-                    type: "hidden",
+                    type: "text",
                     defaultValue: "Schedule Status"
                 });
             }

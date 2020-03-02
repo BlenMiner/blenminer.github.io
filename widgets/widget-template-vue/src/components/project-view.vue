@@ -73,7 +73,7 @@ export default {
         },
 
         settings: function () {
-            EventBus.$emit("editPrefs");
+            EventBus.$emit("editPrefs", this.tabcount);
         }
     }
 };

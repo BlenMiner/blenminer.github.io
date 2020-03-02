@@ -32,7 +32,7 @@
                         color="success"
                         class="ma-2"
                         width="90%"
-                        @click="savesettings()"
+                        @click="savesettings(tabcount)"
                     >
                         Save Settings
                     </v-btn>
@@ -49,7 +49,6 @@ import { EventBus } from "../plugins/vuetify";
 export default {
     props: {
         tabsopts: Array,
-        tabs: Array,
         tabcount: Number
     },
 
@@ -57,18 +56,16 @@ export default {
         return {
             dialog: false,
             tabNames: [],
-            tabUrls: [],
-
-            tablength: this.tabcount
+            tabUrls: []
         };
     },
 
     mounted: function() {
         const that = this;
 
-        EventBus.$on("editPrefs", () => {
+        EventBus.$on("editPrefs", (tabscount) => {
             that.dialog = true;
-            for (let i = 0; i < that.tablength; i++) {
+            for (let i = 0; i < tabscount; i++) {
                 that.tabNames[i] = widget.getValue(`_Tab${i}_Name_`) || "New tab " + (i + 1);
                 that.tabUrls[i] = widget.getValue(`_Tab${i}_Url_`) || "Schedule Status";
             }
@@ -76,9 +73,9 @@ export default {
     },
 
     methods: {
-        savesettings: function () {
+        savesettings: function (tabscount) {
             if (widget.id) {
-                for (let i = 0; i < this.tablength; i++) {
+                for (let i = 0; i < tabscount; i++) {
                     widget.addPreference({
                         name: `_Tab${i}_Name_`,
                         type: "hidden",
