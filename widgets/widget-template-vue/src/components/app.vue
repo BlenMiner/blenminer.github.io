@@ -176,19 +176,6 @@ export default {
             that.enoviaUrl = widget.getValue("_Enovia_");
             that.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
 
-            for (let i = 0; i < that.tabCount; i++) {
-                widget.addPreference({
-                    name: `_Tab${i}_Name_`,
-                    type: "text",
-                    defaultValue: "New tab " + (i + 1)
-                });
-                widget.addPreference({
-                    name: `_Tab${i}_Url_`,
-                    type: "text",
-                    defaultValue: "Schedule Status"
-                });
-            }
-
             EventBus.$emit("myTabsUpdated");
             that.retrieveAllProjects();
         });
@@ -257,6 +244,19 @@ export default {
                 min: "1",
                 max: "10"
             });
+
+            for (let i = 0; i < 10; i++) {
+                widget.addPreference({
+                    name: `_Tab${i}_Name_`,
+                    type: "hidden",
+                    defaultValue: "New tab " + (i + 1)
+                });
+                widget.addPreference({
+                    name: `_Tab${i}_Url_`,
+                    type: "hidden",
+                    defaultValue: "Schedule Status"
+                });
+            }
 
             // Loads the prefs if available
             if (widget.id !== undefined) {
