@@ -133,6 +133,10 @@ export default {
             that.objectid = "";
         });
 
+        EventBus.$on("reloadwidget", (value) => {
+            that.retrieveAllProjects();
+        });
+
         // Start loading bar aswell
         if (widget.id === undefined) {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);

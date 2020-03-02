@@ -32,6 +32,6 @@ export default function() {
         start();
     });
     widget.addEvent("onRefresh", () => {
-        EventBus.$emit("toast", "test");
+        EventBus.$emit("reloadwidget");
     });
 }
