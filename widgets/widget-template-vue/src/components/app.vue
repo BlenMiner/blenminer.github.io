@@ -163,8 +163,6 @@ export default {
 
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
-            const that = this;
-
             this.tenants = [];
             const _TenantOpts = [];
 
@@ -206,8 +204,25 @@ export default {
                 step: "1",
                 min: "1",
                 max: "10",
+
                 onchange: function () {
-                    that.toast("on change");
+                    console.log("here");
+                    const tabCount = parseInt(widget.getValue("_TabCount_"));
+                    for (let i = 0; i < tabCount; i++) {
+                        widget.addPreference({
+                            name: `_Tab${i}_Name_`,
+                            type: "text",
+                            label: `Tab${i} Name`,
+                            defaultValue: "Schedule Status"
+                        });
+
+                        widget.addPreference({
+                            name: `_Tab${i}_Url_`,
+                            type: "text",
+                            label: `Tab${i} Url`,
+                            defaultValue: "/programcentral/ProgramCentralExecutionStatusReport.jsp"
+                        });
+                    }
                 }
             });
 
