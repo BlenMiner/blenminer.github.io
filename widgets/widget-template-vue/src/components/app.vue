@@ -164,6 +164,8 @@ export default {
                     name: widget.getValue(`_Tab${i}_Name_`),
                     url: myurl
                 };
+
+                console.log(that.myTabs[i]);
             }
             that.$forceUpdate();
         });
