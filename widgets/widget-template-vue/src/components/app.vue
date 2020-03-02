@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <preferences :tabs="tabs" :tabsopts="tabsOpts" :tabcount="tabCount" />
         <v-content>
             <!-- header progress bar -->
             <v-progress-linear
@@ -51,6 +52,7 @@ html, body {
 /* eslint-disable no-console */
 import projectGrid from "./project-grid.vue";
 import projectView from "./project-view.vue";
+import preferences from "./preferences.vue";
 import { EventBus } from "../plugins/vuetify";
 
 function httpCallAuthenticated(url, options) {
@@ -63,7 +65,8 @@ export default {
     name: "App",
     components: {
         projectGrid,
-        projectView
+        projectView,
+        preferences
     },
     data: function() {
         return {
@@ -76,6 +79,7 @@ export default {
             loadingbar: true,
             objectid: "",
             currentProject: null,
+            tabCount: 3,
 
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
@@ -104,8 +108,13 @@ export default {
                 {
                     name: "Bussiness Status",
                     url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId="
+                },
+                {
+                    name: "Gantt",
+                    url: "/webapps/ENOGantt/gantt-widget.html?objectId="
                 }
-            ]
+            ],
+            tabsOpts: []
         };
     },
     computed: {
@@ -118,6 +127,10 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
+
+        for (let i = 0; i < this.tabs.length; i++) {
+            this.tabsOpts[i] = this.tabs[i].name;
+        }
 
         EventBus.$on("toast", (value) => {
             that.toast(value);
@@ -135,8 +148,23 @@ export default {
 
         EventBus.$on("reloadwidget", (value) => {
             // Loads the prefs if available
-            this.tenantId = widget.getValue("_CurrentTenantID_");
-            this.enoviaUrl = widget.getValue("_Enovia_");
+            that.tenantId = widget.getValue("_CurrentTenantID_");
+            that.enoviaUrl = widget.getValue("_Enovia_");
+            that.tabCount = widget.getValue("_TabCount_");
+
+            for (let i = 0; i < that.tabCount; i++) {
+                widget.addPreference({
+                    name: `_Tab${i}_Name_`,
+                    type: "hidden",
+                    defaultValue: "New tab " + (i + 1)
+                });
+                widget.addPreference({
+                    name: `_Tab${i}_Url_`,
+                    type: "hidden",
+                    defaultValue: "Schedule Status"
+                });
+            }
+
             that.retrieveAllProjects();
         });
 
@@ -201,35 +229,15 @@ export default {
                 defaultValue: "2",
                 step: "1",
                 min: "1",
-                max: "10",
-                onchange: "tabcount_change"
-            });
-
-            widget.dispatchEvent("tabcount_change", []);
-            widget.addEvent("tabcount_change", () => {
-                console.log("here");
-                const tabCount = parseInt(widget.getValue("_TabCount_"));
-                for (let i = 0; i < tabCount; i++) {
-                    widget.addPreference({
-                        name: `_Tab${i}_Name_`,
-                        type: "text",
-                        label: `Tab${i} Name`,
-                        defaultValue: "Business Status"
-                    });
-
-                    widget.addPreference({
-                        name: `_Tab${i}_Url_`,
-                        type: "text",
-                        label: `Tab${i} Url`,
-                        defaultValue: "/programcentral/ProgramCentralBusinessStatusReport.jsp"
-                    });
-                }
+                max: "10"
             });
 
             // Loads the prefs if available
-            this.tenantId = widget.getValue("_CurrentTenantID_");
-            this.enoviaUrl = widget.getValue("_Enovia_");
-
+            if (widget.id !== undefined) {
+                this.tenantId = widget.getValue("_CurrentTenantID_");
+                this.enoviaUrl = widget.getValue("_Enovia_");
+                this.tabCount = widget.getValue("_TabCount_");
+            }
             if (widget.id !== undefined) this.retrieveAllProjects();
             else this.loadingbar = false;
         },
