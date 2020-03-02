@@ -187,6 +187,7 @@ export default {
                 });
             }
 
+            EventBus.$emit("myTabsUpdated");
             that.retrieveAllProjects();
         });
 
@@ -196,7 +197,6 @@ export default {
             this.myTabs = this.tabs;
         } else {
             this.projects = [];
-            EventBus.$emit("myTabsUpdated");
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
@@ -258,10 +258,7 @@ export default {
 
             // Loads the prefs if available
             if (widget.id !== undefined) {
-                this.tenantId = widget.getValue("_CurrentTenantID_");
-                this.enoviaUrl = widget.getValue("_Enovia_");
-                this.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
-                this.retrieveAllProjects();
+                EventBus.$emit("reloadwidget");
             } else this.loadingbar = false;
         },
 
