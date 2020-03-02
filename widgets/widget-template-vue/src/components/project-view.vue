@@ -30,7 +30,13 @@
                 :key="i"
             >
                 <v-card flat>
-                    <iframe :src="tabs[i - 1] ? (url + tabs[i - 1].url + objectid) : 'about:blank'" width="100%" style="height: calc(100vh - 90.51px);" @load="doneLoading()"></iframe>
+                    <iframe
+                        ref="iframes"
+                        :src="tabs[i - 1] ? (url + tabs[i - 1].url + objectid) : 'about:blank'"
+                        width="100%"
+                        style="height: calc(100vh - 90.51px);"
+                        @load="doneLoading();"
+                    ></iframe>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>

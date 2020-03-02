@@ -22,7 +22,7 @@
                         class="ma-1 pa-1"
                         :style="selection == project ? 'background-color:lightgray;' : ''"
                         hover
-                        @click="select(index)"
+                        @click="select(index, selection, project);"
                     >
                         <v-list-item>
                             <v-list-item-avatar tile size="60">
@@ -50,9 +50,12 @@ export default {
         projects: Array,
         selection: Object
     },
+
     methods: {
-        select(index) {
-            EventBus.$emit("selection_project", index);
+        select(index, selection, project) {
+            if (selection !== project) {
+                EventBus.$emit("selection_project", index);
+            }
         }
     }
 };

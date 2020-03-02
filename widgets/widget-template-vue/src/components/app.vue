@@ -30,7 +30,14 @@
                     :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
                 <template>
-                    <projectView :tabcount="tabCount" :tabs="myTabs" :url="(!tenants || !tenants[tenantId]) ? 'about:blank' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)" :objectid="objectid" :project="currentProject" style="max-width: 100%;" />
+                    <projectView
+                        :tabcount="tabCount"
+                        :tabs="myTabs"
+                        :url="(!tenants || !tenants[tenantId]) ? 'https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)"
+                        :objectid="objectid"
+                        :project="currentProject"
+                        style="max-width: 100%;"
+                    />
                 </template>
             </v-list-item>
         </v-content>
