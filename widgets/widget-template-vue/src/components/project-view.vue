@@ -20,7 +20,7 @@
                 v-for="i in tabcount"
                 :key="i"
             >
-                {{ tabs[i].name }}
+                {{ tabs[i] ? tabs[i].name : 'Loading ...' }}
             </v-tab>
         </v-tabs>
 
@@ -30,7 +30,7 @@
                 :key="i"
             >
                 <v-card flat>
-                    <iframe :src="url + tabs[i].url + objectid" width="100%" style="height: calc(100vh - 90.51px);" @load="doneLoading()"></iframe>
+                    <iframe :src="tabs[i] ? (url + tabs[i].url + objectid) : 'about:blank'" width="100%" style="height: calc(100vh - 90.51px);" @load="doneLoading()"></iframe>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>
