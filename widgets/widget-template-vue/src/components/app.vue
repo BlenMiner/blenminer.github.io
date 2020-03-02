@@ -202,25 +202,26 @@ export default {
                 step: "1",
                 min: "1",
                 max: "10",
+                onchange: "tabcount_change"
+            });
 
-                onchange: function () {
-                    console.log("here");
-                    const tabCount = parseInt(widget.getValue("_TabCount_"));
-                    for (let i = 0; i < tabCount; i++) {
-                        widget.addPreference({
-                            name: `_Tab${i}_Name_`,
-                            type: "text",
-                            label: `Tab${i} Name`,
-                            defaultValue: "Business Status"
-                        });
+            widget.addEvent("tabcount_change", () => {
+                console.log("here");
+                const tabCount = parseInt(widget.getValue("_TabCount_"));
+                for (let i = 0; i < tabCount; i++) {
+                    widget.addPreference({
+                        name: `_Tab${i}_Name_`,
+                        type: "text",
+                        label: `Tab${i} Name`,
+                        defaultValue: "Business Status"
+                    });
 
-                        widget.addPreference({
-                            name: `_Tab${i}_Url_`,
-                            type: "text",
-                            label: `Tab${i} Url`,
-                            defaultValue: "/programcentral/ProgramCentralBusinessStatusReport.jsp"
-                        });
-                    }
+                    widget.addPreference({
+                        name: `_Tab${i}_Url_`,
+                        type: "text",
+                        label: `Tab${i} Url`,
+                        defaultValue: "/programcentral/ProgramCentralBusinessStatusReport.jsp"
+                    });
                 }
             });
 
