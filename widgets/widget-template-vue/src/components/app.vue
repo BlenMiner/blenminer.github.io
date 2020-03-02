@@ -205,6 +205,7 @@ export default {
                 onchange: "tabcount_change"
             });
 
+            widget.dispatchEvent("tabcount_change", []);
             widget.addEvent("tabcount_change", () => {
                 console.log("here");
                 const tabCount = parseInt(widget.getValue("_TabCount_"));
