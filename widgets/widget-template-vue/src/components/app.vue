@@ -166,8 +166,6 @@ export default {
             this.tenants = [];
             const _TenantOpts = [];
 
-            console.log(data);
-
             let j = 0;
 
             // Load all the tenants
@@ -213,14 +211,14 @@ export default {
                             name: `_Tab${i}_Name_`,
                             type: "text",
                             label: `Tab${i} Name`,
-                            defaultValue: "Schedule Status"
+                            defaultValue: "Business Status"
                         });
 
                         widget.addPreference({
                             name: `_Tab${i}_Url_`,
                             type: "text",
                             label: `Tab${i} Url`,
-                            defaultValue: "/programcentral/ProgramCentralExecutionStatusReport.jsp"
+                            defaultValue: "/programcentral/ProgramCentralBusinessStatusReport.jsp"
                         });
                     }
                 }
