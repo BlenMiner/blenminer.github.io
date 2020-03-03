@@ -227,6 +227,8 @@ export default {
 
             let j = 0;
 
+            console.log(data);
+
             // Load all the tenants
             for (let i = 0; i < data.length; i++) {
                 if (data[i]["3DSpace"] === undefined) continue;
