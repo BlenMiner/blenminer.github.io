@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog v-model="dialog" max-width="80%">
         <v-card>
             <v-dialog v-model="infodialog" max-width="700px">
                 <v-toolbar
@@ -21,13 +21,15 @@
                 dark
                 flat
             >
-                <v-toolbar-title>Tab settings<br /><b style="font-size:0.7em;">{id} gets replaces by the project's ID</b></v-toolbar-title>
+                <v-toolbar-title>Tab settings</v-toolbar-title>
                 <v-spacer />
                 <v-btn icon @click="infodialog = true"><v-icon>mdi-information</v-icon></v-btn>
             </v-toolbar>
             <v-card-text>
                 <br />
                 <v-form>
+                    <b>{id}</b> gets replaced by the project's ID<br />
+                    <b>{context}</b> gets replaced by security context<br />
                     <template v-for="i in tabcount">
                         <center :key="i"><b>Tab {{ i }}</b></center>
                         <v-text-field
@@ -44,15 +46,16 @@
                             name="taburl"
                         />
                     </template>
-                    <v-spacer />
-                    <v-btn
-                        color="success"
-                        class="ma-2"
-                        width="90%"
-                        @click="savesettings(tabcount)"
-                    >
-                        Save Settings
-                    </v-btn>
+                    <center>
+                        <v-btn
+                            color="success"
+                            class="pa-2"
+                            width="50%"
+                            @click="savesettings(tabcount)"
+                        >
+                            Save Settings
+                        </v-btn>
+                    </center>
                 </v-form>
             </v-card-text>
         </v-card>

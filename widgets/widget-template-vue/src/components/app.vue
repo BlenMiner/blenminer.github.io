@@ -28,6 +28,7 @@
                 <projectGrid
                     :projects="projects"
                     :selection="currentProject"
+                    :owner="owner"
                     :style="'background-color:white;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
                 <v-expand-x-transition>
@@ -90,6 +91,7 @@ export default {
             objectid: "",
             currentProject: null,
             tabCount: 4,
+            owner: "Loading ...",
 
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
@@ -119,19 +121,19 @@ export default {
             [
                 {
                     name: "Schedule Status",
-                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}"
+                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}&SecurityContext={context}"
                 },
                 {
                     name: "Bussiness Status",
-                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId={id}"
+                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId={id}&SecurityContext={context}"
                 },
                 {
                     name: "Gantt",
-                    url: "/webapps/ENOGantt/gantt-widget.html?objectId={id}"
+                    url: "/webapps/ENOGantt/gantt-widget.html?objectId={id}&SecurityContext={context}"
                 },
                 {
                     name: "Phase View",
-                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId={id}"
+                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId={id}&SecurityContext={context}"
                 }
             ],
             myTabs: [],
@@ -312,6 +314,8 @@ export default {
                             progress: prjt.dataelements.percentComplete,
                             state: prjt.dataelements.state
                         });
+
+                        that.completeProjectData(i);
                     }
 
                     this.loadingbar = false;
@@ -328,14 +332,15 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true&select=collabspaces",
+            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true&select=collabspaces&select=firstname&select=lastname",
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
-                    console.log(data);
                     const contextList = []; // {value, label}
 
                     contextList.push({ value: "", label: "None" });
+
+                    that.owner = data.firstname + " " + data.lastname;
 
                     for (let j = 0; j < data.collabspaces.length; j++) {
                         const roleNLS = data.collabspaces[j].name;
