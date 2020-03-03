@@ -168,7 +168,8 @@ export default {
 
         EventBus.$on("myTabsUpdated", (value) => {
             that.myTabs = [];
-            for (let i = 0; i < that.tabCount; i++) {
+            const length = parseInt(widget.getValue("_TabCount_"), 10);
+            for (let i = 0; i < length; i++) {
                 that.myTabs[i] = {
                     name: widget.getValue(`_Tab${i}_Name_`),
                     url: widget.getValue(`_Tab${i}_Url_`)
