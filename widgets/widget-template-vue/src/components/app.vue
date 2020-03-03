@@ -37,6 +37,7 @@
                         :url="(!tenants || !tenants[tenantId]) ? 'https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)"
                         :objectid="objectid"
                         :project="currentProject"
+                        :securitycontext="securityContext"
                         style="max-width: 100%;"
                     />
                 </v-expand-x-transition>
@@ -133,7 +134,9 @@ export default {
                 }
             ],
             tabsOpts: [],
-            myTabs: []
+            myTabs: [],
+
+            securityContext: ""
         };
     },
     computed: {
@@ -150,8 +153,6 @@ export default {
         for (let i = 0; i < this.tabs.length; i++) {
             this.tabsOpts[i] = this.tabs[i].name;
         }
-
-        this.toast("Aloha from VBU4");
 
         EventBus.$on("toast", (value) => {
             that.toast(value);
@@ -193,9 +194,10 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
             that.enoviaUrl = widget.getValue("_Enovia_");
             that.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
+            that.securityContext = widget.getValue("_CurrentSecurityContext_");
 
             EventBus.$emit("myTabsUpdated");
-            that.retrieveAllProjects();
+            that.retrieveSecurityContexts();
         });
 
         // Start loading bar aswell
@@ -226,8 +228,6 @@ export default {
             const _TenantOpts = [];
 
             let j = 0;
-
-            console.log(data);
 
             // Load all the tenants
             for (let i = 0; i < data.length; i++) {
@@ -265,6 +265,14 @@ export default {
                 max: "10"
             });
 
+            widget.addPreference({
+                name: "_CurrentSecurityContext_",
+                type: "list",
+                label: "Tenant",
+                defaultValue: "",
+                options: [{ value: "", label: "None" }]
+            });
+
             for (let i = 0; i < 10; i++) {
                 widget.addPreference({
                     name: `_Tab${i}_Name_`,
@@ -295,7 +303,6 @@ export default {
                     const data = JSON.parse(response);
                     that.projects = [];
 
-                    console.log(data);
                     console.log(data.data);
 
                     for (let i = 0; i < data.data.length; i++) {
@@ -316,6 +323,56 @@ export default {
 
                 onFailure: () => {
                     this.loadingbar = false;
+                }
+            });
+        },
+
+        retrieveSecurityContexts() {
+            const that = this;
+            this.loadingbar = true;
+
+            const _3dspace = this.tenants[this.tenantId]["3DSpace"];
+            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person",
+            {
+                onComplete: (response) => {
+                    const data = JSON.parse(response);
+                    console.log(data);
+                    const contextList = []; // {value, label}
+
+                    contextList.push({ value: "", label: "None" });
+
+                    for (let j = 0; j < data.collabspaces.length; j++) {
+                        const roleNLS = data.collabspaces[j].name;
+
+                        for (let i = 0; i < data.collabspaces[j].couples.length; i++) {
+                            const couple = data.collabspaces[j].couples[i];
+
+                            const orgName = couple.organization.name;
+                            const roleName = couple.role.name;
+
+                            const sec = roleName + ":" + orgName + ":" + roleNLS;
+
+                            contextList.push({
+                                value: sec,
+                                label: sec
+                            });
+                        }
+                    }
+
+                    widget.addPreference({
+                        name: "_CurrentSecurityContext_",
+                        type: "list",
+                        label: "Tenant",
+                        defaultValue: contextList[0],
+                        options: contextList
+                    });
+
+                    that.securityContext = widget.getValue("_CurrentSecurityContext_");
+                    that.retrieveAllProjects();
+                },
+
+                onFailure: (response) => {
+                    that.retrieveAllProjects();
                 }
             });
         }

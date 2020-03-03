@@ -33,7 +33,7 @@
                     <iframe
                         v-if="project !== null"
                         ref="iframes"
-                        :src="tabs[i - 1] ? (url + tabs[i - 1].url.replace(/{id}/g, objectid)) : 'about:blank'"
+                        :src="tabs[i - 1] ? (url + tabs[i - 1].url.replace(/{id}/g, objectid) + '&SecurityContext=' + securitycontext) : 'about:blank'"
                         width="100%"
                         style="height: calc(100vh - 90.51px);"
                         @load="doneLoading();"
@@ -54,7 +54,8 @@ export default {
         tabs: Array,
         url: String,
         objectid: String,
-        tabcount: Number
+        tabcount: Number,
+        securitycontext: String
     },
 
     data: function() {
