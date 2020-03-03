@@ -15,23 +15,26 @@
                     <v-card
                         v-for="(project, index) in projects"
                         :key="index"
-                        outlined
-                        tile
-                        max-width="350px"
+                        width="350px"
                         height="100px"
                         class="ma-1 pa-1"
-                        :style="selection == project ? 'background-color:lightgray;' : ''"
+                        :color="selection == project ? 'grey lighten-3' : 'white'"
                         hover
                         @click="select(index, selection, project);"
                     >
                         <v-list-item>
-                            <v-list-item-avatar tile size="60">
-                                <v-img src="https://blenminer.github.io/widgets/widget-template-vue/dist/static/images/project.png" class="white--text align-end" />
+                            <v-list-item-avatar tile size="auto">
+                                <v-img :src="project.icon" />
                             </v-list-item-avatar>
                             <v-list-item-content>
-                                <v-list-item-title class="mb-2">{{ project.name }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ project.description }}</v-list-item-subtitle>
-                                <v-list-item-subtitle>Date: {{ project.deadline }}</v-list-item-subtitle>
+                                <v-list-item-title class="mb-2" :title="project.name" v-on="on">{{ project.name }}</v-list-item-title>
+                                <v-list-item-subtitle :title="project.description">{{ project.description }}</v-list-item-subtitle>
+                                <v-list-item-subtitle :title="project.deadline">Date: {{ project.deadline }}</v-list-item-subtitle>
+
+                                <v-progress-linear
+                                    :value="project.progress"
+                                    :title="project.progress"
+                                />
                             </v-list-item-content>
                         </v-list-item>
                     </v-card>

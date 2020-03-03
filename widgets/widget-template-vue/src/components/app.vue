@@ -97,13 +97,19 @@ export default {
                     id: "C745A4D6DB8A000080B84F5E43A50500",
                     name: "Project Purple Planet",
                     description: "efe",
-                    deadline: "20/09/1997"
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "50.2",
+                    state: "Active"
                 },
                 {
                     id: "pfft",
                     name: "Project Red Planet",
                     description: "fef",
-                    deadline: "20/09/1997"
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "10",
+                    state: "Create"
                 }
             ],
 
@@ -295,7 +301,10 @@ export default {
                             id: prjt.id,
                             name: prjt.dataelements.name,
                             description: prjt.dataelements.description,
-                            deadline: prjt.dataelements.estimatedFinishDate
+                            deadline: prjt.dataelements.estimatedFinishDate,
+                            icon: prjt.dataelements.typeicon,
+                            progress: prjt.dataelements.percentComplete,
+                            state: prjt.dataelements.state
                         });
                     }
 
