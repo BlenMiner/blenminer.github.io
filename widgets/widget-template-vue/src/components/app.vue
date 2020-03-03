@@ -1,7 +1,8 @@
 <template>
     <v-app>
-        <preferences :tabsopts="tabsOpts" :tabcount="tabCount" />
         <v-content>
+            <preferences :tabsopts="tabsOpts" :tabcount="tabCount" />
+
             <!-- header progress bar -->
             <v-progress-linear
                 color="blue accent-4"
