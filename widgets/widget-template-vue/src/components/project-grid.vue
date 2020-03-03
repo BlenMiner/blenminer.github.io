@@ -13,7 +13,7 @@
                     no-gutters
                 >
                     <v-card
-                        v-for="(project, index) in projects"
+                        v-for="(project, index) in filtertedlist()"
                         :key="index"
                         width="350px"
                         height="120px"
@@ -57,11 +57,39 @@ export default {
         owner: String
     },
 
+    data: () => {
+        return {
+            searchtext: "Red"
+        };
+    },
+
+    mounted() {
+        const that = this;
+
+        EventBus.$on("search", (msg) => {
+            that.searchtext = msg;
+        });
+    },
+
     methods: {
         select(index, selection, project) {
             if (selection !== project) {
                 EventBus.$emit("selection_project", index);
             }
+        },
+
+        filtertedlist() {
+            if (this.searchtext === "") {
+                return this.projects;
+            }
+            const ret = [];
+
+            for (let i = 0; i < this.projects.length; i++) {
+                if (this.projects[i].name.indexOf(this.searchtext) !== -1) {
+                    ret.push(this.projects[i]);
+                }
+            }
+            return ret;
         }
     }
 };

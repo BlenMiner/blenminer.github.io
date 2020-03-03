@@ -31,7 +31,12 @@ export default function() {
     widget.addEvent("onLoad", () => {
         start();
     });
+
     widget.addEvent("onRefresh", () => {
         EventBus.$emit("reloadwidget");
+    });
+
+    widget.addEvent("onSearch", (searchQuery) => {
+        EventBus.$emit("search", searchQuery);
     });
 }

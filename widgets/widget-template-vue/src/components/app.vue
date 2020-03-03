@@ -31,7 +31,7 @@
                     :owner="owner"
                     :style="'background-color:white;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
-                <v-expand-x-transition>
+                <v-slide-x-transition>
                     <projectView
                         v-show="currentProject !== null"
                         :tabcount="tabCount"
@@ -42,7 +42,7 @@
                         :securitycontext="securityContext"
                         style="max-width: 100%;"
                     />
-                </v-expand-x-transition>
+                </v-slide-x-transition>
             </v-list-item>
         </v-content>
     </v-app>
@@ -130,10 +130,6 @@ export default {
                 {
                     name: "Gantt",
                     url: "/webapps/ENOGantt/gantt-widget.html?objectId={id}&SecurityContext={context}"
-                },
-                {
-                    name: "Phase View",
-                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId={id}&SecurityContext={context}"
                 }
             ],
             myTabs: [],
