@@ -9,7 +9,7 @@
                 <v-row
                     align="start"
                     justify="start"
-                    class="grey lighten-3"
+                    class="white"
                     no-gutters
                 >
                     <v-card

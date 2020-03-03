@@ -27,10 +27,11 @@
                 <projectGrid
                     :projects="projects"
                     :selection="currentProject"
-                    :style="'background-color:#eeeeee;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
+                    :style="'background-color:white;height: 100vh;' + (currentProject !== null ? 'max-width: 360px;' : 'max-width:100%;')"
                 />
-                <template>
+                <v-expand-x-transition>
                     <projectView
+                        v-show="currentProject !== null"
                         :tabcount="tabCount"
                         :tabs="myTabs"
                         :url="(!tenants || !tenants[tenantId]) ? 'https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia' : ('https://' + tenants[tenantId]['platformId'] + '-' + enoviaUrl)"
@@ -38,7 +39,7 @@
                         :project="currentProject"
                         style="max-width: 100%;"
                     />
-                </template>
+                </v-expand-x-transition>
             </v-list-item>
         </v-content>
     </v-app>
@@ -51,7 +52,7 @@ html, body {
     width: 100%;
     padding: 0;
     margin: 0;
-    background-color:#eeeeee;
+    background-color:#ffffff;
 }
 </style>
 

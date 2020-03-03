@@ -1,6 +1,6 @@
 <template>
     <!-- header progress bar -->
-    <v-card v-if="project !== null" style="width: 100%; padding: 0;height: 100vh;" flat>
+    <v-card style="width: 100%; padding: 0;height: 100vh;" flat>
         <v-progress-linear
             color="cyan accent-4"
             indeterminate
@@ -8,7 +8,7 @@
             :active="loadingbar"
         />
         <v-btn text @click="back()"> <v-icon>mdi-forwardburger</v-icon> </v-btn>
-        <b>{{ project.name }}</b>
+        <b>{{ project ? project.name : 'Loading...' }}</b>
         <v-btn text style="float:right;" @click="settings()"> <v-icon>mdi-settings</v-icon> </v-btn>
 
         <v-tabs
