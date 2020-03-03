@@ -197,6 +197,7 @@ export default {
             that.securityContext = widget.getValue("_CurrentSecurityContext_");
 
             widget.setTitle(widget.getValue("_Title_"));
+            window.title = widget.getValue("_Title_");
 
             EventBus.$emit("myTabsUpdated");
             that.retrieveSecurityContexts();
