@@ -67,7 +67,7 @@ export default {
         const that = this;
 
         EventBus.$on("search", (msg) => {
-            that.searchtext = msg;
+            that.searchtext = msg.toLowerCase();
         });
     },
 
@@ -85,7 +85,7 @@ export default {
             const ret = [];
 
             for (let i = 0; i < this.projects.length; i++) {
-                if (this.projects[i].name.indexOf(this.searchtext) !== -1) {
+                if (this.projects[i].name.toLowerCase().indexOf(this.searchtext) !== -1) {
                     ret.push(this.projects[i]);
                 }
             }

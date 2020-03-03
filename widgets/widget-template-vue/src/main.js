@@ -39,4 +39,8 @@ export default function() {
     widget.addEvent("onSearch", (searchQuery) => {
         EventBus.$emit("search", searchQuery);
     });
+
+    widget.addEvent("onResetSearch", () => {
+        EventBus.$emit("search", "");
+    });
 }
