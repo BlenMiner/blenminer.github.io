@@ -280,7 +280,7 @@ export default {
                 widget.addPreference({
                     name: `_Tab${i}_Url_`,
                     type: "hidden",
-                    defaultValue: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}"
+                    defaultValue: this.tabs[(i > this.tabs.length - 1) ? this.tabs.length - 1 : i].url
                 });
             }
 
@@ -363,7 +363,7 @@ export default {
                     widget.addPreference({
                         name: "_CurrentSecurityContext_",
                         type: "list",
-                        label: "Tenant",
+                        label: "Security Context",
                         defaultValue: contextList[0],
                         options: contextList
                     });
