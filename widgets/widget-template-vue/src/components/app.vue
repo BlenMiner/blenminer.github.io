@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-content>
-            <preferences :tabsopts="tabsOpts" :tabcount="tabCount" />
+            <preferences :tabcount="tabCount" :tabs="tabs" />
 
             <!-- header progress bar -->
             <v-progress-linear
@@ -134,7 +134,6 @@ export default {
                     url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId={id}"
                 }
             ],
-            tabsOpts: [],
             myTabs: [],
 
             securityContext: ""
@@ -150,10 +149,6 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
-
-        for (let i = 0; i < this.tabs.length; i++) {
-            this.tabsOpts[i] = this.tabs[i].name;
-        }
 
         EventBus.$on("toast", (value) => {
             that.toast(value);
@@ -172,19 +167,9 @@ export default {
         EventBus.$on("myTabsUpdated", (value) => {
             that.myTabs = [];
             for (let i = 0; i < that.tabCount; i++) {
-                const search = widget.getValue(`_Tab${i}_Url_`);
-                let myurl = that.tabs[0].url;
-
-                for (let j = 0; j < that.tabs.length; j++) {
-                    if (search === that.tabs[j].name) {
-                        myurl = that.tabs[j].url;
-                        break;
-                    }
-                }
-
                 that.myTabs[i] = {
                     name: widget.getValue(`_Tab${i}_Name_`),
-                    url: myurl
+                    url: widget.getValue(`_Tab${i}_Url_`)
                 };
             }
             that.$forceUpdate();
@@ -248,7 +233,7 @@ export default {
                 name: "_Title_",
                 type: "text",
                 label: "Widget Title",
-                defaultValue: "WPM - Widget Project Management"
+                defaultValue: "Widget Project Management"
             });
 
             widget.addPreference({
@@ -279,7 +264,7 @@ export default {
             widget.addPreference({
                 name: "_CurrentSecurityContext_",
                 type: "list",
-                label: "Tenant",
+                label: "Security Context",
                 defaultValue: "",
                 options: [{ value: "", label: "None" }]
             });
@@ -293,7 +278,7 @@ export default {
                 widget.addPreference({
                     name: `_Tab${i}_Url_`,
                     type: "hidden",
-                    defaultValue: "Schedule Status"
+                    defaultValue: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}"
                 });
             }
 

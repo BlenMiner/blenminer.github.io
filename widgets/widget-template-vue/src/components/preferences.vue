@@ -1,12 +1,29 @@
 <template>
     <v-dialog v-model="dialog" max-width="600px">
         <v-card>
+            <v-dialog v-model="infodialog" max-width="700px">
+                <v-toolbar
+                    style="background-color: #005685;"
+                    dark
+                    flat
+                >
+                    <v-toolbar-title>URL Presets</v-toolbar-title>
+                </v-toolbar>
+                <v-card tile>
+                    <v-content v-for="(tab, i) in tabs" :key="i" class="pa-5">
+                        <h3>{{ tab.name }}</h3>
+                        {{ tab.url }}
+                    </v-content>
+                </v-card>
+            </v-dialog>
             <v-toolbar
                 style="background-color: #005685;"
                 dark
                 flat
             >
-                <v-toolbar-title>Tab settings</v-toolbar-title>
+                <v-toolbar-title>Tab settings<br /><b style="font-size:0.7em;">{id} gets replaces by the project's ID</b></v-toolbar-title>
+                <v-spacer />
+                <v-btn icon @click="infodialog = true"><v-icon>mdi-information</v-icon></v-btn>
             </v-toolbar>
             <v-card-text>
                 <br />
@@ -19,11 +36,11 @@
                             :label="'Tab ' + i + ': Name'"
                             name="tabname"
                         />
-                        <v-select
+                        <v-text-field
                             :key="i + '_url'"
                             v-model="tabUrls[i - 1]"
-                            :items="tabsopts"
-                            :label="'Tab ' + i + ': Url/Type'"
+                            :label="'Tab ' + i + ': Url'"
+                            title="{id} gets replaces by the project's ID"
                             name="taburl"
                         />
                     </template>
@@ -48,13 +65,14 @@ import { EventBus } from "../plugins/vuetify";
 
 export default {
     props: {
-        tabsopts: Array,
-        tabcount: Number
+        tabcount: Number,
+        tabs: Array
     },
 
     data: function() {
         return {
             dialog: false,
+            infodialog: false,
             tabNames: [],
             tabUrls: []
         };
@@ -67,7 +85,7 @@ export default {
             that.dialog = true;
             for (let i = 0; i < tabscount; i++) {
                 that.tabNames[i] = widget.getValue(`_Tab${i}_Name_`) || "New tab " + (i + 1);
-                that.tabUrls[i] = widget.getValue(`_Tab${i}_Url_`) || "Schedule Status";
+                that.tabUrls[i] = widget.getValue(`_Tab${i}_Url_`) || "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}";
             }
         });
     },
