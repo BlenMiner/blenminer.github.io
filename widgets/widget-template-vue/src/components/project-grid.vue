@@ -59,7 +59,7 @@ export default {
 
     data: () => {
         return {
-            searchtext: "Red"
+            searchtext: ""
         };
     },
 
