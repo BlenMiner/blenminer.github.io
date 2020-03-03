@@ -16,7 +16,7 @@
                         v-for="(project, index) in projects"
                         :key="index"
                         width="350px"
-                        height="100px"
+                        height="120px"
                         class="ma-1 pa-1"
                         :color="selection == project ? 'grey lighten-3' : 'white'"
                         hover
@@ -26,14 +26,15 @@
                             <v-list-item-avatar tile size="auto">
                                 <v-img :src="project.icon" />
                             </v-list-item-avatar>
-                            <v-list-item-content>
-                                <v-list-item-title class="mb-2" :title="project.name" v-on="on">{{ project.name }}</v-list-item-title>
-                                <v-list-item-subtitle :title="project.description">{{ project.description }}</v-list-item-subtitle>
-                                <v-list-item-subtitle :title="project.deadline">Date: {{ project.deadline }}</v-list-item-subtitle>
-
+                            <v-list-item-content style="padding:0;" height="120px">
+                                <v-list-item-title :title="project.name" class="my-2" v-on="on">{{ project.name }}</v-list-item-title>
+                                <v-list-item-subtitle :title="project.state">State: {{ project.state }}</v-list-item-subtitle>
+                                <v-list-item-subtitle :title="project.description">Desc: {{ project.description }}</v-list-item-subtitle>
                                 <v-progress-linear
                                     :value="project.progress"
                                     :title="project.progress"
+                                    height="8px"
+                                    class="my-2"
                                 />
                             </v-list-item-content>
                         </v-list-item>

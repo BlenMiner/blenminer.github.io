@@ -31,8 +31,9 @@
             >
                 <v-card flat>
                     <iframe
+                        v-if="project !== null"
                         ref="iframes"
-                        :src="tabs[i - 1] ? (url + tabs[i - 1].url + objectid) : 'about:blank'"
+                        :src="tabs[i - 1] ? (url + tabs[i - 1].url.replace(/{id}/g, objectid)) : 'about:blank'"
                         width="100%"
                         style="height: calc(100vh - 90.51px);"
                         @load="doneLoading();"

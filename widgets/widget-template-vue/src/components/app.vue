@@ -117,19 +117,19 @@ export default {
             [
                 {
                     name: "Schedule Status",
-                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId="
+                    url: "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}"
                 },
                 {
                     name: "Bussiness Status",
-                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId="
+                    url: "/programcentral/ProgramCentralBusinessStatusReport.jsp?objectId={id}"
                 },
                 {
                     name: "Gantt",
-                    url: "/webapps/ENOGantt/gantt-widget.html?objectId="
+                    url: "/webapps/ENOGantt/gantt-widget.html?objectId={id}"
                 },
                 {
                     name: "Phase View",
-                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId="
+                    url: "/common/emxIndentedTable.jsp?table=PMCPhaseGateView&objectId={id}"
                 }
             ],
             tabsOpts: [],
@@ -293,6 +293,7 @@ export default {
                     const data = JSON.parse(response);
                     that.projects = [];
 
+                    console.log(data);
                     console.log(data.data);
 
                     for (let i = 0; i < data.data.length; i++) {
