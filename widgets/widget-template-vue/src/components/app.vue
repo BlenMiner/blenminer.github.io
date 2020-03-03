@@ -314,8 +314,6 @@ export default {
                             progress: prjt.dataelements.percentComplete,
                             state: prjt.dataelements.state
                         });
-
-                        that.completeProjectData(i);
                     }
 
                     this.loadingbar = false;
