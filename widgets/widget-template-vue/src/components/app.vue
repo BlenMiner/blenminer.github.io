@@ -196,6 +196,8 @@ export default {
             that.tabCount = parseInt(widget.getValue("_TabCount_"), 10);
             that.securityContext = widget.getValue("_CurrentSecurityContext_");
 
+            widget.setTitle(widget.getValue("_Title_"));
+
             EventBus.$emit("myTabsUpdated");
             that.retrieveSecurityContexts();
         });
@@ -240,6 +242,13 @@ export default {
             }
 
             // Setup your preferences...
+            widget.addPreference({
+                name: "_Title_",
+                type: "text",
+                label: "Widget Title",
+                defaultValue: "WPM - Widget Project Management"
+            });
+
             widget.addPreference({
                 name: "_CurrentTenantID_",
                 type: "list",
@@ -332,7 +341,7 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person",
+            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true",
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
