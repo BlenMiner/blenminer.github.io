@@ -343,7 +343,7 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true",
+            httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true&select=collabspaces",
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
