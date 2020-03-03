@@ -20,7 +20,7 @@
                         class="ma-1 pa-1"
                         :color="selection == project ? 'grey lighten-3' : 'white'"
                         hover
-                        @click="select(index, selection, project);"
+                        @click="select(selection, project);"
                     >
                         <v-list-item>
                             <v-list-item-avatar tile size="auto">
@@ -72,9 +72,9 @@ export default {
     },
 
     methods: {
-        select(index, selection, project) {
+        select(selection, project) {
             if (selection !== project) {
-                EventBus.$emit("selection_project", index);
+                EventBus.$emit("selection_project", project);
             }
         },
 

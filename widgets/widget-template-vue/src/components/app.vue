@@ -153,8 +153,8 @@ export default {
         });
 
         EventBus.$on("selection_project", (value) => {
-            that.objectid = that.projects[value].id;
-            that.currentProject = that.projects[value];
+            that.objectid = value.id;
+            that.currentProject = value;
         });
 
         EventBus.$on("removeProjectSelection", (value) => {
