@@ -302,7 +302,6 @@ export default {
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
-                    that.projects = [];
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
@@ -321,11 +320,13 @@ export default {
                         });
                     }
 
-                    this.loadingbar = false;
+                    that.loadingbar = false;
                 },
 
-                onFailure: () => {
-                    this.loadingbar = false;
+                onFailure: (err) => {
+                    that.projects = [];
+                    that.toast(err);
+                    that.loadingbar = false;
                 }
             });
         },
