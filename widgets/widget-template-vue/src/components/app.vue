@@ -358,7 +358,7 @@ export default {
                             const sec = roleName + "." + orgName + "." + roleNLS;
 
                             contextList.push({
-                                value: encodeURI(sec),
+                                value: sec,
                                 label: sec
                             });
                         }
