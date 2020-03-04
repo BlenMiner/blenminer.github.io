@@ -347,15 +347,16 @@ export default {
                     that.owner = data.firstname + " " + data.lastname;
 
                     for (let j = 0; j < data.collabspaces.length; j++) {
-                        const colabspace = data.collabspaces[j].name;
+                        const colabspace = data.collabspaces[j];
+                        const colabspaceName = data.collabspaces[j].name;
 
-                        for (let i = 0; i < data.collabspaces[j].couples.length; i++) {
-                            const couple = data.collabspaces[j].couples[i];
+                        for (let i = 0; i < colabspace.couples.length; i++) {
+                            const couple = colabspace.couples[i];
 
                             const orgName = couple.organization.name;
                             const roleName = couple.role.name;
 
-                            const sec = roleName + "." + orgName + "." + colabspace;
+                            const sec = roleName + "." + orgName + "." + colabspaceName;
 
                             contextList.push({
                                 value: sec,
