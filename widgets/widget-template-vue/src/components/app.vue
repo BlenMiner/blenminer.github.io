@@ -114,6 +114,42 @@ export default {
                     icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
                     progress: "10",
                     state: "Create"
+                },
+                {
+                    id: "pfft",
+                    name: "Project Red Planet",
+                    description: "fef",
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "10",
+                    state: "Create"
+                },
+                {
+                    id: "pfft",
+                    name: "Project Red Planet",
+                    description: "fef",
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "10",
+                    state: "Create"
+                },
+                {
+                    id: "pfft",
+                    name: "Project Red Planet",
+                    description: "fef",
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "10",
+                    state: "Create"
+                },
+                {
+                    id: "pfft",
+                    name: "Project Red Planet",
+                    description: "fef",
+                    deadline: "20/09/1997",
+                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
+                    progress: "10",
+                    state: "Create"
                 }
             ],
 
@@ -148,6 +184,11 @@ export default {
     mounted: function () {
         const that = this;
 
+        EventBus.$on("change_tab_count", (value) => {
+            widget.setValue("_TabCount_", value);
+            that.tabCount = value;
+        });
+
         EventBus.$on("toast", (value) => {
             that.toast(value);
         });
@@ -164,8 +205,7 @@ export default {
 
         EventBus.$on("myTabsUpdated", (value) => {
             that.myTabs = [];
-            const length = parseInt(widget.getValue("_TabCount_"), 10);
-            for (let i = 0; i < length; i++) {
+            for (let i = 0; i < that.tabCount; i++) {
                 that.myTabs[i] = {
                     name: widget.getValue(`_Tab${i}_Name_`),
                     url: widget.getValue(`_Tab${i}_Url_`)
@@ -252,7 +292,7 @@ export default {
 
             widget.addPreference({
                 name: "_TabCount_",
-                type: "range",
+                type: "hidden", // range
                 label: "Tab Count",
                 defaultValue: "2",
                 step: "1",

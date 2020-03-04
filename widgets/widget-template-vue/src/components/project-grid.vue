@@ -4,6 +4,7 @@
     >
         <v-row
             no-gutters
+            style="padding: 0;"
         >
             <v-col>
                 <v-row
@@ -22,23 +23,25 @@
                         hover
                         @click="select(selection, project);"
                     >
-                        <v-list-item>
-                            <v-list-item-avatar tile size="auto">
-                                <v-img :src="project.icon" />
-                            </v-list-item-avatar>
-                            <v-list-item-content style="padding:0;" height="120px">
-                                <v-list-item-title :title="project.name" class="my-2">{{ project.name }}</v-list-item-title>
-                                <v-list-item-subtitle :title="project.state">State: {{ project.state }}</v-list-item-subtitle>
-                                <v-list-item-subtitle :title="project.description">Desc: {{ project.description }}</v-list-item-subtitle>
-                                <v-list-item-subtitle :title="owner">Owner: {{ owner }}</v-list-item-subtitle>
-                                <v-progress-linear
-                                    :value="project.progress"
-                                    :title="project.progress"
-                                    height="8px"
-                                    class="my-2"
-                                />
-                            </v-list-item-content>
-                        </v-list-item>
+                        <v-expand-x-transition>
+                            <v-list-item>
+                                <v-list-item-avatar tile size="auto">
+                                    <v-img :src="project.icon" />
+                                </v-list-item-avatar>
+                                <v-list-item-content style="padding:0;" height="120px">
+                                    <v-list-item-title :title="project.name" class="my-2">{{ project.name }}</v-list-item-title>
+                                    <v-list-item-subtitle :title="project.state">State: {{ project.state }}</v-list-item-subtitle>
+                                    <v-list-item-subtitle :title="project.description">Desc: {{ project.description }}</v-list-item-subtitle>
+                                    <v-list-item-subtitle :title="owner">Owner: {{ owner }}</v-list-item-subtitle>
+                                    <v-progress-linear
+                                        :value="project.progress"
+                                        :title="project.progress"
+                                        height="8px"
+                                        class="my-2"
+                                    />
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-expand-x-transition>
                     </v-card>
                 </v-row>
             </v-col>
