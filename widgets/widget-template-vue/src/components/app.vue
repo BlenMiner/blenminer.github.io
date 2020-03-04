@@ -347,7 +347,7 @@ export default {
                     that.owner = data.firstname + " " + data.lastname;
 
                     for (let j = 0; j < data.collabspaces.length; j++) {
-                        const roleNLS = data.collabspaces[j].name;
+                        const colabspace = data.collabspaces[j].name;
 
                         for (let i = 0; i < data.collabspaces[j].couples.length; i++) {
                             const couple = data.collabspaces[j].couples[i];
@@ -355,7 +355,7 @@ export default {
                             const orgName = couple.organization.name;
                             const roleName = couple.role.name;
 
-                            const sec = roleName + "." + orgName + "." + roleNLS;
+                            const sec = roleName + "." + orgName + "." + colabspace;
 
                             contextList.push({
                                 value: sec,
