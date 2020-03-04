@@ -104,7 +104,8 @@ export default {
                     deadline: "20/09/1997",
                     icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
                     progress: "50.2",
-                    state: "Active"
+                    state: "Active",
+                    owner: "Me :D"
                 },
                 {
                     id: "pfft",
@@ -113,43 +114,8 @@ export default {
                     deadline: "20/09/1997",
                     icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
                     progress: "10",
-                    state: "Create"
-                },
-                {
-                    id: "pfft",
-                    name: "Project Red Planet",
-                    description: "fef",
-                    deadline: "20/09/1997",
-                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
-                    progress: "10",
-                    state: "Create"
-                },
-                {
-                    id: "pfft",
-                    name: "Project Red Planet",
-                    description: "fef",
-                    deadline: "20/09/1997",
-                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
-                    progress: "10",
-                    state: "Create"
-                },
-                {
-                    id: "pfft",
-                    name: "Project Red Planet",
-                    description: "fef",
-                    deadline: "20/09/1997",
-                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
-                    progress: "10",
-                    state: "Create"
-                },
-                {
-                    id: "pfft",
-                    name: "Project Red Planet",
-                    description: "fef",
-                    deadline: "20/09/1997",
-                    icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
-                    progress: "10",
-                    state: "Create"
+                    state: "Create",
+                    owner: "Me :D"
                 }
             ],
 
@@ -332,13 +298,11 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects",
+            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
                     that.projects = [];
-
-                    console.log(data.data);
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
@@ -349,7 +313,11 @@ export default {
                             deadline: prjt.dataelements.estimatedFinishDate,
                             icon: prjt.dataelements.typeicon,
                             progress: prjt.dataelements.percentComplete,
-                            state: prjt.dataelements.state
+                            state: prjt.dataelements.state,
+                            owner: prjt.relateddata && prjt.relateddata.ownerInfo && prjt.relateddata.ownerInfo.dataelements ? (
+                                prjt.relateddata.ownerInfo.dataelements.firstname +
+                                prjt.relateddata.ownerInfo.dataelements.lastname
+                            ) : that.owner
                         });
                     }
 
