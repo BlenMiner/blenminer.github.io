@@ -339,6 +339,7 @@ export default {
             httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true&select=collabspaces&select=firstname&select=lastname",
             {
                 onComplete: (response) => {
+                    that.projects = [];
                     const data = JSON.parse(response);
                     const contextList = []; // {value, label}
 
