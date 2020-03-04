@@ -356,13 +356,13 @@ export default {
                             const couple = colabspace.couples[i];
 
                             const orgName = couple.organization.name;
-                            const roleName = couple.role.name;
 
-                            const sec = roleName + "." + orgName + "." + colabspaceName;
+                            const val = "ctx::" + couple.role.name + "." + orgName + "." + colabspaceName;
+                            const label = couple.role.nls + "." + orgName + "." + colabspaceName;
 
                             contextList.push({
-                                value: sec,
-                                label: sec
+                                value: val,
+                                label: label
                             });
                         }
                     }
