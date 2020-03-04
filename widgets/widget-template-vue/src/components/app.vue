@@ -354,7 +354,7 @@ export default {
                             const orgName = couple.organization.name;
                             const roleName = couple.role.name;
 
-                            const sec = roleName + ":" + orgName + ":" + roleNLS;
+                            const sec = roleName + "." + orgName + "." + roleNLS;
 
                             contextList.push({
                                 value: sec,
