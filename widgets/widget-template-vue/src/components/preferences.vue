@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialog" max-width="80%" @click:outside="savesettings(tabcount)">
-        <v-card>
+        <v-card min-height="90vh">
             <v-dialog v-model="infodialog" max-width="700px">
                 <v-toolbar
                     style="background-color: #005685;"
