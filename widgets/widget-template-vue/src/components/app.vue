@@ -300,11 +300,42 @@ export default {
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             const collabspace = this.securityContext.split(".")[2];
 
+            const getProjIndexById = (id) => {
+                for (let i = 0; i < that.projects.length; i++) {
+                    if (that.projects[i].id === id) {
+                        return i;
+                    }
+                }
+                return that.projects.length;
+            };
+
             httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=` + this.securityContext,
             {
                 onComplete: (response) => {
-                    const data = JSON.parse(response);
-                    console.log(data);
+                    const items = JSON.parse(response).items;
+                    console.log(items);
+
+                    for (let i = 0; i < items.length; i++) {
+                        const content = items[i].businessobj;
+
+                        if (!content) {
+                            continue;
+                        }
+
+                        if (content.type.name === "Project Space") {
+                            const j = getProjIndexById(items[i].id);
+                            that.projects[j] = ({
+                                id: items[i].id,
+                                name: content.name,
+                                description: content.description,
+                                deadline: null,
+                                icon: content.thumbnail,
+                                progress: null,
+                                state: content.maturity.name,
+                                owner: content.fullnameowner
+                            });
+                        }
+                    }
                 },
 
                 onFailure: (response) => {
@@ -319,7 +350,9 @@ export default {
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
-                        that.projects.push({
+                        const j = getProjIndexById(prjt.id);
+
+                        that.projects[j] = ({
                             id: prjt.id,
                             name: prjt.dataelements.name,
                             description: prjt.dataelements.description,
