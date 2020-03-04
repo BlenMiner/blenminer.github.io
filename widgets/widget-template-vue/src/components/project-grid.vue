@@ -1,6 +1,7 @@
 <template>
     <v-container
         style="padding: 0;"
+        class="overflow-y-auto"
     >
         <v-row
             no-gutters
