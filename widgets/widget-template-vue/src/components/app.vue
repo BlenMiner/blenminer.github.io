@@ -298,6 +298,19 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
+            const collabspace = this.securityContext.split(".")[1];
+            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/${collabspace}/Test%20VBU4/contents?SecurityContext=` + this.securityContext,
+            {
+                onComplete: (response) => {
+                    const data = JSON.parse(response);
+                    console.log(data);
+                },
+
+                onFailure: (response) => {
+                    that.toast(response);
+                }
+            });
+
             httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
             {
                 onComplete: (response) => {
