@@ -33,14 +33,25 @@
                 </center>
                 <v-content v-else>
                     <v-card height="100vh">
+                        <v-card-title>
+                            Tablue Vue
+                            <v-spacer />
+                            <v-text-field
+                                v-model="search"
+                                append-icon="mdi-magnify"
+                                label="Search"
+                                single-line
+                                hide-details
+                            />
+                        </v-card-title>
                         <v-data-table
                             :headers="headers"
                             :items="items"
                             class="elevation-1"
                             height="calc(100vh - 60px)"
-                        >
-                            t
-                        </v-data-table>
+                            multi-sort
+                            loading="true"
+                        />
                     </v-card>
                 </v-content>
             </v-slide-x-transition>
@@ -151,6 +162,7 @@ export default {
 
             // For debugging reasons
             sampleText: "",
+            search: "",
 
             // Used to log information
             snackbarMsg: "",
