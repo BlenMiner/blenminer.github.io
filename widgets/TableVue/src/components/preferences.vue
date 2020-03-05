@@ -43,15 +43,14 @@ export default {
     mounted: function() {
         const that = this;
 
-        this.$forceUpdate();
-
         EventBus.$on("settingsShow", () => {
             that.dialog = true;
         });
 
         EventBus.$on("loadedtable", () => {
-            for (let i = 0; i < this.headers.length; i++) {
-                this.$set(this.settings, i, widget.getValue(`col_${i}`) === "1");
+            const hiddencols = JSON.parse(widget.getValue("hidden_columns_list"));
+            for (let i = 0; i < that.headers.length; i++) {
+                that.$set(that.settings, i, hiddencols[i.toString()] === undefined);
             }
         });
     },
@@ -62,9 +61,13 @@ export default {
         },
 
         applySettings() {
+            const hiddencols = {};
             for (let i = 0; i < this.settings.length; i++) {
-                widget.setValue(`col_${i}`, this.settings[i] ? "1" : "0");
+                if (!this.settings[i]) {
+                    hiddencols[i.toString()] = "hidden";
+                }
             }
+            widget.setValue("hidden_columns_list", JSON.stringify(hiddencols));
             EventBus.$emit("changeheaders", this.settings);
         }
     }

@@ -344,13 +344,6 @@ export default {
                     text: titleBlock,
                     value: `col_${j}`
                 });
-
-                // Setup prefs for hidding cols
-                widget.addPreference({
-                    name: `col_${j}`,
-                    type: "hidden",
-                    defaultValue: "1"
-                });
             }
 
             for (let i = 1; i < data.length; i++) {
@@ -406,6 +399,18 @@ export default {
                 type: "text",
                 label: "File Object ID",
                 defaultValue: ""
+            });
+
+            widget.addPreference({
+                name: "hidden_columns_list",
+                type: "hidden",
+                defaultValue: "{}"
+            });
+
+            widget.addPreference({
+                name: "hidden_rows_list",
+                type: "hidden",
+                defaultValue: "{}"
             });
 
             // Loads the prefs if available
