@@ -28,7 +28,7 @@
             <v-slide-x-transition>
                 <center v-if="fileId === ''">
                     <v-content style="height:100vh;width:100%;">
-                        <v-card id="drop" ref="drop" width="90vh" height="90vh" />
+                        <div id="drop" ref="drop" width="90vh" height="90vh"></div>
                     </v-content>
                 </center>
                 <v-content v-else>
@@ -50,8 +50,8 @@ html, body {
 }
 
 #drop {
-    width: 20em;
-    height: 20em;
+    width: 90vh;
+    height: 90vh;
 
     border-style: dashed;
     border-color: lightgray;
@@ -64,9 +64,11 @@ html, body {
     background-position: center;
     background-color: #f7f7f7;
 
+    position: absolute;
     top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 </style>
 
@@ -134,13 +136,15 @@ export default {
                 });
             });
 
-            requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
-                DataDragAndDrop.droppable(that.$refs.drop, {
-                    drop: (strData, element, event) => {
-                        that.objectDroped(strData, element, event);
-                    }
+            if (that.$refs.drop) {
+                requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
+                    DataDragAndDrop.droppable(that.$refs.drop, {
+                        drop: (strData, element, event) => {
+                            that.objectDroped(strData, element, event);
+                        }
+                    });
                 });
-            });
+            }
         }
     },
 
