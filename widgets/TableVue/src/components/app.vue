@@ -92,7 +92,8 @@ export default {
         return {
             loadingbar: true,
 
-            sampleText: "test,test1,test2",
+            // For debugging reasons
+            sampleText: "",
 
             // Used to log information
             snackbarMsg: "",
@@ -102,10 +103,7 @@ export default {
 
             // Data loaded from DS and from preferences
             tenantId: -1,
-            tenants: [],
-
-            // tenant returns the current selected tenant, used to retrieve services URL
-            tenant: (this.tenantId > -1 && this.tenantId < this.tenants.length) ? this.tenants[this.tenantId] : null
+            tenants: []
         };
     },
 
@@ -156,7 +154,7 @@ export default {
             const that = this;
 
             // Retrive CSRF ticket
-            const _3dspace = that.tenant["3DSpace"];
+            const _3dspace = that.tenants[that.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
             {
                 onComplete: (response) => {
@@ -178,7 +176,7 @@ export default {
             that.fileId = widget.getValue("_FileID_");
 
             if (widget.id !== undefined) {
-                const _3dspace = that.tenant["3DSpace"];
+                const _3dspace = that.tenants[that.tenantId]["3DSpace"];
 
                 if (that.fileId !== "") {
                     // Retrieve a CSRF ticket & download the file!
@@ -217,6 +215,8 @@ export default {
                     );
                 }
             } else {
+                that.fileId = "1";
+                that.sampleText = "test,t,pra";
                 that.loadingbar = false;
             }
         },
