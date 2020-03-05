@@ -113,7 +113,7 @@ export default {
                     description: "fef",
                     deadline: "20/09/1997",
                     icon: "https://R1132100006595-eu1-space.3dexperience.3ds.com/enovia/snresources/images/icons/small/I_ProjectSpace.png",
-                    progress: "10",
+                    progress: "5",
                     state: "Create",
                     owner: "Me :D"
                 }
@@ -318,16 +318,16 @@ export default {
                         const id = items[i].id;
 
                         if (content.type.name === "Project Space") {
-                            that.projects[id] = ({
+                            that.projects[id] = {
                                 id: id,
                                 name: content.name,
                                 description: content.description,
-                                deadline: "Loading ...",
+                                deadline: null,
                                 icon: content.thumbnail,
-                                progress: 0,
+                                progress: null,
                                 state: content.maturity.name,
                                 owner: content.fullnameowner
-                            });
+                            };
                         }
                     }
                 },

@@ -37,6 +37,7 @@
                                     <v-progress-linear
                                         :value="project.progress"
                                         :title="project.progress"
+                                        :indeterminate="!project.progress"
                                         height="8px"
                                         class="my-2"
                                     />
