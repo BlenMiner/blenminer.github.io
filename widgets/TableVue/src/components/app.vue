@@ -136,8 +136,9 @@ export default {
                 });
             });
 
+            console.log("doing the deed???");
             if (that.$refs.drop) {
-                console.log("doing the deed");
+                console.log("doing the deed, yes!");
                 requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
                     DataDragAndDrop.droppable(that.$refs.drop, {
                         drop: (strData, element, event) => {
