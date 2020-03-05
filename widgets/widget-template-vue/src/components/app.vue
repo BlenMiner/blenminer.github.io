@@ -306,7 +306,7 @@ export default {
             // /resources/e6w/service/json/PRG_Experience_MyProjects_List?tenant=R1132100006595&xrequestedwith=xmlhttprequest
             // /resources/e6w/service/json/PRG_Experience_MyTasks_List?tenant=R1132100006595&xrequestedwith=xmlhttprequest
 
-            httpCallAuthenticated(_3dspace + `/resources/e6w/service/json/PRG_Experience_MyProjects_List/?SecurityContext=${this.securityContext}`,
+            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
                     const items = JSON.parse(response).items;
@@ -318,11 +318,11 @@ export default {
                             continue;
                         }
 
-                        console.log(content);
+                        console.log(content.type.value);
 
                         const id = items[i].id;
 
-                        if (content.type.name === "Project Space") {
+                        if (content.type.value === "Project Space") {
                             that.projects[id] = {
                                 id: id,
                                 name: content.name,
@@ -335,6 +335,8 @@ export default {
                             };
                         }
                     }
+
+                    that.loadingbar = false;
                 },
 
                 onFailure: (response) => {
