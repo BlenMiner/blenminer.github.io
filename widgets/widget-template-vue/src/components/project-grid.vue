@@ -56,7 +56,7 @@ import { EventBus } from "../plugins/vuetify";
 
 export default {
     props: {
-        projects: Array,
+        projects: Object,
         selection: Object,
         owner: String
     },

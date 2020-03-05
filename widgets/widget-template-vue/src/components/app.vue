@@ -96,8 +96,8 @@ export default {
             enoviaUrl: "https://r1132100006595-eu1-space.3dexperience.3ds.com/enovia",
 
             projects:
-            [
-                {
+            {
+                C745A4D6DB8A000080B84F5E43A50500: {
                     id: "C745A4D6DB8A000080B84F5E43A50500",
                     name: "Project Purple Planet",
                     description: "efe",
@@ -107,7 +107,7 @@ export default {
                     state: "Active",
                     owner: "Me :D"
                 },
-                {
+                pfft: {
                     id: "pfft",
                     name: "Project Red Planet",
                     description: "fef",
@@ -117,7 +117,7 @@ export default {
                     state: "Create",
                     owner: "Me :D"
                 }
-            ],
+            },
 
             tabs:
             [
@@ -199,7 +199,7 @@ export default {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
             this.myTabs = this.tabs;
         } else {
-            this.projects = [];
+            this.projects = {};
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
@@ -300,14 +300,7 @@ export default {
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             const collabspace = this.securityContext.split(".")[2];
 
-            const getProjIndexById = (id) => {
-                for (let i = 0; i < that.projects.length; i++) {
-                    if (that.projects[i].id === id) {
-                        return i;
-                    }
-                }
-                return that.projects.length;
-            };
+            that.projects = {};
 
             httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=` + this.securityContext,
             {
@@ -322,15 +315,16 @@ export default {
                             continue;
                         }
 
+                        const id = items[i].id;
+
                         if (content.type.name === "Project Space") {
-                            const j = getProjIndexById(items[i].id);
-                            that.projects[j] = ({
-                                id: items[i].id,
+                            that.projects[id] = ({
+                                id: id,
                                 name: content.name,
                                 description: content.description,
-                                deadline: null,
+                                deadline: "Loading ...",
                                 icon: content.thumbnail,
-                                progress: null,
+                                progress: 0,
                                 state: content.maturity.name,
                                 owner: content.fullnameowner
                             });
@@ -350,21 +344,25 @@ export default {
 
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
-                        const j = getProjIndexById(prjt.id);
 
-                        that.projects[j] = ({
-                            id: prjt.id,
-                            name: prjt.dataelements.name,
-                            description: prjt.dataelements.description,
-                            deadline: prjt.dataelements.estimatedFinishDate,
-                            icon: prjt.dataelements.typeicon,
-                            progress: prjt.dataelements.percentComplete,
-                            state: prjt.dataelements.state,
-                            owner: prjt.relateddata && prjt.relateddata.ownerInfo && prjt.relateddata.ownerInfo.dataelements ? (
-                                prjt.relateddata.ownerInfo.dataelements.firstname +
-                                prjt.relateddata.ownerInfo.dataelements.lastname
-                            ) : that.owner
-                        });
+                        if (that.projects[prjt.id]) {
+                            that.projects[prjt.id] = ({
+                                id: prjt.id,
+                                name: prjt.dataelements.name,
+                                description: prjt.dataelements.description,
+                                deadline: prjt.dataelements.estimatedFinishDate,
+                                icon: prjt.dataelements.typeicon,
+                                progress: prjt.dataelements.percentComplete,
+                                state: prjt.dataelements.state,
+                                owner: prjt.relateddata && prjt.relateddata.ownerInfo && prjt.relateddata.ownerInfo.dataelements ? (
+                                    prjt.relateddata.ownerInfo.dataelements.firstname +
+                                    prjt.relateddata.ownerInfo.dataelements.lastname
+                                ) : that.owner
+                            });
+                        } else {
+                            that.projects[prjt.id].deadline = prjt.dataelements.estimatedFinishDate;
+                            that.projects[prjt.id].progress = prjt.dataelements.percentComplete;
+                        }
                     }
 
                     that.loadingbar = false;
