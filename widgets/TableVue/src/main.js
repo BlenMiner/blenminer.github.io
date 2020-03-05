@@ -11,7 +11,7 @@ import { EventBus } from "./plugins/vuetify";
 function start() {
     x3DDashboardUtils.disableCSS(true);
 
-    window.title = "Widget Project Management";
+    window.title = "Tablue Vue";
     widget.setTitle(window.title);
 
     const main = new Vue({

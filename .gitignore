@@ -9,14 +9,14 @@ widgets/widget-template-vue/.vscode/extensions.json
 widgets/widget-template-vue/.vscode/launch.json
 widgets/widget-template-vue/.vscode/settings.json
 widgets/widget-template-vue/node_modules/*
-widgets/Table Vue/.eslintignore
-widgets/Table Vue/.eslintrc.json
-widgets/Table Vue/.gitlab-ci.yml
-widgets/Table Vue/.markdownlint.json
-widgets/Table Vue/.prettierrc
-widgets/Table Vue/.zipignore
-widgets/Table Vue/README.md
-widgets/Table Vue/.vscode/extensions.json
-widgets/Table Vue/.vscode/launch.json
-widgets/Table Vue/.vscode/settings.json
-widgets/Table Vue/node_modules/*
+widgets/TableVue/.eslintignore
+widgets/TableVue/.eslintrc.json
+widgets/TableVue/.gitlab-ci.yml
+widgets/TableVue/.markdownlint.json
+widgets/TableVue/.prettierrc
+widgets/TableVue/.zipignore
+widgets/TableVue/README.md
+widgets/TableVue/.vscode/extensions.json
+widgets/TableVue/.vscode/launch.json
+widgets/TableVue/.vscode/settings.json
+widgets/TableVue/node_modules/*
