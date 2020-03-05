@@ -35,8 +35,15 @@ var MyWidget = function()
         _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
             function(result)
             {
+                elem.style.width = "90%";
                 if (btn) btn.disabled = false;
-                elem.style.width = "100%";
+                me.queueUpdatePreview(function (crf)
+                {
+                    elem.style.width = "100%";
+                    require(["DS/PlatformAPI/PlatformAPI"], function(PlatformAPI) {
+                        PlatformAPI.publish("file_uploaded", _TargetFile.objectId);
+                    });            
+                });
             },
             function(error)
             {
