@@ -41,6 +41,9 @@ var MyWidget = function()
                 me.queueUpdatePreview(function (crf)
                 {
                     elem.style.width = "100%";
+                    require(["DS/PlatformAPI/PlatformAPI"], function(PlatformAPI) {
+                        PlatformAPI.publish("file_uploaded", _TargetFile.objectId);
+                    });            
                 });
             },
             function(error)

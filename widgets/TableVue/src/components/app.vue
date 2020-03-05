@@ -217,6 +217,13 @@ export default {
                 });
             });
 
+            requirejs(["DS/PlatformAPI/PlatformAPI"], (PlatformAPI) => {
+                PlatformAPI.subscribe("file_uploaded", (data) => {
+                    console.log("file_uploaded:");
+                    console.log(data);
+                });
+            });
+
             if (that.$refs.drop) {
                 requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
                     DataDragAndDrop.droppable(that.$refs.drop, {
