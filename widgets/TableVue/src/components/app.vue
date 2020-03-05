@@ -231,8 +231,11 @@ export default {
 
         objectDroped(strData, element, event) {
             const res = JSON.parse(strData);
-            console.log(strData);
-            console.log(res);
+
+            if (res.protocol === "3DXContent") {
+                this.fileId = res.data.items[0].objectId;
+                widget.setValue("_FileID_", this.fileId);
+            }
         },
 
         displayFileData(datatxt) {
