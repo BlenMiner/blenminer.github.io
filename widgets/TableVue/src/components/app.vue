@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-content>
-            <preferences />
+            <preferences :headers="headers" />
 
             <!-- header progress bar -->
             <v-progress-linear
@@ -34,8 +34,6 @@
                 <v-content v-else>
                     <v-card height="100vh">
                         <v-card-title>
-                            Tablue Vue
-                            <v-spacer />
                             <v-text-field
                                 v-model="search"
                                 append-icon="mdi-magnify"
@@ -43,13 +41,15 @@
                                 single-line
                                 hide-details
                             />
+                            <v-spacer />
+                            <v-btn icon large @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
                         </v-card-title>
                         <v-data-table
-                            :headers="headers"
+                            :headers="filteredheaders"
                             :items="items"
+                            :search="search"
                             class="elevation-1"
-                            height="calc(100vh - 60px)"
-                            multi-sort
+                            height="calc(100vh - 139px)"
                             loading="true"
                         />
                     </v-card>
@@ -174,6 +174,7 @@ export default {
             tenantId: -1,
             tenants: [],
 
+            filteredheaders: [],
             headers: [],
             items: []
         };
@@ -192,10 +193,20 @@ export default {
         that.loadingbar = true;
 
         EventBus.$on("reloadwidget", () => { that.reload(); });
+        EventBus.$on("changeheaders", (settings) => {
+            if (!settings) return;
+            const newHeader = [];
+            for (let i = 0; i < settings.length; i++) {
+                if (settings[i]) {
+                    newHeader.push(that.headers[i]);
+                }
+            }
+            that.filteredheaders = newHeader;
+         });
 
         // Start loading bar aswell
         if (widget.id === undefined) {
-            setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 2000);
+            setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 500);
         } else {
             this.projects = {};
 
@@ -219,6 +230,10 @@ export default {
     },
 
     methods: {
+        showSettings() {
+            EventBus.$emit("settingsShow");
+        },
+
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
@@ -320,7 +335,14 @@ export default {
                 const titleBlock = data[0][j];
                 this.headers.push({
                     text: titleBlock,
-                    value: `col_${j}"`
+                    value: `col_${j}`
+                });
+
+                // Setup prefs for hidding cols
+                widget.addPreference({
+                    name: `col_${j}`,
+                    type: "hidden",
+                    defaultValue: "1"
                 });
             }
 
@@ -328,10 +350,20 @@ export default {
                 const item = {};
                 for (let j = 0; j < data[i].length; j++) {
                     const block = data[i][j];
-                    item[`col_${j}"`] = block;
+                    item[`col_${j}`] = block;
                 }
+                this.filteredheaders.push(item);
                 this.items.push(item);
+
+                // Setup prefs for hidding cols
+                widget.addPreference({
+                    name: `row_${i - 1}`,
+                    type: "hidden",
+                    defaultValue: "1"
+                });
             }
+
+            EventBus.$emit("loadedtable");
         },
 
         // Load the tenant data & its services URLs based on the ID
