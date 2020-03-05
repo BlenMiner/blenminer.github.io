@@ -137,6 +137,7 @@ export default {
             });
 
             if (that.$refs.drop) {
+                console.log("doing the deed");
                 requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
                     DataDragAndDrop.droppable(that.$refs.drop, {
                         drop: (strData, element, event) => {
@@ -217,6 +218,8 @@ export default {
                             that.loadingbar = false;
                         }
                     );
+                } else {
+                    that.loadingbar = false;
                 }
             } else {
                 that.fileId = "1";
