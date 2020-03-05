@@ -35,99 +35,13 @@ var MyWidget = function()
         _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
             function(result)
             {
-                elem.style.width = "90%";
-                DrawCSVTable(_TableData, data);
+                elem.style.width = "100%";
                 if (btn) btn.disabled = false;
-                me.queueUpdatePreview(function (crf)
-                {
-                    elem.style.width = "100%";
-                    require(["DS/PlatformAPI/PlatformAPI"], function(PlatformAPI) {
-                        PlatformAPI.publish("file_uploaded", _TargetFile.objectId);
-                    });            
-                });
             },
             function(error)
             {
                 elem.style.width = "0%";
                 document.getElementById("form_spot").innerHTML = "failed";
-                me.queueUpdatePreview(me.updatePreview);
-            }
-        );
-    }
-
-    this.queueUpdatePreview = function(onDone)
-    {
-        var elem = document.getElementById("myBar");
-        elem.style.width = "10%";
-
-        _3dspace_get_csrf(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, function(info)
-        {
-            _TargetFile.fileId = info.data[0].relateddata.files[0].id;
-            if (onDone) onDone(info.csrf.value);
-            else elem.style.width = "100%";
-        },
-        function (error)
-        {
-            elem.style.width = "0%";
-        });
-    }
-
-    //Downloads & displays the table's content
-    this.updatePreview = function(crs)
-    {
-        var elem = document.getElementById("myBar");
-        me.toggleDropbox(false);
-
-        //Get the file URL & download it
-        elem.style.width = "20%";
-        _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
-            function(RESULT_URl)
-            {
-                elem.style.width = "50%";
-                _httpCallAuthenticated(RESULT_URl, {
-                    onComplete: function(RESULT_CONTENT)
-                    {
-                        //Convert the csv to an array & display its content
-                        _TableData = CSVToArray(RESULT_CONTENT, ',');
-                        let data = document.getElementById("data");
-                        let form = document.getElementById("form_spot");
-
-                        DrawCSVTable(_TableData, data);
-
-                        //Add the form to be able to add a new element
-                        let form_html = "<div id='form'>";
-
-                        for (i = 0; i < _TableData[0].length; i++)
-                            form_html += `<input type="text" id="${_TableData[0][i]}" placeholder="${_TableData[0][i]} ...">`;
-                        
-                        form_html += `<input type="submit" value="Add Entry" id="add_entry_button">`;
-                        form_html += "</div>";
-
-                        form.innerHTML = form_html;
-
-                        //Add the ability to add new lines
-                        document.getElementById("add_entry_button").addEventListener("click",
-                        function()
-                        {
-                            let line = [];
-
-                            for (i = 0; i < _TableData[0].length; i++)
-                            {
-                                let elmnt = document.getElementById(_TableData[0][i]);
-                                
-                                line.push(sanitize(elmnt.value));
-                                elmnt.value = "";
-                            }
-
-                            _TableData.push(line);
-                            //DrawCSVTable(_TableData, data);
-                            me.uploadChanges(crs);
-                        });;
-
-                        //Display some visual progress
-                        elem.style.width = "100%";
-                    }
-                });
             }
         );
     }
@@ -198,7 +112,6 @@ var MyWidget = function()
 
                 if (targetfile && targetfile != '') {
                     _TargetFile = JSON.parse(targetfile);
-                    me.queueUpdatePreview(me.updatePreview);
                 }
                 else {
                     me.toggleDropbox(true);
@@ -218,10 +131,7 @@ var MyWidget = function()
                     {
                         item = items[i];
                         _TargetFile = {objectId: item.objectId, displayName: item.displayName, fileId: null};
-
                         widget.setValue("_TargetFile_", JSON.stringify(_TargetFile));
-                        me.queueUpdatePreview(me.updatePreview);
-
                         break;
                     }
                     break;
@@ -234,10 +144,8 @@ var MyWidget = function()
 
     // Widget Reload button or Preference changed
     this.onRefresh = function() {
-        if (_TargetFile) 
-        {
+        if (_TargetFile) {
             _TenantId = widget.getValue("_TenantsData_");
-            me.queueUpdatePreview(me.updatePreview);
         }
     };
 

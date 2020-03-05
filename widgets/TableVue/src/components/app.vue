@@ -219,8 +219,9 @@ export default {
 
             requirejs(["DS/PlatformAPI/PlatformAPI"], (PlatformAPI) => {
                 PlatformAPI.subscribe("file_uploaded", (data) => {
-                    console.log("file_uploaded:");
-                    console.log(data);
+                    if (data === that.fileId) {
+                        that.reload();
+                    }
                 });
             });
 
@@ -333,6 +334,7 @@ export default {
         displayFileData(datatxt) {
             const data = CSVToArray(datatxt, ",");
             this.headers = [];
+            this.items = [];
 
             if (data.length === 0) {
                 return;
