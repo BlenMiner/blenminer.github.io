@@ -25,11 +25,16 @@
                 </v-btn>
             </v-snackbar>
 
-            <center>
-                <v-content style="height:100vh;width:100%;">
-                    <v-card id="drop" ref="drop" width="90vh" height="90vh" />
+            <v-slide-x-transition>
+                <center v-if="fileId === ''">
+                    <v-content style="height:100vh;width:100%;">
+                        <v-card id="drop" ref="drop" width="90vh" height="90vh" />
+                    </v-content>
+                </center>
+                <v-content v-else>
+                    <span>{{ sampleText }}</span>
                 </v-content>
-            </center>
+            </v-slide-x-transition>
         </v-content>
     </v-app>
 </template>
@@ -92,6 +97,8 @@ export default {
             // Used to log information
             snackbarMsg: "",
             snackbar: false,
+
+            fileId: "",
 
             // Data loaded from DS and from preferences
             tenantId: -1,
@@ -173,47 +180,51 @@ export default {
             if (widget.id !== undefined) {
                 const _3dspace = that.tenant["3DSpace"];
 
-                // Retrieve a CSRF ticket & download the file!
-                that.getCSRF(
-                    (csrf) => {
-                        httpCallAuthenticated(_3dspace + `/resources/v1/modeler/documents/${that.fileId}/files/DownloadTicket`,
-                        {
-                            method: "PUT",
-                            headers: { ENO_CSRF_TOKEN: csrf },
+                if (that.fileId !== "") {
+                    // Retrieve a CSRF ticket & download the file!
+                    that.getCSRF(
+                        (csrf) => {
+                            httpCallAuthenticated(_3dspace + `/resources/v1/modeler/documents/${that.fileId}/files/DownloadTicket`,
+                            {
+                                method: "PUT",
+                                headers: { ENO_CSRF_TOKEN: csrf },
 
-                            onComplete: (response) => {
-                                const res = JSON.parse(response);
-                                httpCallAuthenticated(res.data[0].dataelements.ticketURL,
-                                {
-                                    onComplete: (datatxt) => {
-                                        that.displayFileData(datatxt);
-                                        that.loadingbar = false;
-                                    },
+                                onComplete: (response) => {
+                                    const res = JSON.parse(response);
+                                    httpCallAuthenticated(res.data[0].dataelements.ticketURL,
+                                    {
+                                        onComplete: (datatxt) => {
+                                            that.displayFileData(datatxt);
+                                            that.loadingbar = false;
+                                        },
 
-                                    onFailure: (response) => {
-                                        that.log(response);
-                                        that.loadingbar = false;
-                                    }
-                                });
-                            },
+                                        onFailure: (response) => {
+                                            that.log(response);
+                                            that.loadingbar = false;
+                                        }
+                                    });
+                                },
 
-                            onFailure: (response) => {
-                                that.log(response);
-                                that.loadingbar = false;
-                            }
-                        });
-                    },
-                    () => {
-                        that.loadingbar = false;
-                    }
-                );
+                                onFailure: (response) => {
+                                    that.log(response);
+                                    that.loadingbar = false;
+                                }
+                            });
+                        },
+                        () => {
+                            that.loadingbar = false;
+                        }
+                    );
+                }
             } else {
                 that.loadingbar = false;
             }
         },
 
         objectDroped(strData, element, event) {
+            const res = JSON.parse(strData);
             console.log(strData);
+            console.log(res);
         },
 
         displayFileData(datatxt) {
