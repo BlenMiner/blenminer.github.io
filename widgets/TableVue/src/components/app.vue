@@ -32,7 +32,16 @@
                     </v-content>
                 </center>
                 <v-content v-else>
-                    <span>{{ sampleText }}</span>
+                    <v-card height="100vh">
+                        <v-data-table
+                            :headers="headers"
+                            :items="items"
+                            class="elevation-1"
+                            height="calc(100vh - 60px)"
+                        >
+                            t
+                        </v-data-table>
+                    </v-card>
                 </v-content>
             </v-slide-x-transition>
         </v-content>
@@ -77,6 +86,52 @@ html, body {
 import preferences from "./preferences.vue";
 import { EventBus } from "../plugins/vuetify";
 
+function CSVToArray(strData, strDelimiter) {
+    strDelimiter = (strDelimiter || ",");
+
+    const objPattern = new RegExp(
+        (
+            // Delimiters.
+            "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+
+            // Quoted fields.
+            "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+
+            // Standard fields.
+            "([^\"\\" + strDelimiter + "\\r\\n]*))"
+        ),
+        "gi"
+        );
+
+    const arrData = [[]];
+    let arrMatches = null;
+    let strMatchedValue = null;
+
+    while ((arrMatches = objPattern.exec(strData))) {
+        const strMatchedDelimiter = arrMatches[1];
+        if (
+            strMatchedDelimiter.length &&
+            (strMatchedDelimiter !== strDelimiter)
+            ) {
+            arrData.push([]);
+        }
+
+        if (arrMatches[2]) {
+            strMatchedValue = arrMatches[2].replace(
+                new RegExp("\"\"", "g"),
+                "\""
+                );
+        } else {
+            strMatchedValue = arrMatches[3];
+        }
+
+        arrData[arrData.length - 1].push(strMatchedValue);
+    }
+
+    // Return the parsed data.
+    return (arrData);
+}
+
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
         WAFData.authenticatedRequest(url, options);
@@ -105,7 +160,10 @@ export default {
 
             // Data loaded from DS and from preferences
             tenantId: -1,
-            tenants: []
+            tenants: [],
+
+            headers: [],
+            items: []
         };
     },
 
@@ -136,9 +194,7 @@ export default {
                 });
             });
 
-            console.log("doing the deed???");
             if (that.$refs.drop) {
-                console.log("doing the deed, yes!");
                 requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
                     DataDragAndDrop.droppable(that.$refs.drop, {
                         drop: (strData, element, event) => {
@@ -177,6 +233,8 @@ export default {
 
         reload() {
             const that = this;
+
+            that.loadingbar = true;
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
             that.fileId = widget.getValue("_FileID_");
@@ -224,7 +282,7 @@ export default {
                 }
             } else {
                 that.fileId = "1";
-                that.sampleText = "test,t,pra";
+                that.displayFileData("test,test1,test2\n1,2,3\n4,5,6");
                 that.loadingbar = false;
             }
         },
@@ -239,7 +297,29 @@ export default {
         },
 
         displayFileData(datatxt) {
-            this.sampleText = datatxt;
+            const data = CSVToArray(datatxt, ",");
+            this.headers = [];
+
+            if (data.length === 0) {
+                return;
+            }
+
+            for (let j = 0; j < data[0].length; j++) {
+                const titleBlock = data[0][j];
+                this.headers.push({
+                    text: titleBlock,
+                    value: `col_${j}"`
+                });
+            }
+
+            for (let i = 1; i < data.length; i++) {
+                const item = {};
+                for (let j = 0; j < data[i].length; j++) {
+                    const block = data[i][j];
+                    item[`col_${j}"`] = block;
+                }
+                this.items.push(item);
+            }
         },
 
         // Load the tenant data & its services URLs based on the ID
