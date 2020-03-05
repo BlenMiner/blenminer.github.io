@@ -19,7 +19,7 @@
 
 <script>
 
-//import { EventBus } from "../plugins/vuetify";
+// import { EventBus } from "../plugins/vuetify";
 
 export default {
     props: {
@@ -28,6 +28,7 @@ export default {
 
     data: function() {
         return {
+            dialog: false
         };
     },
 

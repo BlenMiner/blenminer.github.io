@@ -57,7 +57,7 @@ input[type=submit]:disabled {
   background-color: #4CAF50;
 }
 
-.zone {
+#zone {
     padding: 2em;
     margin: 1.2em;
 
