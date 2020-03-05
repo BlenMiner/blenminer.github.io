@@ -302,11 +302,14 @@ export default {
 
             that.projects = {};
 
-            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=` + this.securityContext,
+            // `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=` + this.securityContext //GET ALL FILES
+            // /resources/e6w/service/json/PRG_Experience_MyProjects_List?tenant=R1132100006595&xrequestedwith=xmlhttprequest
+            // /resources/e6w/service/json/PRG_Experience_MyTasks_List?tenant=R1132100006595&xrequestedwith=xmlhttprequest
+
+            httpCallAuthenticated(_3dspace + `/resources/e6w/service/json/PRG_Experience_MyProjects_List/?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
                     const items = JSON.parse(response).items;
-                    console.log(items);
 
                     for (let i = 0; i < items.length; i++) {
                         const content = items[i].businessobj;
@@ -314,6 +317,8 @@ export default {
                         if (!content) {
                             continue;
                         }
+
+                        console.log(content);
 
                         const id = items[i].id;
 
@@ -337,7 +342,7 @@ export default {
                 }
             });
 
-            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
+            /* httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
@@ -345,7 +350,7 @@ export default {
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
 
-                        if (that.projects[prjt.id]) {
+                        if (!that.projects[prjt.id]) {
                             that.projects[prjt.id] = ({
                                 id: prjt.id,
                                 name: prjt.dataelements.name,
@@ -373,7 +378,7 @@ export default {
                     that.toast(err);
                     that.loadingbar = false;
                 }
-            });
+            }); */
         },
 
         retrieveSecurityContexts() {
