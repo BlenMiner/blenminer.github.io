@@ -31,7 +31,7 @@
                                 </v-list-item-avatar>
                                 <v-list-item-content style="padding:0;" height="120px">
                                     <v-list-item-title :title="project.name" class="my-2">{{ project.name }}</v-list-item-title>
-                                    <v-list-item-subtitle :title="project.state">State: {{ project.state }}</v-list-item-subtitle>
+                                    <v-list-item-subtitle :title="project.state">Phase: {{ project.state }}</v-list-item-subtitle>
                                     <v-list-item-subtitle :title="project.description">Desc: {{ project.description }}</v-list-item-subtitle>
                                     <v-list-item-subtitle :title="owner">Owner: {{ project.owner }}</v-list-item-subtitle>
                                     <v-progress-linear

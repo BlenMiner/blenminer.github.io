@@ -309,6 +309,31 @@ export default {
             httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
+                    const items = JSON.parse(response).widget.datarecords.datagroups;
+
+                    for (let i = 0; i < items.length; i++) {
+                        const id = items[i].physicalId;
+                        const data = items[i].dataelements;
+
+                        this.$set(this.projects, id, {
+                            id: id,
+                            name: data.name.value[0].value,
+                            description: data.desc.value[0].value,
+                            icon: data.image.value[0].imageValue,
+                            progress: data.percentComplete.value[0].value,
+                            state: (data.phase.value.length !== 0) ? data.phase.value[0].value : "",
+                            owner: data.owner.value[0].value
+                        });
+                    }
+                },
+
+                onFailure: (response) => {
+
+                }
+            });
+            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}`,
+            {
+                onComplete: (response) => {
                     const items = JSON.parse(response).items;
 
                     for (let i = 0; i < items.length; i++) {
