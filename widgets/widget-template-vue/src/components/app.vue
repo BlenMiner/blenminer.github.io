@@ -328,9 +328,11 @@ export default {
                 },
 
                 onFailure: (response) => {
-
+                    that.log(response);
                 }
             });
+
+            /*
             httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
@@ -369,7 +371,7 @@ export default {
                 }
             });
 
-            /* httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
+            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
             {
                 onComplete: (response) => {
                     const data = JSON.parse(response);
@@ -377,21 +379,7 @@ export default {
                     for (let i = 0; i < data.data.length; i++) {
                         const prjt = data.data[i];
 
-                        if (!that.projects[prjt.id]) {
-                            that.projects[prjt.id] = ({
-                                id: prjt.id,
-                                name: prjt.dataelements.name,
-                                description: prjt.dataelements.description,
-                                deadline: prjt.dataelements.estimatedFinishDate,
-                                icon: prjt.dataelements.typeicon,
-                                progress: prjt.dataelements.percentComplete,
-                                state: prjt.dataelements.state,
-                                owner: prjt.relateddata && prjt.relateddata.ownerInfo && prjt.relateddata.ownerInfo.dataelements ? (
-                                    prjt.relateddata.ownerInfo.dataelements.firstname +
-                                    prjt.relateddata.ownerInfo.dataelements.lastname
-                                ) : that.owner
-                            });
-                        } else {
+                        if (that.projects[prjt.id]) {
                             that.projects[prjt.id].deadline = prjt.dataelements.estimatedFinishDate;
                             that.projects[prjt.id].progress = prjt.dataelements.percentComplete;
                         }
@@ -401,11 +389,11 @@ export default {
                 },
 
                 onFailure: (err) => {
-                    that.projects = [];
                     that.toast(err);
                     that.loadingbar = false;
                 }
-            }); */
+            });
+            */
         },
 
         retrieveSecurityContexts() {
