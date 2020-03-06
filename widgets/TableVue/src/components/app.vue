@@ -357,13 +357,6 @@ export default {
                     item[`col_${j}`] = block;
                 }
                 this.items.push(item);
-
-                // Setup prefs for hidding cols
-                widget.addPreference({
-                    name: `row_${i - 1}`,
-                    type: "hidden",
-                    defaultValue: "1"
-                });
             }
 
             EventBus.$emit("loadedtable");
