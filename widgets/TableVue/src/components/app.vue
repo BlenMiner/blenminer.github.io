@@ -193,11 +193,10 @@ export default {
         that.loadingbar = true;
 
         EventBus.$on("reloadwidget", () => { that.reload(); });
-        EventBus.$on("changeheaders", (settings) => {
-            if (!settings) return;
+        EventBus.$on("changeheaders", (hiddencols) => {
             const newHeader = [];
-            for (let i = 0; i < settings.length; i++) {
-                if (settings[i]) {
+            for (let i = 0; i < that.headers.length; i++) {
+                if (hiddencols[i] === undefined) {
                     newHeader.push(that.headers[i]);
                 }
             }
@@ -334,6 +333,7 @@ export default {
         displayFileData(datatxt) {
             const data = CSVToArray(datatxt, ",");
             this.headers = [];
+            this.filteredheaders = [];
             this.items = [];
 
             if (data.length === 0) {
@@ -342,10 +342,12 @@ export default {
 
             for (let j = 0; j < data[0].length; j++) {
                 const titleBlock = data[0][j];
-                this.headers.push({
+                const hdr = {
                     text: titleBlock,
                     value: `col_${j}`
-                });
+                };
+                this.headers.push(hdr);
+                this.filteredheaders.push(hdr);
             }
 
             for (let i = 1; i < data.length; i++) {
@@ -354,7 +356,6 @@ export default {
                     const block = data[i][j];
                     item[`col_${j}`] = block;
                 }
-                this.filteredheaders.push(item);
                 this.items.push(item);
 
                 // Setup prefs for hidding cols

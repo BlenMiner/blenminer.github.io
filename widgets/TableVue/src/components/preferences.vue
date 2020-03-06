@@ -13,9 +13,9 @@
             <v-card-text>
                 <v-card-title>Columns</v-card-title>
                 <span v-for="(item, i) in headers" :key="i">
-                    <v-btn class="ma-1" :color="settings[i] ? 'green' : 'red'" :title="item.text" @click="toggle(i)">
+                    <v-btn class="ma-1" :color="!settings[i] ? 'green' : 'red'" :title="item.text" @click="toggle(i)">
                         {{ item.text }}<v-spacer />
-                        <v-icon v-if="settings[i]">mdi-eye</v-icon>
+                        <v-icon v-if="!settings[i]">mdi-eye</v-icon>
                         <v-icon v-else>mdi-eye-off</v-icon>
                     </v-btn>
                 </span>
@@ -50,7 +50,7 @@ export default {
         EventBus.$on("loadedtable", () => {
             const hiddencols = JSON.parse(widget.getValue("hidden_columns_list"));
             for (let i = 0; i < that.headers.length; i++) {
-                that.$set(that.settings, i, hiddencols[i.toString()] === undefined);
+                that.$set(that.settings, i, hiddencols[i.toString()] !== undefined);
             }
         });
     },
@@ -63,12 +63,12 @@ export default {
         applySettings() {
             const hiddencols = {};
             for (let i = 0; i < this.settings.length; i++) {
-                if (!this.settings[i]) {
+                if (this.settings[i]) {
                     hiddencols[i.toString()] = "hidden";
                 }
             }
             widget.setValue("hidden_columns_list", JSON.stringify(hiddencols));
-            EventBus.$emit("changeheaders", this.settings);
+            EventBus.$emit("changeheaders", hiddencols);
         }
     }
 };
