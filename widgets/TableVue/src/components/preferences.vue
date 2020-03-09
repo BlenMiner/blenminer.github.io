@@ -52,6 +52,7 @@ export default {
             for (let i = 0; i < that.headers.length; i++) {
                 that.$set(that.settings, i, hiddencols[i.toString()] !== undefined);
             }
+            EventBus.$emit("changeheaders", hiddencols);
         });
     },
 
