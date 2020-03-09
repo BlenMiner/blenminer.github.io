@@ -34,13 +34,6 @@
                 <v-content v-else>
                     <v-card height="100vh">
                         <v-card-title>
-                            <v-text-field
-                                v-model="search"
-                                append-icon="mdi-magnify"
-                                label="Search"
-                                single-line
-                                hide-details
-                            />
                             <v-spacer />
                             <v-btn icon large @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
                         </v-card-title>
@@ -191,6 +184,9 @@ export default {
         const that = this;
 
         that.loadingbar = true;
+
+        EventBus.$on("onSearch", (txt) => { that.search = txt; });
+        EventBus.$on("onResetSearch", () => { that.search = ""; });
 
         EventBus.$on("reloadwidget", () => { that.reload(); });
         EventBus.$on("changeheaders", (hiddencols) => {

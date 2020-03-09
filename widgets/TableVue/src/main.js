@@ -36,11 +36,11 @@ export default function() {
         EventBus.$emit("reloadwidget");
     });
 
-    /* widget.addEvent("onSearch", (searchQuery) => {
+    widget.addEvent("onSearch", (searchQuery) => {
         EventBus.$emit("search", searchQuery);
     });
 
     widget.addEvent("onResetSearch", () => {
         EventBus.$emit("search", "");
-    }); */
+    });
 }
