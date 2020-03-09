@@ -67,23 +67,27 @@ export default {
         });
 
         EventBus.$on("loadedtable", () => {
-            const hiddencols = JSON.parse(widget.getValue("hidden_columns_list"));
-            const hiddenrows = JSON.parse(widget.getValue("hidden_rows_list"));
-
-            for (let i = 0; i < that.headers.length; i++) {
-                that.$set(that.settings, i, !hiddencols[i.toString()]);
-            }
-
-            for (let i = 0; i < that.rows.length; i++) {
-                that.$set(that.rowvis, i, !hiddenrows[i.toString()]);
-            }
-
-            EventBus.$emit("changeheaders", hiddencols);
-            EventBus.$emit("changerowsvisibility", hiddenrows);
+            that.loadedtable();
         });
     },
 
     methods: {
+        loadedtable() {
+            const hiddencols = JSON.parse(widget.getValue("hidden_columns_list"));
+            const hiddenrows = JSON.parse(widget.getValue("hidden_rows_list"));
+
+            for (let i = 0; i < this.headers.length; i++) {
+                this.$set(this.settings, i, hiddencols[i.toString()] !== undefined);
+            }
+
+            for (let i = 0; i < this.rows.length; i++) {
+                this.$set(this.rowvis, i, hiddenrows[i.toString()] !== undefined);
+            }
+
+            EventBus.$emit("changeheaders", hiddencols);
+            EventBus.$emit("changerowsvisibility", hiddenrows);
+        },
+
         toggle(i) {
             this.$set(this.settings, i, !this.settings[i]);
         },
