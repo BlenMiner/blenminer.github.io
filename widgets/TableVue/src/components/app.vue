@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-content>
-            <preferences :headers="headers" />
+            <preferences :headers="headers" :rows="items" />
 
             <!-- header progress bar -->
             <v-progress-linear
@@ -39,12 +39,23 @@
                         </v-card-title>
                         <v-data-table
                             :headers="filteredheaders"
-                            :items="items"
+                            :items="filteredrows"
                             :search="search"
                             class="elevation-1"
                             height="calc(100vh - 139px)"
                             loading="true"
-                        />
+                        >
+                            <template v-slot:item.action="{ item }">
+                                <v-icon
+                                    v-if="item"
+                                    small
+                                    class="mr-2"
+                                    @click="hidetablerow(item)"
+                                >
+                                    mdi-eye-off
+                                </v-icon>
+                            </template>
+                        </v-data-table>
                     </v-card>
                 </v-content>
             </v-slide-x-transition>
@@ -168,6 +179,7 @@ export default {
             tenants: [],
 
             filteredheaders: [],
+            filteredrows: [],
             headers: [],
             items: []
         };
@@ -186,9 +198,9 @@ export default {
         that.loadingbar = true;
 
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
-        EventBus.$on("onResetSearch", () => { that.search = ""; });
 
         EventBus.$on("reloadwidget", () => { that.reload(); });
+
         EventBus.$on("changeheaders", (hiddencols) => {
             const newHeader = [];
             for (let i = 0; i < that.headers.length; i++) {
@@ -197,6 +209,16 @@ export default {
                 }
             }
             that.filteredheaders = newHeader;
+         });
+
+         EventBus.$on("changerowsvisibility", (hiddenrows) => {
+            const newRows = [];
+            for (let i = 0; i < that.headers.length; i++) {
+                if (hiddenrows[i] === undefined) {
+                    newRows.push(that.items[i]);
+                }
+            }
+            that.filteredrows = newRows;
          });
 
         // Start loading bar aswell
@@ -312,7 +334,7 @@ export default {
                 }
             } else {
                 that.fileId = "1";
-                that.displayFileData("test,test1,test2\n1,2,3\n4,5,6");
+                that.displayFileData("test,test1,test2\n1,2,3\n4,5,6\naba,eba,ibi");
                 that.loadingbar = false;
             }
         },
@@ -346,6 +368,9 @@ export default {
                 this.filteredheaders.push(hdr);
             }
 
+            this.headers.push({ text: "Actions", value: "action", sortable: false });
+            this.filteredheaders.push({ text: "Actions", value: "action", sortable: false });
+
             for (let i = 1; i < data.length; i++) {
                 const item = {};
                 for (let j = 0; j < data[i].length; j++) {
@@ -353,6 +378,7 @@ export default {
                     item[`col_${j}`] = block;
                 }
                 this.items.push(item);
+                this.filteredrows.push(item);
             }
 
             EventBus.$emit("loadedtable");
@@ -407,6 +433,12 @@ export default {
 
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
+        },
+
+        hidetablerow(item) {
+            this.log("hmm");
+            const index = this.items.indexOf(item);
+            EventBus.$emit("removeandupdate", index);
         }
     }
 };

@@ -37,10 +37,10 @@ export default function() {
     });
 
     widget.addEvent("onSearch", (searchQuery) => {
-        EventBus.$emit("search", searchQuery);
+        EventBus.$emit("onSearch", searchQuery);
     });
 
     widget.addEvent("onResetSearch", () => {
-        EventBus.$emit("search", "");
+        EventBus.$emit("onSearch", "");
     });
 }
