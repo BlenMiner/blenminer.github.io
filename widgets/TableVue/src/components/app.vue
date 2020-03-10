@@ -213,7 +213,7 @@ export default {
 
          EventBus.$on("changerowsvisibility", (hiddenrows) => {
             const newRows = [];
-            for (let i = 0; i < that.headers.length; i++) {
+            for (let i = 0; i < that.items.length; i++) {
                 if (hiddenrows[i] === undefined) {
                     newRows.push(that.items[i]);
                 }
