@@ -345,6 +345,7 @@ export default {
             if (res.protocol === "3DXContent") {
                 this.fileId = res.data.items[0].objectId;
                 widget.setValue("_FileID_", this.fileId);
+                this.reload();
             }
         },
 
