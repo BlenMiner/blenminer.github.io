@@ -24,6 +24,7 @@ module.exports = merge(
             // to prevent CORS issues
             headers: { "Access-Control-Allow-Origin": "*" },
             writeToDisk: false,
+            https: true,
 
             // these options are computed from localUrl and publicUrl global parameters
             port: port,
