@@ -6,7 +6,7 @@
                 dark
                 flat
             >
-                <v-toolbar-title>Table Settings</v-toolbar-title>
+                <v-toolbar-title>Table Settings {{ tmp }}</v-toolbar-title>
                 <v-spacer />
                 <v-btn icon><v-icon>mdi-information</v-icon></v-btn>
             </v-toolbar>
@@ -51,7 +51,8 @@ export default {
         return {
             dialog: false,
             settings: [],
-            rowvis: []
+            rowvis: [],
+            tmp: 0
         };
     },
 
@@ -66,21 +67,21 @@ export default {
             that.removeandupdate(i);
         });
 
-        EventBus.$on("loadedtable", () => {
-            that.loadedtable();
+        EventBus.$on("loadedtable", (h, r) => {
+            that.loadedtable(h, r);
         });
     },
 
     methods: {
-        loadedtable() {
+        loadedtable(headers, rows) {
             const hiddencols = JSON.parse(widget.getValue("hidden_columns_list"));
             const hiddenrows = JSON.parse(widget.getValue("hidden_rows_list"));
 
-            for (let i = 0; i < this.headers.length; i++) {
+            for (let i = 0; i < headers.length; i++) {
                 this.$set(this.settings, i, hiddencols[i.toString()] !== undefined);
             }
 
-            for (let i = 0; i < this.rows.length; i++) {
+            for (let i = 0; i < rows.length; i++) {
                 this.$set(this.rowvis, i, hiddenrows[i.toString()] !== undefined);
             }
 
@@ -122,10 +123,6 @@ export default {
 
             EventBus.$emit("changeheaders", hiddencols);
             EventBus.$emit("changerowsvisibility", hiddenrows);
-        },
-
-        resetRow(i) {
-
         }
     }
 };

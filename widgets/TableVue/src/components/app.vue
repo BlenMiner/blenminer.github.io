@@ -381,7 +381,7 @@ export default {
                 this.filteredrows.push(item);
             }
 
-            EventBus.$emit("loadedtable");
+            EventBus.$emit("loadedtable", this.headers, this.items);
         },
 
         // Load the tenant data & its services URLs based on the ID
