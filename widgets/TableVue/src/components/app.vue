@@ -34,7 +34,7 @@
                 <v-content v-else>
                     <v-card height="100vh">
                         <v-card-title>
-                            File Name
+                            {{ fileName }}
                             <v-spacer />
                             <v-btn icon small @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
                         </v-card-title>
@@ -168,6 +168,7 @@ export default {
             // For debugging reasons
             sampleText: "",
             search: "",
+            fileName: "",
 
             // Used to log information
             snackbarMsg: "",
@@ -291,6 +292,7 @@ export default {
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
             that.fileId = widget.getValue("_FileID_");
+            that.fileName = widget.getValue("_FileName_");
 
             if (widget.id !== undefined) {
                 const _3dspace = that.tenants[that.tenantId]["3DSpace"];
@@ -342,11 +344,12 @@ export default {
 
         objectDroped(strData, element, event) {
             const res = JSON.parse(strData);
-            console.log(res);
 
             if (res.protocol === "3DXContent") {
                 this.fileId = res.data.items[0].objectId;
+                this.fileName = res.data.items[0].displayName;
                 widget.setValue("_FileID_", this.fileId);
+                widget.setValue("_FileName_", this.fileName);
                 this.reload();
             }
         },
@@ -419,6 +422,13 @@ export default {
                 name: "_FileID_",
                 type: "text",
                 label: "File Object ID",
+                defaultValue: ""
+            });
+
+            widget.addPreference({
+                name: "_FileName_",
+                type: "text",
+                label: "File Name",
                 defaultValue: ""
             });
 
