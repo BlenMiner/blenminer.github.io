@@ -32,26 +32,39 @@ var MyWidget = function()
         var btn = document.getElementById("add_entry_button");
         btn.disabled = true;
 
-        _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
-            function(result)
-            {
-                elem.style.width = "90%";
-                if (btn) btn.disabled = false;
-                me.queueUpdatePreview(function (crf)
-                { 
-                    elem.style.width = "100%";
-                    require(["DS/PlatformAPI/PlatformAPI"], function(PlatformAPI) {
-                        PlatformAPI.publish("file_uploaded", _TargetFile.objectId);
-                    });            
-                });
-            },
-            function(error)
-            {
-                elem.style.width = "0%";
-                document.getElementById("form_spot").innerHTML = "failed";
-                me.queueUpdatePreview(me.updatePreview);
-            }
-        );
+        _3dspace_file_url_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, crs,
+        function(RESULT_URl)
+        {
+            elem.style.width = "5%";
+            _httpCallAuthenticated(RESULT_URl, {
+                onComplete: function(RESULT_CONTENT)
+                {
+                    //Convert the csv to an array & display its content
+                    _TableData = CSVToArray(RESULT_CONTENT, ',');
+
+                    _3dspace_file_update_csr(_Tenants[_TenantId]["3DSpace"], _TargetFile.objectId, _TargetFile.fileId, csv_file, filename, crs,
+                        function(result)
+                        {
+                            elem.style.width = "90%";
+                            if (btn) btn.disabled = false;
+                            me.queueUpdatePreview(function (crf)
+                            { 
+                                elem.style.width = "100%";
+                                require(["DS/PlatformAPI/PlatformAPI"], function(PlatformAPI) {
+                                    PlatformAPI.publish("file_uploaded", _TargetFile.objectId);
+                                });            
+                            });
+                        },
+                        function(error)
+                        {
+                            elem.style.width = "0%";
+                            document.getElementById("form_spot").innerHTML = "failed";
+                            me.queueUpdatePreview(me.updatePreview);
+                        }
+                    );
+                }
+            })
+        });
     }
 
     this.queueUpdatePreview = function(onDone)
