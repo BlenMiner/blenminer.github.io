@@ -298,7 +298,7 @@ export default {
             this.loadingbar = true;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            const collabspace = this.securityContext.split(".")[2];
+            // const collabspace = this.securityContext.split(".")[2];
 
             that.projects = {};
 
@@ -314,7 +314,7 @@ export default {
                         const id = items[i].physicalId;
                         const data = items[i].dataelements;
 
-                        this.$set(this.projects, id, {
+                        that.$set(this.projects, id, {
                             id: id,
                             name: data.name.value[0].value,
                             description: data.desc.value[0].value,
@@ -323,76 +323,14 @@ export default {
                             state: (data.phase.value.length !== 0) ? data.phase.value[0].value : "",
                             owner: data.owner.value[0].value
                         });
+                        that.loadingbar = false;
                     }
                 },
 
                 onFailure: (response) => {
-                    that.log(response);
-                }
-            });
-
-            /*
-            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}`,
-            {
-                onComplete: (response) => {
-                    const items = JSON.parse(response).items;
-
-                    for (let i = 0; i < items.length; i++) {
-                        const content = items[i].businessobj;
-
-                        if (!content) {
-                            continue;
-                        }
-
-                        console.log(content.type.value);
-
-                        const id = items[i].id;
-
-                        if (content.type.value === "Project Space") {
-                            that.projects[id] = {
-                                id: id,
-                                name: content.name,
-                                description: content.description,
-                                deadline: null,
-                                icon: content.thumbnail,
-                                progress: null,
-                                state: content.maturity.name,
-                                owner: content.fullnameowner
-                            };
-                        }
-                    }
-
-                    that.loadingbar = false;
-                },
-
-                onFailure: (response) => {
-                    that.toast(response);
-                }
-            });
-
-            httpCallAuthenticated(_3dspace + "/resources/v1/modeler/projects?SecurityContext=" + this.securityContext,
-            {
-                onComplete: (response) => {
-                    const data = JSON.parse(response);
-
-                    for (let i = 0; i < data.data.length; i++) {
-                        const prjt = data.data[i];
-
-                        if (that.projects[prjt.id]) {
-                            that.projects[prjt.id].deadline = prjt.dataelements.estimatedFinishDate;
-                            that.projects[prjt.id].progress = prjt.dataelements.percentComplete;
-                        }
-                    }
-
-                    that.loadingbar = false;
-                },
-
-                onFailure: (err) => {
-                    that.toast(err);
                     that.loadingbar = false;
                 }
             });
-            */
         },
 
         retrieveSecurityContexts() {
