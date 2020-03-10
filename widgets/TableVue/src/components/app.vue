@@ -34,8 +34,9 @@
                 <v-content v-else>
                     <v-card height="100vh">
                         <v-card-title>
+                            File Name
                             <v-spacer />
-                            <v-btn icon large @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
+                            <v-btn icon small @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
                         </v-card-title>
                         <v-data-table
                             :headers="filteredheaders"
@@ -341,6 +342,7 @@ export default {
 
         objectDroped(strData, element, event) {
             const res = JSON.parse(strData);
+            console.log(res);
 
             if (res.protocol === "3DXContent") {
                 this.fileId = res.data.items[0].objectId;
