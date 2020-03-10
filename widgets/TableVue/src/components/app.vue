@@ -439,7 +439,6 @@ export default {
         },
 
         hidetablerow(item) {
-            this.log("hmm");
             const index = this.items.indexOf(item);
             EventBus.$emit("removeandupdate", index);
         }
