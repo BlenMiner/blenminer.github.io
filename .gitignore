@@ -20,3 +20,14 @@ widgets/TableVue/.vscode/extensions.json
 widgets/TableVue/.vscode/launch.json
 widgets/TableVue/.vscode/settings.json
 widgets/TableVue/node_modules/*
+widgets/Formation/.eslintignore
+widgets/Formation/.eslintrc.json
+widgets/Formation/.gitlab-ci.yml
+widgets/Formation/.markdownlint.json
+widgets/Formation/.prettierrc
+widgets/Formation/.zipignore
+widgets/Formation/README.md
+widgets/Formation/.vscode/extensions.json
+widgets/Formation/.vscode/launch.json
+widgets/Formation/.vscode/settings.json
+widgets/Formation/node_modules/*
