@@ -335,7 +335,7 @@ export default {
                 }
             } else {
                 that.fileId = "1";
-                that.displayFileData("test,test1,test2\n1,2,3\n4,5,6\naba,eba,ibi");
+                that.displayFileData("test 6,test 9,test2\n1,2,3\n4,5,6\naba,eba,ibi");
                 that.loadingbar = false;
             }
         },
