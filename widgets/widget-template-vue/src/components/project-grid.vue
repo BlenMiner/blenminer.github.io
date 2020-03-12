@@ -35,6 +35,7 @@
                                     <v-list-item-subtitle :title="project.description">Desc: {{ project.description }}</v-list-item-subtitle>
                                     <v-list-item-subtitle :title="owner">Owner: {{ project.owner }}</v-list-item-subtitle>
                                     <v-progress-linear
+                                        v-if="project.progress !== -1"
                                         :value="project.progress"
                                         :title="project.progress"
                                         :indeterminate="!project.progress"

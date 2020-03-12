@@ -8,7 +8,7 @@
                 color="blue accent-4"
                 indeterminate
                 height="10"
-                :active="loadingbar"
+                :active="loadingbar > 0"
             />
 
             <!-- widget notifaction module -->
@@ -87,7 +87,7 @@ export default {
             tenants: [],
             tenantId: 0,
 
-            loadingbar: true,
+            loadingbar: 0,
             objectid: "",
             currentProject: null,
             tabCount: 4,
@@ -290,15 +290,15 @@ export default {
             // Loads the prefs if available
             if (widget.id !== undefined) {
                 EventBus.$emit("reloadwidget");
-            } else this.loadingbar = false;
+            } else this.loadingbar = 0;
         },
 
         retrieveAllProjects() {
             const that = this;
-            this.loadingbar = true;
+            this.loadingbar += 2;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            // const collabspace = this.securityContext.split(".")[2];
+            const collabspace = this.securityContext.split(".")[2];
 
             that.projects = {};
 
@@ -321,21 +321,61 @@ export default {
                             icon: data.image.value[0].imageValue,
                             progress: data.percentComplete.value[0].value,
                             state: (data.phase.value.length !== 0) ? data.phase.value[0].value : "",
-                            owner: data.owner.value[0].value
+                            owner: data.owner.value[0].value,
+                            type: "Project Space"
                         });
-                        that.loadingbar = false;
+                        that.loadingbar--;
                     }
                 },
 
                 onFailure: (response) => {
-                    that.loadingbar = false;
+                    that.loadingbar--;
+                }
+            });
+
+            const tags = {};
+            tags.allfilters = {
+                "ds6w:what/ds6w:policy": [
+                    {
+                        object: "Project Task",
+                        type: "string",
+                        field: ["implicit"]
+                    }
+                ]
+            };
+
+            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}&tags=${tags}`,
+            {
+                onComplete: (response) => {
+                    const items = JSON.parse(response).items;
+
+                    for (let i = 0; i < items.length; i++) {
+                        const id = items[i].id;
+                        const data = items[i].businessobj;
+
+                        that.$set(this.projects, id, {
+                            id: id,
+                            name: data.name,
+                            description: data.desc,
+                            icon: data.icon,
+                            progress: -1,
+                            state: data.maturity ? data.maturity.name : "NAN",
+                            owner: data.fullnameowner,
+                            type: data.type.value
+                        });
+                        that.loadingbar--;
+                    }
+                },
+
+                onFailure: (response) => {
+                    that.loadingbar--;
                 }
             });
         },
 
         retrieveSecurityContexts() {
             const that = this;
-            this.loadingbar = true;
+            this.loadingbar++;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/modeler/pno/person?&current=true&select=collabspaces&select=firstname&select=lastname",
@@ -379,10 +419,12 @@ export default {
                     });
 
                     that.securityContext = widget.getValue("_CurrentSecurityContext_");
+                    this.loadingbar--;
                     that.retrieveAllProjects();
                 },
 
                 onFailure: (response) => {
+                    this.loadingbar--;
                     that.retrieveAllProjects();
                 }
             });
