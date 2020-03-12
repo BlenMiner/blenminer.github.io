@@ -340,6 +340,11 @@ export default {
                         object: "Project Task",
                         type: "string",
                         field: ["implicit"]
+                    },
+                    {
+                        object: "Financial Items",
+                        type: "string",
+                        field: ["implicit"]
                     }
                 ]
             };
