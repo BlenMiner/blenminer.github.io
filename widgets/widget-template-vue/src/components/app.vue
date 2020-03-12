@@ -349,7 +349,7 @@ export default {
                 ]
             };
 
-            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}&tags=${tags}`,
+            httpCallAuthenticated(_3dspace + `/resources/enocsmrest/collabspaces/${collabspace}/contents?SecurityContext=${this.securityContext}&tags=${JSON.stringify(tags)}`,
             {
                 onComplete: (response) => {
                     const items = JSON.parse(response).items;
