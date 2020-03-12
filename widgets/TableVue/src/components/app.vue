@@ -333,6 +333,15 @@ export default {
                         }
                     );
                 } else {
+                    if (that.$refs.drop) {
+                        requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
+                            DataDragAndDrop.droppable(that.$refs.drop, {
+                                drop: (strData, element, event) => {
+                                    that.objectDroped(strData, element, event);
+                                }
+                            });
+                        });
+                    }
                     that.loadingbar = false;
                 }
             } else {
