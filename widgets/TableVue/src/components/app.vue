@@ -25,41 +25,39 @@
                 </v-btn>
             </v-snackbar>
 
-            <v-slide-x-transition>
-                <center v-if="fileId === ''">
-                    <v-content style="height:100vh;width:100%;">
-                        <div id="drop" ref="drop" width="90vh" height="90vh"></div>
-                    </v-content>
-                </center>
-                <v-content v-else>
-                    <v-card height="100vh">
-                        <v-card-title>
-                            {{ fileName }}
-                            <v-spacer />
-                            <v-btn icon small @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
-                        </v-card-title>
-                        <v-data-table
-                            :headers="filteredheaders"
-                            :items="filteredrows"
-                            :search="search"
-                            class="elevation-1"
-                            height="calc(100vh - 139px)"
-                            loading="true"
-                        >
-                            <template v-slot:item.action="{ item }">
-                                <v-icon
-                                    v-if="item"
-                                    small
-                                    class="mr-2"
-                                    @click="hidetablerow(item)"
-                                >
-                                    mdi-eye-off
-                                </v-icon>
-                            </template>
-                        </v-data-table>
-                    </v-card>
+            <center v-show="fileId === ''">
+                <v-content style="height:100vh;width:100%;">
+                    <div id="drop" ref="drop" width="90vh" height="90vh"></div>
                 </v-content>
-            </v-slide-x-transition>
+            </center>
+            <v-content v-if="fileId !== ''">
+                <v-card height="100vh">
+                    <v-card-title>
+                        {{ fileName }}
+                        <v-spacer />
+                        <v-btn icon small @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
+                    </v-card-title>
+                    <v-data-table
+                        :headers="filteredheaders"
+                        :items="filteredrows"
+                        :search="search"
+                        class="elevation-1"
+                        height="calc(100vh - 139px)"
+                        loading="true"
+                    >
+                        <template v-slot:item.action="{ item }">
+                            <v-icon
+                                v-if="item"
+                                small
+                                class="mr-2"
+                                @click="hidetablerow(item)"
+                            >
+                                mdi-eye-off
+                            </v-icon>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-content>
         </v-content>
     </v-app>
 </template>
@@ -333,15 +331,6 @@ export default {
                         }
                     );
                 } else {
-                    if (that.$refs.drop) {
-                        requirejs(["DS/DataDragAndDrop/DataDragAndDrop"], (DataDragAndDrop) => {
-                            DataDragAndDrop.droppable(that.$refs.drop, {
-                                drop: (strData, element, event) => {
-                                    that.objectDroped(strData, element, event);
-                                }
-                            });
-                        });
-                    }
                     that.loadingbar = false;
                 }
             } else {
