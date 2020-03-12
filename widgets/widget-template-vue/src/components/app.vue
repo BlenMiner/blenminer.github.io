@@ -390,8 +390,6 @@ export default {
                     const data = JSON.parse(response);
                     const contextList = []; // {value, label}
 
-                    console.log(data);
-
                     contextList.push({ value: "", label: "None" });
 
                     that.owner = data.firstname + " " + data.lastname;
