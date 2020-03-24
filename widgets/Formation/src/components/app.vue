@@ -42,8 +42,7 @@ html, body {
 <script>
 /* eslint-disable no-console */
 import { EventBus } from "../plugins/vuetify";
-
-const net = requirejs("net");
+import { CSVToArray } from "../plugins/vuetify";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -68,9 +67,7 @@ export default {
 
             // Data loaded from DS and from preferences
             tenantId: -1,
-            tenants: [],
-
-            client: null
+            tenants: []
         };
     },
 
@@ -87,7 +84,6 @@ export default {
         that.loadingbar = true;
 
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
-
         EventBus.$on("reloadwidget", () => { that.reload(); });
 
         // Start loading bar aswell
@@ -107,16 +103,6 @@ export default {
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
-        },
-
-        connectserver() {
-            const that = this;
-            that.client = new net.Socket();
-
-            that.client.connect(6969, "127.0.0.1", () => {
-                that.log("Hello");
-                that.client.write("Hello, server! Love, Client.");
-            });
         },
 
         getCSRF(onComplete, onFailure) {
