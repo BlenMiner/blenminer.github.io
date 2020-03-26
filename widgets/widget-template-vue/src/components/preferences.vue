@@ -52,6 +52,7 @@
                                     title="{id}= project's ID; {context} = security context;"
                                     name="taburl"
                                 />
+                                <v-switch v-model="tabOutside[i - 1]" label="Open As New Window" />
                             </v-card-text>
                         </v-card>
                     </template>
@@ -77,7 +78,8 @@ export default {
             dialog: false,
             infodialog: false,
             tabNames: [],
-            tabUrls: []
+            tabUrls: [],
+            tabOutside: []
         };
     },
 
@@ -89,6 +91,7 @@ export default {
             for (let i = 0; i < tabscount; i++) {
                 that.tabNames[i] = widget.getValue(`_Tab${i}_Name_`) || "New tab " + (i + 1);
                 that.tabUrls[i] = widget.getValue(`_Tab${i}_Url_`) || "/programcentral/ProgramCentralExecutionStatusReport.jsp?objectId={id}";
+                that.tabOutside[i] = widget.getValue(`_Tab${i}_NewTab_`) || false;
             }
         });
     },
@@ -99,9 +102,11 @@ export default {
             if (widget.id) {
                 for (let i = 0; i < tabscount; i++) {
                     if (widget.getValue(`_Tab${i}_Name_`) !== this.tabNames[i] ||
-                        widget.getValue(`_Tab${i}_Url_`) !== this.tabUrls[i]) {
+                        widget.getValue(`_Tab${i}_Url_`) !== this.tabUrls[i] ||
+                        widget.getValue(`_Tab${i}_NewTab_`) !== this.tabOutside[i]) {
                         widget.setValue(`_Tab${i}_Name_`, this.tabNames[i]);
                         widget.setValue(`_Tab${i}_Url_`, this.tabUrls[i]);
+                        widget.setValue(`_Tab${i}_NewTab_`, this.tabOutside[i]);
                         changes = true;
                     }
                 }

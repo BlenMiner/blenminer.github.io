@@ -41,8 +41,7 @@ html, body {
 
 <script>
 /* eslint-disable no-console */
-import { EventBus } from "../plugins/vuetify";
-import { CSVToArray } from "../plugins/vuetify";
+import { EventBus, CSVToArray } from "../plugins/vuetify";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -130,13 +129,14 @@ export default {
             that.loadingbar = true;
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
-            if (widget.id !== undefined) {
-                // use all the api stuff
-                that.loadingbar = false;
-            } else {
-                // simulate some data so we can test locally
-                that.loadingbar = false;
-            }
+            const http = new XMLHttpRequest();
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.csv", false);
+            http.send(null);
+
+            const table = CSVToArray(http.responseText, ";");
+            console.log(http.responseText);
+            console.log(table);
+            that.loadingbar = false;
         },
 
         // Load the tenant data & its services URLs based on the ID

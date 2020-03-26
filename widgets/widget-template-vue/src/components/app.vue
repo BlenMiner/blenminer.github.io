@@ -174,7 +174,8 @@ export default {
             for (let i = 0; i < that.tabCount; i++) {
                 that.myTabs[i] = {
                     name: widget.getValue(`_Tab${i}_Name_`),
-                    url: widget.getValue(`_Tab${i}_Url_`)
+                    url: widget.getValue(`_Tab${i}_Url_`),
+                    openNewTab: widget.getValue(`_Tab${i}_NewTab_`)
                 };
             }
             that.$forceUpdate();
@@ -284,6 +285,11 @@ export default {
                     name: `_Tab${i}_Url_`,
                     type: "hidden",
                     defaultValue: this.tabs[(i > this.tabs.length - 1) ? this.tabs.length - 1 : i].url
+                });
+                widget.addPreference({
+                    name: `_Tab${i}_NewTab_`,
+                    type: "hidden",
+                    defaultValue: false
                 });
             }
 

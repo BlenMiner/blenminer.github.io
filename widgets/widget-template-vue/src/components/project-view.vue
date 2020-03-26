@@ -29,7 +29,7 @@
                 v-for="i in tabcount"
                 :key="i"
             >
-                <v-card flat>
+                <v-card v-if="tabs[i - 1] != null && !tabs[i - 1].openNewTab" flat>
                     <iframe
                         v-if="project !== null"
                         ref="iframes"
@@ -38,6 +38,13 @@
                         style="height: calc(100vh - 90.51px);"
                         @load="doneLoading();"
                     ></iframe>
+                </v-card>
+                <v-card v-else style="height: calc(100vh - 90.51px);">
+                    <a
+                        target="_blank"
+                        :href="tabs[i - 1] ? (url + tabs[i - 1].url.replace(/{id}/g, objectid).replace(/{context}/g, securitycontext)) : 'about:blank'"
+                        @click="loadingbar=false"
+                    >Open in Enovia</a>
                 </v-card>
             </v-tab-item>
         </v-tabs-items>
