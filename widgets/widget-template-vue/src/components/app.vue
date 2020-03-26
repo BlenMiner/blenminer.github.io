@@ -339,7 +339,7 @@ export default {
                 }
             });
 
-            const tags = {};
+            /* const tags = {};
             tags.allfilters = {
                 "ds6w:what/ds6w:policy": [
                     {
@@ -381,7 +381,7 @@ export default {
                 onFailure: (response) => {
                     that.loadingbar--;
                 }
-            });
+            }); */
         },
 
         retrieveSecurityContexts() {
