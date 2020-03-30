@@ -130,12 +130,13 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.csv", false);
+            http.open("GET", "@/static/database_kpi.csv", false);
             http.send(null);
 
             const table = CSVToArray(http.responseText, ";");
             console.log(http.responseText);
             console.log(table);
+            
             that.loadingbar = false;
         },
 
