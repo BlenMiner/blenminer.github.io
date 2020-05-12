@@ -7,7 +7,7 @@
                 dark
                 show-arrows
             >
-                <v-tabs-slider color="#5FEFE"></v-tabs-slider>
+                <v-tabs-slider color="#5FEFE" />
                 <v-tab
                     v-for="v in sortedDatabase"
                     :key="v"
@@ -31,14 +31,18 @@
                             >
                                 <template v-slot:item="props">
                                     <tr :style="{'background-color': getColor(props.item.color)}">
-                                        <td>{{props.item.category}}</td>
-                                        <td>{{props.item.subcategory}}</td>
-                                        <td><v-chip 
-                                            :color="
-                                                (props.item.count * props.item.credits) >= 5 ? 'green' : 
-                                                ((props.item.count * props.item.credits) >= 2 ? 'orange' : 'red')
+                                        <td>{{ props.item.category }}</td>
+                                        <td>{{ props.item.subcategory }}</td>
+                                        <td>
+                                            <v-chip
+                                                :color="
+                                                    (props.item.count * props.item.credits) >= 5 ? 'green' :
+                                                    ((props.item.count * props.item.credits) >= 2 ? 'orange' : 'red')
                                                 "
-                                            dark>{{props.item.count}}</v-chip>
+                                                dark
+                                            >
+                                                {{ props.item.count }}
+                                            </v-chip>
                                         </td>
                                     </tr>
                                 </template>
@@ -65,6 +69,7 @@ html, body {
 <script>
 /* eslint-disable no-console */
 import { EventBus, CSVToArray } from "../plugins/vuetify";
+import Vue from "vue";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -85,15 +90,15 @@ export default {
             tab: null,
 
             headers: [
-            { text: 'Category', value: 'category', },
-            { text: 'Sub-Category', value: 'subcategory', },
-            { text: 'Total', value: 'count', }
+            { text: "Category", value: "category" },
+            { text: "Sub-Category", value: "subcategory" },
+            { text: "Total", value: "count" }
             ],
 
             database: {},
             sortedDatabase: [],
             databaseCategories: {},
-            
+
             // Help the user know something is loading
             loadingbar: true,
 
@@ -135,121 +140,6 @@ export default {
         }
 
         // Actual new code is here =========
-
-        const http = new XMLHttpRequest();
-        http.open("GET", "https://bcracker.dev/widgets/database_kpi.php", false);
-        http.send(null);
-
-        this.table = CSVToArray(http.responseText, ";");
-
-        http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
-        http.send(null);
-
-        this.categories = CSVToArray(http.responseText, ";");
-
-        http.open("GET", "https://bcracker.dev/widgets/smec.php", false);
-        http.send(null);
-
-        /*http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
-        http.send(null);*/
-
-        const smecs = CSVToArray(http.responseText, ";");
-
-        for (let i = 1; i < this.table.length; i++)
-        {
-            let partnerName = this.table[i][0];
-            if (!partnerName) continue;
-
-            let partnerId = partnerName.split("[")[1].slice(0, -1);
-            partnerName = partnerName.split("[")[0].slice(0, -1);
-
-            const certName = this.table[i][7];
-
-            let found = false;
-            let category = "Brand_Essentials";
-            let subcategory = "Brand Articulate";
-            let credits = "0,5";
-
-            for (let j = 1; j < this.categories.length; ++j)
-            {
-                if (this.categories[j][0] == certName)
-                {
-                    category = this.categories[j][1];
-                    subcategory = this.categories[j][2];
-                    credits = this.categories[j][3];
-                    found = true;
-                    break;
-                }
-            }
-
-            if (this.database[partnerName] === undefined)
-            {
-                this.sortedDatabase.push(partnerName);
-                Vue.set(this.database, partnerName, []);
-                Vue.set(this.databaseCategories, partnerName, []);
-            }
-
-            if (!found)
-            {
-                console.error(certName + " doesn't exist in the list.");
-            }
-
-            const cert = {
-                    partner_id: partnerId,
-                    cert_name: certName,
-                    cert_expiration: this.table[i][9],
-                    cert_profile: this.table[i][11],
-                    cert_axis: this.table[i][12],
-                    cert_category: this.table[i][13],
-                    category: category,
-                    subcategory: subcategory,
-                    credits: credits
-            };
-
-            this.database[partnerName].push(cert);
-            this.addCategoryItem(partnerName, category, subcategory, credits);
-        }
-
-        for (let i = 5; i < smecs.length; i++)
-        {
-            let partnerName = smecs[i][10];
-            let valid = smecs[i][26];
-
-            if (!partnerName) continue;
-
-            //let partnerId = partnerName.split("[")[1].slice(0, -1);
-            partnerName = partnerName.split("[")[0].slice(0, -1);
-            if (valid == "Finished" && partnerName != "3D") {
-                this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
-            }
-        }
-
-        this.sortedDatabase.sort(
-            function(aA, bB)
-            {
-                const a = that.database[aA].length;
-                const b = that.database[bB].length;
-                return (a < b ? 1 : (a > b ? -1 : 0))
-            }
-        );
-
-        for (const val in this.databaseCategories)
-        {
-            this.databaseCategories[val].sort(function(a, b){return (a.category < b.category ? -1 : (a.category > b.category ? 1 : 0))});
-
-            if (this.databaseCategories[val].length > 0) {
-                let last = this.databaseCategories[val][0];
-                let counter = 0;
-
-                for (let i = 0; i < this.databaseCategories[val].length; ++i) {
-                    if (last.category != this.databaseCategories[val][i].category) {
-                        ++counter;
-                    }
-                    last = this.databaseCategories[val][i];
-                    last.color = counter;
-                }
-            }
-        }
     },
 
     methods: {
@@ -287,9 +177,112 @@ export default {
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php", false);
             http.send(null);
 
-            const table = CSVToArray(http.responseText, ";");
-            console.log(http.responseText);
-            console.log(table);
+            this.table = CSVToArray(http.responseText, ";");
+
+            http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
+            http.send(null);
+
+            this.categories = CSVToArray(http.responseText, ";");
+
+            http.open("GET", "https://bcracker.dev/widgets/smec.php", false);
+            http.send(null);
+
+            /* http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
+            http.send(null); */
+
+            const smecs = CSVToArray(http.responseText, ";");
+
+            this.sortedDatabase.splice(0, this.sortedDatabase.length);
+            this.database = {};
+            this.databaseCategories = {};
+
+            for (let i = 1; i < this.table.length; i++) {
+                let partnerName = this.table[i][0];
+                if (!partnerName) continue;
+
+                const partnerId = partnerName.split("[")[1].slice(0, -1);
+                partnerName = partnerName.split("[")[0].slice(0, -1);
+
+                const certName = this.table[i][7];
+
+                let found = false;
+                let category = "Brand_Essentials";
+                let subcategory = "Brand Articulate";
+                let credits = "0,5";
+
+                for (let j = 1; j < this.categories.length; ++j) {
+                    if (this.categories[j][0] === certName) {
+                        category = this.categories[j][1];
+                        subcategory = this.categories[j][2];
+                        credits = this.categories[j][3];
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (this.database[partnerName] === undefined) {
+                    this.sortedDatabase.push(partnerName);
+                    Vue.set(this.database, partnerName, []);
+                    Vue.set(this.databaseCategories, partnerName, []);
+                }
+
+                if (!found) {
+                    console.error(certName + " doesn't exist in the list.");
+                }
+
+                const cert = {
+                        partnerId: partnerId,
+                        certName: certName,
+                        certExpiration: this.table[i][9],
+                        certProfile: this.table[i][11],
+                        certAxis: this.table[i][12],
+                        certCategory: this.table[i][13],
+                        category: category,
+                        subcategory: subcategory,
+                        credits: credits
+                };
+
+                this.database[partnerName].push(cert);
+                this.addCategoryItem(partnerName, category, subcategory, credits);
+            }
+
+            for (let i = 5; i < smecs.length; i++) {
+                let partnerName = smecs[i][10];
+                const valid = smecs[i][26];
+
+                if (!partnerName) continue;
+
+                // let partnerId = partnerName.split("[")[1].slice(0, -1);
+                partnerName = partnerName.split("[")[0].slice(0, -1);
+                if (valid === "Finished" && partnerName !== "3D") {
+                    this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
+                }
+            }
+
+            this.sortedDatabase.sort(
+                (aA, bB) => {
+                    const a = that.database[aA].length;
+                    const b = that.database[bB].length;
+                    return (a < b ? 1 : (a > b ? -1 : 0));
+                }
+            );
+
+            for (const val in this.databaseCategories) {
+                this.databaseCategories[val].sort((a, b) => { return (a.category < b.category ? -1 : (a.category > b.category ? 1 : 0)); });
+
+                if (this.databaseCategories[val].length > 0) {
+                    let last = this.databaseCategories[val][0];
+                    let counter = 0;
+
+                    for (let i = 0; i < this.databaseCategories[val].length; ++i) {
+                        if (last.category !== this.databaseCategories[val][i].category) {
+                            ++counter;
+                        }
+                        last = this.databaseCategories[val][i];
+                        last.color = counter;
+                    }
+                }
+            }
 
             that.loadingbar = false;
         },
@@ -327,32 +320,31 @@ export default {
         },
 
         getColor: function(counter) {
-            if (counter % 2 == 1)
-                return 'white';
-            else return '#EFEFEF';
+            if (counter % 2 === 1) {
+                return "white";
+            } else {
+                return "#EFEFEF";
+            }
         },
 
         addCategoryItem: function(partnerName, category, subcategory, credits) {
             let foundSat = false;
 
-            if (this.databaseCategories[partnerName] == null) {
+            if (!this.databaseCategories[partnerName]) {
                 console.error(partnerName + " doesn't have other licenses?");
                 return;
             }
 
-            for (let j = 0; j < this.databaseCategories[partnerName].length; ++j)
-            {
+            for (let j = 0; j < this.databaseCategories[partnerName].length; ++j) {
                 const v = this.databaseCategories[partnerName][j];
-                if (v.category == category && v.subcategory == subcategory)
-                {
+                if (v.category === category && v.subcategory === subcategory) {
                     v.count += 1;
                     foundSat = true;
                     return;
                 }
             }
 
-            if (!foundSat)
-            {
+            if (!foundSat) {
                 this.databaseCategories[partnerName].push({
                     category: category,
                     subcategory: subcategory,
