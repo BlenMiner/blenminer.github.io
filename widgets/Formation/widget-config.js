@@ -1,9 +1,9 @@
-//const fs = require("fs");
+const fs = require("fs");
 
 const cfg = {
     urls: {
         // URL to serve from webpack (local)
-        local: "http://localhost:8080/widget/"
+        local: "https://localhost:8081/widget/"
 
         // URL to access this server (public), default is same as local
         //   you can define different public URL if you serve behind reverse proxy
@@ -18,10 +18,10 @@ const cfg = {
 
         devServer: {
             // TODO uncomment these lines if you want to serve https
-            /*https: {
+            https: {
                 key: fs.readFileSync("C:/Users/VBU4/Desktop/Repository/mkcert/localhost+3-key.pem"),
                 cert: fs.readFileSync("C:/Users/VBU4/Desktop/Repository/mkcert/localhost+3.pem")
-            }*/
+            }
         }
     },
     s3: {
