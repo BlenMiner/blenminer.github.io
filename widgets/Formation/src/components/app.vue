@@ -1,30 +1,53 @@
 <template>
     <v-app>
-        <v-content>
-            <!-- header progress bar -->
-            <v-progress-linear
-                color="blue accent-4"
-                indeterminate
-                height="10"
-                :active="loadingbar"
-                absolute
-                app
-            />
-
-            <!-- widget notifaction module -->
-            <v-snackbar v-model="snackbar">
-                {{ snackbarMsg }}
-                <v-btn
-                    color="grey"
-                    text
-                    @click="snackbar = false"
+        <v-card flat>
+            <v-tabs
+                v-model="tab"
+                background-color="#005685"
+                dark
+                show-arrows
+            >
+                <v-tabs-slider color="#5FEFE"></v-tabs-slider>
+                <v-tab
+                    v-for="v in sortedDatabase"
+                    :key="v"
                 >
-                    Close
-                </v-btn>
-            </v-snackbar>
+                    <small>{{ v }}</small>
+                </v-tab>
+            </v-tabs>
 
-            <v-btn @click="connectserver()"> Click me! </v-btn>
-        </v-content>
+            <v-tabs-items v-model="tab">
+                <v-tabs-items v-model="tab">
+                    <v-tab-item
+                        v-for="k in sortedDatabase"
+                        :key="k"
+                    >
+                        <v-card flat>
+                            <v-data-table
+                                :headers="headers"
+                                :items="databaseCategories[k]"
+                                :items-per-page="15"
+                                dense
+                            >
+                                <template v-slot:item="props">
+                                    <tr :style="{'background-color': getColor(props.item.color)}">
+                                        <td>{{props.item.category}}</td>
+                                        <td>{{props.item.subcategory}}</td>
+                                        <td><v-chip 
+                                            :color="
+                                                (props.item.count * props.item.credits) >= 5 ? 'green' : 
+                                                ((props.item.count * props.item.credits) >= 2 ? 'orange' : 'red')
+                                                "
+                                            dark>{{props.item.count}}</v-chip>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-tab-item>
+                </v-tabs-items>
+            </v-tabs-items>
+        </v-card>
     </v-app>
 </template>
 
@@ -57,6 +80,20 @@ export default {
 
     data: function() {
         return {
+            table: null,
+            categories: null,
+            tab: null,
+
+            headers: [
+            { text: 'Category', value: 'category', },
+            { text: 'Sub-Category', value: 'subcategory', },
+            { text: 'Total', value: 'count', }
+            ],
+
+            database: {},
+            sortedDatabase: [],
+            databaseCategories: {},
+            
             // Help the user know something is loading
             loadingbar: true,
 
@@ -95,6 +132,123 @@ export default {
                     onComplete: this.tenantDataLoaded
                 });
             });
+        }
+
+        // Actual new code is here =========
+
+        const http = new XMLHttpRequest();
+        http.open("GET", "https://bcracker.dev/widgets/database_kpi.php", false);
+        http.send(null);
+
+        this.table = CSVToArray(http.responseText, ";");
+
+        http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
+        http.send(null);
+
+        this.categories = CSVToArray(http.responseText, ";");
+
+        http.open("GET", "https://bcracker.dev/widgets/smec.php", false);
+        http.send(null);
+
+        /*http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
+        http.send(null);*/
+
+        const smecs = CSVToArray(http.responseText, ";");
+
+        for (let i = 1; i < this.table.length; i++)
+        {
+            let partnerName = this.table[i][0];
+            if (!partnerName) continue;
+
+            let partnerId = partnerName.split("[")[1].slice(0, -1);
+            partnerName = partnerName.split("[")[0].slice(0, -1);
+
+            const certName = this.table[i][7];
+
+            let found = false;
+            let category = "Brand_Essentials";
+            let subcategory = "Brand Articulate";
+            let credits = "0,5";
+
+            for (let j = 1; j < this.categories.length; ++j)
+            {
+                if (this.categories[j][0] == certName)
+                {
+                    category = this.categories[j][1];
+                    subcategory = this.categories[j][2];
+                    credits = this.categories[j][3];
+                    found = true;
+                    break;
+                }
+            }
+
+            if (this.database[partnerName] === undefined)
+            {
+                this.sortedDatabase.push(partnerName);
+                Vue.set(this.database, partnerName, []);
+                Vue.set(this.databaseCategories, partnerName, []);
+            }
+
+            if (!found)
+            {
+                console.error(certName + " doesn't exist in the list.");
+            }
+
+            const cert = {
+                    partner_id: partnerId,
+                    cert_name: certName,
+                    cert_expiration: this.table[i][9],
+                    cert_profile: this.table[i][11],
+                    cert_axis: this.table[i][12],
+                    cert_category: this.table[i][13],
+                    category: category,
+                    subcategory: subcategory,
+                    credits: credits
+            };
+
+            this.database[partnerName].push(cert);
+            this.addCategoryItem(partnerName, category, subcategory, credits);
+        }
+
+        for (let i = 5; i < smecs.length; i++)
+        {
+            let partnerName = smecs[i][10];
+            let valid = smecs[i][26];
+
+            if (!partnerName) continue;
+
+            //let partnerId = partnerName.split("[")[1].slice(0, -1);
+            partnerName = partnerName.split("[")[0].slice(0, -1);
+            if (valid == "Finished" && partnerName != "3D") {
+                this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
+            }
+        }
+
+        this.sortedDatabase.sort(
+            function(aA, bB)
+            {
+                const a = that.database[aA].length;
+                const b = that.database[bB].length;
+                return (a < b ? 1 : (a > b ? -1 : 0))
+            }
+        );
+
+        for (const val in this.databaseCategories)
+        {
+            this.databaseCategories[val].sort(function(a, b){return (a.category < b.category ? -1 : (a.category > b.category ? 1 : 0))});
+
+            if (this.databaseCategories[val].length > 0) {
+                let last = this.databaseCategories[val][0];
+                let counter = 0;
+
+                for (let i = 0; i < this.databaseCategories[val].length; ++i) {
+                    if (last.category != this.databaseCategories[val][i].category) {
+                        ++counter;
+                    }
+                    last = this.databaseCategories[val][i];
+                    last.color = counter;
+                }
+            }
         }
     },
 
@@ -170,6 +324,43 @@ export default {
 
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
+        },
+
+        getColor: function(counter) {
+            if (counter % 2 == 1)
+                return 'white';
+            else return '#EFEFEF';
+        },
+
+        addCategoryItem: function(partnerName, category, subcategory, credits) {
+            let foundSat = false;
+
+            if (this.databaseCategories[partnerName] == null) {
+                console.error(partnerName + " doesn't have other licenses?");
+                return;
+            }
+
+            for (let j = 0; j < this.databaseCategories[partnerName].length; ++j)
+            {
+                const v = this.databaseCategories[partnerName][j];
+                if (v.category == category && v.subcategory == subcategory)
+                {
+                    v.count += 1;
+                    foundSat = true;
+                    return;
+                }
+            }
+
+            if (!foundSat)
+            {
+                this.databaseCategories[partnerName].push({
+                    category: category,
+                    subcategory: subcategory,
+                    credits: Number(credits.replace(/,/g, ".")),
+                    count: 1,
+                    color: 0
+                });
+            }
         }
     }
 };
