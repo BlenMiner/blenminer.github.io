@@ -31,3 +31,14 @@ widgets/Formation/.vscode/extensions.json
 widgets/Formation/.vscode/launch.json
 widgets/Formation/.vscode/settings.json
 widgets/Formation/node_modules/*
+widgets/KPI Simulator/.eslintignore
+widgets/KPI Simulator/.eslintrc.json
+widgets/KPI Simulator/.gitlab-ci.yml
+widgets/KPI Simulator/.markdownlint.json
+widgets/KPI Simulator/.prettierrc
+widgets/KPI Simulator/.zipignore
+widgets/KPI Simulator/README.md
+widgets/KPI Simulator/.vscode/extensions.json
+widgets/KPI Simulator/.vscode/launch.json
+widgets/KPI Simulator/.vscode/settings.json
+widgets/KPI Simulator/node_modules/*
