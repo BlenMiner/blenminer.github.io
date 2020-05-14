@@ -204,6 +204,38 @@ export default {
             this.snackbar = true;
         },
 
+        // Load the tenant data & its services URLs based on the ID
+        tenantDataLoaded(data) {
+            this.tenants = [];
+            const _TenantOpts = [];
+
+            let j = 0;
+
+            // Load all the tenants
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]["3DSpace"] === undefined) continue;
+
+                _TenantOpts.push({
+                    value: `${j++}`,
+                    label: `${data[i].platformId} - ${data[i].displayName}`
+                });
+
+                this.tenants.push(data[i]);
+            }
+
+            // Setup your preferences...
+            widget.addPreference({
+                name: "_CurrentTenantID_",
+                type: "list",
+                label: "Tenant",
+                defaultValue: "0",
+                options: _TenantOpts
+            });
+
+            // Loads the prefs if available
+            EventBus.$emit("reloadwidget");
+        },
+
         getCSRF(onComplete, onFailure) {
             const that = this;
 
