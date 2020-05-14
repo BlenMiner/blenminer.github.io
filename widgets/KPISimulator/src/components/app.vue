@@ -8,6 +8,7 @@
                 <v-btn
                     color="green darken-1"
                     dark
+                    flat
                     v-on="on"
                 >
                     Load from partner
@@ -187,7 +188,7 @@ export default {
 
         // Start loading bar aswell
         if (widget.id === undefined) {
-            setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 500);
+            that.tenantDataLoaded([{ id: -1 }]);
         } else {
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
