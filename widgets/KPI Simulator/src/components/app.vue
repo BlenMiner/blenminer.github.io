@@ -1,56 +1,110 @@
 <template>
     <v-app>
-        <v-card flat>
-            <v-tabs
-                v-model="tab"
-                background-color="#005685"
-                dark
-                show-arrows
-            >
-                <v-tabs-slider color="#5FEFE" />
-                <v-tab
-                    v-for="v in sortedDatabase"
-                    :key="v"
+        <v-dialog
+            v-model="dialog"
+            width="500"
+        >
+            <template v-slot:activator="{ on }">
+                <v-btn
+                    color="green darken-1"
+                    dark
+                    v-on="on"
                 >
-                    <small>{{ v }}</small>
-                </v-tab>
-            </v-tabs>
+                    Load from partner
+                </v-btn>
+            </template>
 
-            <v-tabs-items v-model="tab">
-                <v-tabs-items v-model="tab">
-                    <v-tab-item
-                        v-for="k in sortedDatabase"
-                        :key="k"
+            <v-card>
+                <v-card-title
+                    class="headline grey lighten-2"
+                    primary-title
+                >
+                    Load From Partner
+                </v-card-title>
+
+                <v-card-text>
+                    <br />
+                    Select a partner and click the "Load Data" button.
+                    <v-overflow-btn
+                        class="my-2"
+                        :items="sortedDatabase"
+                        label="No selection"
+                        editable
+                        v-model="value"
+                    />
+                </v-card-text>
+
+                <v-divider />
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        color="primary"
+                        text
+                        @click="loadData(value);dialog = false;"
                     >
-                        <v-card flat>
-                            <v-data-table
-                                :headers="headers"
-                                :items="databaseCategories[k]"
-                                :items-per-page="15"
-                                dense
+                        Load Data
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-card flat>
+            <v-simple-table dense>
+                <template v-slot:default>
+                <thead>
+                    <tr>
+                    <th class="text-left">Category</th>
+                    <th class="text-left">Sub-Category</th>
+                    <th class="text-right">Credits</th>
+                    <th class="text-center" width="200">Nbr Certifications</th>
+                    <th class="text-right">Total Credits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, i) in databaseCategories['categories']" :key="i" :style="{'background-color': getColor(item.color)}">
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.subcategory }}</td>
+                        <td class="text-right">
+                            <v-chip
+                                color="#555"
+                                dark
                             >
-                                <template v-slot:item="props">
-                                    <tr :style="{'background-color': getColor(props.item.color)}">
-                                        <td>{{ props.item.category }}</td>
-                                        <td>{{ props.item.subcategory }}</td>
-                                        <td>
-                                            <v-chip
-                                                :color="
-                                                    (props.item.count * props.item.credits) >= 5 ? 'green' :
-                                                    ((props.item.count * props.item.credits) >= 2 ? 'orange' : 'red')
-                                                "
-                                                dark
-                                            >
-                                                {{ props.item.count }}
-                                            </v-chip>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </v-data-table>
-                        </v-card>
-                    </v-tab-item>
-                </v-tabs-items>
-            </v-tabs-items>
+                                {{ item.credits }}
+                            </v-chip>
+                        </td>
+                        <td>
+                            <v-text-field
+                                label="Outlined"
+                                placeholder="Cert Count"
+                                rounded
+                                dense
+                                solo
+                                single-line
+                                type="Number"
+                                v-model="item.count"
+                                hide-details
+                                clearable=""
+                            />
+                        </td>
+                        <td width="120">
+                            <v-chip
+                                color="#005685"
+                                dark
+                                style="width:100%;"
+                            >
+                            {{ item.count * item.credits }}
+                            </v-chip>
+                        </td>
+                    </tr>
+                </tbody>
+                </template>
+            </v-simple-table>
+            <hr />
+            
+            <b style="float: right; margin-right: 60px;">Total: {{ getTotalCredits() }}</b>
+            <br />
+            <b style="float: right; margin-right: 60px;">Distinc Certifications: {{ getDistinc() }}</b>
         </v-card>
     </v-app>
 </template>
@@ -85,6 +139,8 @@ export default {
 
     data: function() {
         return {
+            value: "",
+            dialog: null,
             table: null,
             categories: null,
             tab: null,
@@ -92,7 +148,9 @@ export default {
             headers: [
             { text: "Category", value: "category" },
             { text: "Sub-Category", value: "subcategory" },
-            { text: "Total", value: "count" }
+            { text: "Credits", value: "credits" },
+            { text: "Number of Certifications", value: "count" },
+            { text: "Total Credits", value: "count" }
             ],
 
             database: {},
@@ -138,6 +196,8 @@ export default {
                 });
             });
         }
+
+        that.reload();
     },
 
     methods: {
@@ -165,27 +225,109 @@ export default {
             });
         },
 
+        
+        getColor: function(counter) {
+            if (counter % 2 === 1) {
+                return "white";
+            } else {
+                return "#EFEFEF";
+            }
+        },
+
+        getTotalCredits() {
+            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
+                return 0;
+            }
+
+            let total = 0;
+            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                const v = this.databaseCategories["categories"][j];
+                total += v.count * v.credits;
+            }
+            return total;
+        },
+
+        getDistinc() {
+            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
+                return 0;
+            }
+
+            let total = 0;
+            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                const v = this.databaseCategories["categories"][j];
+                total += (!v.count || v == 0) ? 0 : 1;
+            }
+            return total;
+        },
+
+        loadData(partnerName) {
+            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                const v = this.databaseCategories["categories"][j];
+                v.count = 0;
+            }
+
+            if (this.databaseCategories[partnerName] !== undefined) {
+                for (let i = 0; i < this.databaseCategories[partnerName].length; ++i) {
+                    const element = this.databaseCategories[partnerName][i];
+
+                    for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                        const v = this.databaseCategories["categories"][j];
+                        
+                        if (v.category == element.category && v.subcategory == element.subcategory) {
+                            v.count = element.count;
+                        }
+                    }
+                }
+            }
+        },
+
+        addCategoryItem: function(partnerName, category, subcategory, credits) {
+            let foundSat = false;
+            const baseline = (partnerName === "categories");
+
+            if (!this.databaseCategories[partnerName]) {
+                console.error(partnerName + " doesn't have other licenses?");
+                return;
+            }
+
+            for (let j = 0; j < this.databaseCategories[partnerName].length; ++j) {
+                const v = this.databaseCategories[partnerName][j];
+                if (v.category === category && v.subcategory === subcategory) {
+                    v.count += baseline ? 0 : 1;
+                    foundSat = true;
+                    return;
+                }
+            }
+
+            if (!foundSat) {
+                this.databaseCategories[partnerName].push({
+                    category: category,
+                    subcategory: subcategory,
+                    credits: Number(credits.replace(/,/g, ".")),
+                    count: baseline ? 0 : 1,
+                    color: 0
+                });
+            }
+        },
+
         reload() {
             const that = this;
 
-            that.loadingbar = true;
-            that.tenantId = widget.getValue("_CurrentTenantID_");
-
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/cert_category.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
 
             this.categories = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/smec.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/smec.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
 
-            /* http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
+            /* http.open("GET", "https://bcracker.dev/widgets/ranges.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null); */
 
             const smecs = CSVToArray(http.responseText, ";");
@@ -244,6 +386,19 @@ export default {
                 this.addCategoryItem(partnerName, category, subcategory, credits);
             }
 
+            Vue.set(this.databaseCategories, "categories", []);
+            for (let i = 2; i < this.categories.length; i++) {
+                const category = this.categories[i][1];
+                const subcategory = this.categories[i][2];
+                const credits = this.categories[i][3];
+
+                if (credits === undefined) {
+                    continue;
+                }
+
+                this.addCategoryItem("categories", category, subcategory, credits);
+            }
+
             for (let i = 5; i < smecs.length; i++) {
                 let partnerName = smecs[i][10];
                 const valid = smecs[i][26];
@@ -280,76 +435,6 @@ export default {
                         last.color = counter;
                     }
                 }
-            }
-
-            that.loadingbar = false;
-        },
-
-        // Load the tenant data & its services URLs based on the ID
-        tenantDataLoaded(data) {
-            this.tenants = [];
-            const _TenantOpts = [];
-
-            let j = 0;
-
-            // Load all the tenants
-            for (let i = 0; i < data.length; i++) {
-                if (data[i]["3DSpace"] === undefined) continue;
-
-                _TenantOpts.push({
-                    value: `${j++}`,
-                    label: `${data[i].platformId} - ${data[i].displayName}`
-                });
-
-                this.tenants.push(data[i]);
-            }
-
-            // Setup your preferences...
-            widget.addPreference({
-                name: "_CurrentTenantID_",
-                type: "list",
-                label: "Tenant",
-                defaultValue: "0",
-                options: _TenantOpts
-            });
-
-            // Loads the prefs if available
-            EventBus.$emit("reloadwidget");
-        },
-
-        getColor: function(counter) {
-            if (counter % 2 === 1) {
-                return "white";
-            } else {
-                return "#EFEFEF";
-            }
-        },
-
-        addCategoryItem: function(partnerName, category, subcategory, credits) {
-            let foundSat = false;
-
-            if (!this.databaseCategories[partnerName]) {
-                console.error(partnerName + " doesn't have other licenses?");
-                return;
-            }
-
-            for (let j = 0; j < this.databaseCategories[partnerName].length; ++j) {
-                const v = this.databaseCategories[partnerName][j];
-                if (v.category === category && v.subcategory === subcategory) {
-                    v.count += 1;
-                    foundSat = true;
-                    return;
-                }
-            }
-
-            if (!foundSat) {
-                this.databaseCategories[partnerName].push({
-                    category: category,
-                    subcategory: subcategory,
-                    credits: Number(credits.replace(/,/g, ".")),
-                    count: 1,
-                    color: 0
-                });
             }
         }
     }
