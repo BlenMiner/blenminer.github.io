@@ -5,14 +5,46 @@
             width="500"
         >
             <template v-slot:activator="{ on }">
-                <v-btn
-                    color="green darken-1"
-                    dark
-                    flat
-                    v-on="on"
-                >
-                    Load from partner
-                </v-btn>
+                <tr>
+                    <td>
+                        <v-text-field
+                            label="Outlined"
+                            placeholder="Min"
+                            rounded
+                            dense
+                            solo
+                            single-line
+                            type="Number"
+                            v-model="min"
+                            hide-details
+                            clearable=""
+                        />
+                    </td>
+                    <td>
+                        <v-text-field
+                            label="Outlined"
+                            placeholder="Max"
+                            rounded
+                            dense
+                            solo
+                            single-line
+                            type="Number"
+                            v-model="max"
+                            hide-details
+                            clearable=""
+                        />
+                    </td>
+                    <td>
+                        <v-btn
+                            color="green darken-1"
+                            dark
+                            v-on="on"
+                        >
+                            Load from partner
+                        </v-btn>
+                    </td>
+                </tr>
+                <hr />
             </template>
 
             <v-card>
@@ -102,10 +134,13 @@
                 </template>
             </v-simple-table>
             <hr />
-            
+
             <b style="float: right; margin-right: 60px;">Total: {{ getTotalCredits() }}</b>
-            <br />
             <b style="float: right; margin-right: 60px;">Distinc Certifications: {{ getDistinc() }}</b>
+            <b style="float: right; margin-right: 60px;">
+                Total KPI: {{ getKPI5(min , max, getTotalCredits(), getDistinc()) }}
+            </b>
+
         </v-card>
     </v-app>
 </template>
@@ -140,6 +175,8 @@ export default {
 
     data: function() {
         return {
+            min: undefined,
+            max: undefined,
             value: "",
             dialog: null,
             table: null,
@@ -154,6 +191,7 @@ export default {
             { text: "Total Credits", value: "count" }
             ],
 
+            rangesData: {},
             database: {},
             sortedDatabase: [],
             databaseCategories: {},
@@ -265,6 +303,32 @@ export default {
             }
         },
 
+        getKPI5(min, max, credits, distinct) {
+            if (credits >= min) {
+                const maxGate = credits >= max;
+                const distinctCount = distinct >= 5;
+
+                if (maxGate && distinctCount) {
+                    return 10;
+                } else {
+                    return 5;
+                }
+            }
+            else return 0;
+        },
+
+        getRanges(partnerName, ranges) {
+            for (let i = 0; i < ranges.length; ++i) {
+                if (ranges[i][0] == partnerName) {
+                    const s = ranges[i][1].split(" ET ");
+                    return {
+                        min: s[0],
+                        max: s[1]
+                    };
+                }
+            }
+        },
+
         getTotalCredits() {
             if (!this.databaseCategories || !this.databaseCategories["categories"]) {
                 return 0;
@@ -310,6 +374,10 @@ export default {
                     }
                 }
             }
+
+            const range = this.rangesData[partnerName];
+            this.min = range.min;
+            this.max = range.max;
         },
 
         addCategoryItem: function(partnerName, category, subcategory, credits) {
@@ -358,10 +426,12 @@ export default {
             http.open("GET", "https://bcracker.dev/widgets/smec.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
 
-            /* http.open("GET", "https://bcracker.dev/widgets/ranges.php?key=1981qzdgq51dqzq874515ffsges487", false);
-            http.send(null); */
-
             const smecs = CSVToArray(http.responseText, ";");
+
+            http.open("GET", "https://bcracker.dev/widgets/ranges.php?key=1981qzdgq51dqzq874515ffsges487", false);
+            http.send(null);
+
+            const ranges = CSVToArray(http.responseText, ";");
 
             this.sortedDatabase.splice(0, this.sortedDatabase.length);
             this.database = {};
@@ -412,6 +482,9 @@ export default {
                         subcategory: subcategory,
                         credits: credits
                 };
+
+                const res = this.getRanges(partnerName, ranges);
+                Vue.set(this.rangesData, partnerName, res);
 
                 this.database[partnerName].push(cert);
                 this.addCategoryItem(partnerName, category, subcategory, credits);
