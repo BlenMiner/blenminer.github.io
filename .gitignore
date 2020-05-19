@@ -42,3 +42,14 @@ widgets/KPISimulator/.vscode/extensions.json
 widgets/KPISimulator/.vscode/launch.json
 widgets/KPISimulator/.vscode/settings.json
 widgets/KPISimulator/node_modules/*
+widgets/PartnersGatesKPI5/.eslintignore
+widgets/PartnersGatesKPI5/.eslintrc.json
+widgets/PartnersGatesKPI5/.gitlab-ci.yml
+widgets/PartnersGatesKPI5/.markdownlint.json
+widgets/PartnersGatesKPI5/.prettierrc
+widgets/PartnersGatesKPI5/.zipignore
+widgets/PartnersGatesKPI5/README.md
+widgets/PartnersGatesKPI5/.vscode/extensions.json
+widgets/PartnersGatesKPI5/.vscode/launch.json
+widgets/PartnersGatesKPI5/.vscode/settings.json
+widgets/PartnersGatesKPI5/node_modules/*
