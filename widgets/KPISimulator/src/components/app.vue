@@ -137,7 +137,8 @@
 
             <b style="float: right; margin-right: 60px;">Total: {{ getTotalCredits() }}</b>
             <b style="float: right; margin-right: 60px;">Distinc Certifications: {{ getDistinc() }}</b>
-            <b style="float: right; margin-right: 60px;">
+            
+            <b v-if="min !== undefined && max !== undefined" style="float: right; margin-right: 60px;">
                 Total KPI: {{ getKPI5(min , max, getTotalCredits(), getDistinc()) }}
             </b>
 
