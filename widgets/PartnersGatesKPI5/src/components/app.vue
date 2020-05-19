@@ -278,6 +278,18 @@ export default {
             }
         },
 
+        getRanges(partnerName, ranges) {
+            for (let i = 0; i < ranges.length; ++i) {
+                if (ranges[i][0] == partnerName) {
+                    const s = ranges[i][1].split(" ET ");
+                    return {
+                        min: s[0],
+                        max: s[1]
+                    };
+                }
+            }
+        },
+
         reload() {
             const that = this;
 
