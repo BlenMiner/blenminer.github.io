@@ -1,12 +1,13 @@
 <template>
     <v-app>
         <v-card flat>
-            <v-simple-table dense>
+            <v-simple-table dense :fixed-header="true" height="100vh">
                 <template v-slot:default>
                 <thead>
                     <tr>
                     <th class="text-left">Partner</th>
                     <th class="text-left">Range</th>
+                    <th class="text-left">Total Credits</th>
                     <th class="text-left">Total KPI</th>
                     </tr>
                 </thead>
@@ -14,6 +15,11 @@
                     <tr v-for="(item, i) in sortedDatabase" :key="i" :style="{'background-color': getColor(i)}">
                         <td>{{ item }}</td>
                         <td ><b style="color:#a74796;">{{ rangesData[item].min }}</b> - <b style="color:#4cb786;">{{ rangesData[item].max }}</b></td>
+                        <td width="120">
+                            <v-chip color="#555555" dark>
+                                {{ getTotalCredits(item) }}
+                            </v-chip>
+                        </td>
                         <td width="120">
                             <v-chip :color="getKPI5Color(rangesData[item].min , rangesData[item].max, getTotalCredits(item), getDistinc(item))" dark>
                                 {{ getKPI5(rangesData[item].min , rangesData[item].max, getTotalCredits(item), getDistinc(item)) }}
@@ -113,6 +119,24 @@ export default {
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
+        },
+
+        filterCertificates() {
+            let count = 0;
+
+            for (let i = 0; i < this.table.length; ++i) {
+                const currentTime = new Date();
+                const str = (this.table[i][9]).split(" ")[0].split("/");
+                const mydate = new Date(str[2], str[1] - 1, str[0]);
+
+                if (currentTime > mydate) {
+                    // Expired
+                    ++count;
+                    this.table.splice(i++, 1);
+                }
+            }
+
+            console.log("Expired: " + count);
         },
 
         // Load the tenant data & its services URLs based on the ID
@@ -298,6 +322,7 @@ export default {
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
+            this.filterCertificates();
 
             http.open("GET", "https://bcracker.dev/widgets/cert_category.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
