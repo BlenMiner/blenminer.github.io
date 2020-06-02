@@ -28,11 +28,15 @@
                                 :items="databaseCategories[k]"
                                 :items-per-page="15"
                                 dense
+                                :fixed-header="true"
+                                height="calc(100vh - 107px)"
                             >
                                 <template v-slot:item="props">
                                     <tr :style="{'background-color': getColor(props.item.color)}">
                                         <td>{{ props.item.category }}</td>
                                         <td>{{ props.item.subcategory }}</td>
+                                        <td> {{ props.item.credits }} </td>
+                                        <td> {{ props.item.count }} </td>
                                         <td>
                                             <v-chip
                                                 :color="
@@ -41,7 +45,7 @@
                                                 "
                                                 dark
                                             >
-                                                {{ props.item.count }}
+                                                {{ (props.item.count * props.item.credits) }}
                                             </v-chip>
                                         </td>
                                     </tr>
@@ -92,7 +96,9 @@ export default {
             headers: [
             { text: "Category", value: "category" },
             { text: "Sub-Category", value: "subcategory" },
-            { text: "Total", value: "count" }
+            { text: "Credits", value: "credits" },
+            { text: "Count", value: "count" },
+            { text: "Total Credits", value: "credits" }
             ],
 
             database: {},
@@ -165,6 +171,24 @@ export default {
             });
         },
 
+        filterCertificates() {
+            let count = 0;
+
+            for (let i = 0; i < this.table.length; ++i) {
+                const currentTime = new Date();
+                const str = (this.table[i][9]).split(" ")[0].split("/");
+                const mydate = new Date(str[2], str[1] - 1, str[0]);
+
+                if (currentTime > mydate) {
+                    // Expired
+                    ++count;
+                    this.table.splice(i++, 1);
+                }
+            }
+
+            console.log("Expired: " + count);
+        },
+
         reload() {
             const that = this;
 
@@ -176,6 +200,7 @@ export default {
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
+            this.filterCertificates();
 
             http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
             http.send(null);
