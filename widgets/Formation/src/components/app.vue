@@ -197,18 +197,18 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php&key=" + key, false);
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?&key=" + key, false);
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
             this.filterCertificates();
 
-            http.open("GET", "https://bcracker.dev/widgets/cert_category.php&key=" + key, false);
+            http.open("GET", "https://bcracker.dev/widgets/cert_category.php?&key=" + key, false);
             http.send(null);
 
             this.categories = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/smec.php&key=" + key, false);
+            http.open("GET", "https://bcracker.dev/widgets/smec.php?&key=" + key, false);
             http.send(null);
 
             /* http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
