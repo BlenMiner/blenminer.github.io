@@ -191,23 +191,24 @@ export default {
 
         reload() {
             const that = this;
+            const key = widget.getPreference("_FileKey_");
 
             that.loadingbar = true;
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php&key=" + key, false);
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
             this.filterCertificates();
 
-            http.open("GET", "https://bcracker.dev/widgets/cert_category.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/cert_category.php&key=" + key, false);
             http.send(null);
 
             this.categories = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/smec.php", false);
+            http.open("GET", "https://bcracker.dev/widgets/smec.php&key=" + key, false);
             http.send(null);
 
             /* http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
@@ -336,6 +337,13 @@ export default {
                 label: "Tenant",
                 defaultValue: "0",
                 options: _TenantOpts
+            });
+
+            widget.addPreference({
+                name: "_FileKey_",
+                type: "text",
+                label: "File Key",
+                defaultValue: ""
             });
 
             // Loads the prefs if available
