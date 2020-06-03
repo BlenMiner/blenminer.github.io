@@ -323,14 +323,11 @@ export default {
 
         reload() {
             const that = this;
-            const key = widget.getPreference("_FileKey_");
+            const key = widget.getPreference("_FileKey_").value;
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
             http.send(null);
-
-            console.log(key);
-            console.log(http.responseText);
 
             this.table = CSVToArray(http.responseText, ";");
             this.filterCertificates();
