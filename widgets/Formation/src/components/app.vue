@@ -191,7 +191,7 @@ export default {
 
         reload() {
             const that = this;
-            const key = widget.getPreference("_FileKey_");
+            const key = widget.getPreference("_FileKey_").value;
 
             that.loadingbar = true;
             that.tenantId = widget.getValue("_CurrentTenantID_");
