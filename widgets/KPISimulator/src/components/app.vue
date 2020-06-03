@@ -1,15 +1,63 @@
 <template>
     <v-app>
+        <v-footer
+            fixed
+            :padless="true"
+        >
+            <v-card
+                flat
+                tile
+                height="80"
+                width="100%"
+                color="#efefef"
+                class="text-center"
+                elevation="24"
+                raised
+            >
+                <v-card-text class="black--text pa-2">
+                    <table width="100%">
+                        <tr>
+                            <td class="text-left" width="300">Credits : {{ getTotalCredits().toFixed(1) }}</td>
+                            <td class="text-center">
+                                <v-chip
+                                    color="#00857c"
+                                    dark
+                                    style="width:200px;"
+                                >
+                                    Sim KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getSimulatedDistinc()) }}
+                                </v-chip>
+                            </td>
+                            <td class="text-right" width="300">Simulated Credits : {{ (getTotalCredits() + getSimulatedTotalCredits()).toFixed(1) }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left" width="300">Distinct : {{ getDistinc() }}</td>
+                            <td class="text-center">
+                                <v-chip
+                                    color="#00852c"
+                                    dark
+                                    style="width:200px;"
+                                >
+                                    KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc()) }}
+                                </v-chip>
+                            </td>
+                            <td class="text-right" width="300">Simulated Distinct : {{ getSimulatedDistinc() }}</td>
+                        </tr>
+                    </table>
+                </v-card-text>
+            </v-card>
+        </v-footer>
+
         <v-dialog
             v-model="dialog"
             width="500"
         >
             <template v-slot:activator="{ on }">
                 <tr>
+                    <td>Ranges: </td>
                     <td>
                         <v-text-field
                             label="Outlined"
-                            placeholder="Min"
+                            placeholder="Min Range"
                             rounded
                             dense
                             solo
@@ -18,12 +66,13 @@
                             v-model="min"
                             hide-details
                             clearable=""
+                            class="mx-4"
                         />
                     </td>
                     <td>
                         <v-text-field
                             label="Outlined"
-                            placeholder="Max"
+                            placeholder="Max Range"
                             rounded
                             dense
                             solo
@@ -32,13 +81,15 @@
                             v-model="max"
                             hide-details
                             clearable=""
+                            class="mx-4"
                         />
                     </td>
-                    <td>
+                    <td class="text-right" width="60%">
                         <v-btn
                             color="green darken-1"
                             dark
                             v-on="on"
+                            width="50%"
                         >
                             Load from partner
                         </v-btn>
@@ -83,22 +134,22 @@
         </v-dialog>
 
         <v-card flat>
-            <v-simple-table dense>
+            <v-simple-table dense :fixed-header="true" height="calc(100vh - 120px)">
                 <template v-slot:default>
                 <thead>
                     <tr>
                     <th class="text-left">Category</th>
-                    <th class="text-left">Sub-Category</th>
-                    <th class="text-right">Credits</th>
-                    <th class="text-center" width="200">Nbr Certifications</th>
-                    <th class="text-right">Total Credits</th>
+                    <th class="text-right">Sub-Category</th>
+                    <th class="text-left">Credits</th>
+                    <th class="text-center" width="200">Count</th>
+                    <th class="text-center" width="200">Simulation</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, i) in databaseCategories['categories']" :key="i" :style="{'background-color': getColor(item.color)}">
                         <td>{{ item.category }}</td>
-                        <td>{{ item.subcategory }}</td>
-                        <td class="text-right">
+                        <td class="text-right">{{ item.subcategory }}</td>
+                        <td width="200">
                             <v-chip
                                 color="#555"
                                 dark
@@ -106,42 +157,33 @@
                                 {{ item.credits }}
                             </v-chip>
                         </td>
-                        <td>
-                            <v-text-field
-                                label="Outlined"
-                                placeholder="Cert Count"
-                                rounded
-                                dense
-                                solo
-                                single-line
-                                type="Number"
-                                v-model="item.count"
-                                hide-details
-                                clearable=""
-                            />
-                        </td>
                         <td width="120">
                             <v-chip
                                 color="#005685"
                                 dark
                                 style="width:100%;"
                             >
-                            {{ item.count * item.credits }}
+                                {{ !item.count ? 0 : item.count }}
                             </v-chip>
+                        </td>
+                        <td>
+                            <v-text-field
+                                label="Outlined"
+                                placeholder="Sim Count"
+                                rounded
+                                dense
+                                solo
+                                single-line
+                                type="Number"
+                                v-model="item.simcount"
+                                hide-details
+                                clearable=""
+                            />
                         </td>
                     </tr>
                 </tbody>
                 </template>
             </v-simple-table>
-            <hr />
-
-            <b style="float: right; margin-right: 60px;">Total: {{ getTotalCredits() }}</b>
-            <b style="float: right; margin-right: 60px;">Distinc Certifications: {{ getDistinc() }}</b>
-            
-            <b v-if="min !== undefined && max !== undefined" style="float: right; margin-right: 60px;">
-                Total KPI: {{ getKPI5(min , max, getTotalCredits(), getDistinc()) }}
-            </b>
-
         </v-card>
     </v-app>
 </template>
@@ -244,6 +286,24 @@ export default {
             this.snackbar = true;
         },
 
+        filterCertificates() {
+            let count = 0;
+
+            for (let i = 0; i < this.table.length; ++i) {
+                const currentTime = new Date();
+                const str = (this.table[i][9]).split(" ")[0].split("/");
+                const mydate = new Date(str[2], str[1] - 1, str[0]);
+
+                if (currentTime > mydate) {
+                    // Expired
+                    ++count;
+                    this.table.splice(i++, 1);
+                }
+            }
+
+            console.log("Expired: " + count);
+        },
+
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
             this.tenants = [];
@@ -343,6 +403,19 @@ export default {
             return total;
         },
 
+        getSimulatedTotalCredits() {
+            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
+                return 0;
+            }
+
+            let total = 0;
+            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                const v = this.databaseCategories["categories"][j];
+                total += (!v.simcount ? 0 : v.simcount) * v.credits;
+            }
+            return total;
+        },
+
         getDistinc() {
             if (!this.databaseCategories || !this.databaseCategories["categories"]) {
                 return 0;
@@ -351,7 +424,20 @@ export default {
             let total = 0;
             for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
                 const v = this.databaseCategories["categories"][j];
-                total += (!v.count || v == 0) ? 0 : 1;
+                total += (!v.count || v.count == 0) ? 0 : 1;
+            }
+            return total;
+        },
+
+        getSimulatedDistinc() {
+            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
+                return 0;
+            }
+
+            let total = 0;
+            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
+                const v = this.databaseCategories["categories"][j];
+                total += ((!v.count || v.count == 0) && (!v.simcount || v.simcount == 0)) ? 0 : 1;
             }
             return total;
         },
@@ -418,6 +504,7 @@ export default {
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
+            this.filterCertificates();
 
             http.open("GET", "https://bcracker.dev/widgets/cert_category.php?key=1981qzdgq51dqzq874515ffsges487", false);
             http.send(null);
