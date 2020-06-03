@@ -332,6 +332,13 @@ export default {
                 options: _TenantOpts
             });
 
+            widget.addPreference({
+                name: "_FileKey_",
+                type: "text",
+                label: "File Key",
+                defaultValue: "",
+            });
+
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
         },
@@ -498,25 +505,26 @@ export default {
 
         reload() {
             const that = this;
+            const key = widget.getPreference("_FileKey_");
 
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=1981qzdgq51dqzq874515ffsges487", false);
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
             this.filterCertificates();
 
-            http.open("GET", "https://bcracker.dev/widgets/cert_category.php?key=1981qzdgq51dqzq874515ffsges487", false);
+            http.open("GET", "https://bcracker.dev/widgets/cert_category.php?key=" + key, false);
             http.send(null);
 
             this.categories = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/smec.php?key=1981qzdgq51dqzq874515ffsges487", false);
+            http.open("GET", "https://bcracker.dev/widgets/smec.php?key=" + key, false);
             http.send(null);
 
             const smecs = CSVToArray(http.responseText, ";");
 
-            http.open("GET", "https://bcracker.dev/widgets/ranges.php?key=1981qzdgq51dqzq874515ffsges487", false);
+            http.open("GET", "https://bcracker.dev/widgets/ranges.php?key=" + key, false);
             http.send(null);
 
             const ranges = CSVToArray(http.responseText, ";");
