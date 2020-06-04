@@ -52,49 +52,49 @@
             width="500"
         >
             <template v-slot:activator="{ on }">
-                <tr>
-                    <td>Ranges: </td>
-                    <td>
-                        <v-text-field
-                            label="Outlined"
-                            placeholder="Min Range"
-                            rounded
-                            dense
-                            solo
-                            single-line
-                            type="Number"
-                            v-model="min"
-                            hide-details
-                            clearable=""
-                            class="mx-4"
-                        />
-                    </td>
-                    <td>
-                        <v-text-field
-                            label="Outlined"
-                            placeholder="Max Range"
-                            rounded
-                            dense
-                            solo
-                            single-line
-                            type="Number"
-                            v-model="max"
-                            hide-details
-                            clearable=""
-                            class="mx-4"
-                        />
-                    </td>
-                    <td class="text-right" width="60%">
-                        <v-btn
-                            color="green darken-1"
-                            dark
-                            v-on="on"
-                            width="50%"
-                        >
-                            Load from partner
-                        </v-btn>
-                    </td>
-                </tr>
+                <table width="100%">
+                    <tr>
+                        <td>Ranges: </td>
+                        <td>
+                            <v-text-field
+                                label="Outlined"
+                                placeholder="Min"
+                                dense
+                                single-line
+                                type="Number"
+                                v-model="min"
+                                hide-details
+                                clearable
+                                class="mx-4"
+                            />
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <v-text-field
+                                label="Outlined"
+                                placeholder="Max"
+                                dense
+                                single-line
+                                type="Number"
+                                v-model="max"
+                                hide-details
+                                clearable
+                                class="mx-4"
+                            />
+                        </td>
+                        <td class="text-right" width="200px">
+                            <v-btn
+                                color="green darken-1"
+                                dark
+                                v-on="on"
+                                text
+                                width="100%"
+                            >
+                                Load from partner
+                            </v-btn>
+                        </td>
+                    </tr>
+                </table>
                 <hr />
             </template>
 
@@ -172,12 +172,12 @@
                                 placeholder="Sim Count"
                                 rounded
                                 dense
-                                solo
                                 single-line
                                 type="Number"
                                 v-model="item.simcount"
                                 hide-details
-                                clearable=""
+                                clearable
+                                class="elevation-2"
                             />
                         </td>
                     </tr>
@@ -291,6 +291,7 @@ export default {
 
             for (let i = 0; i < this.table.length; ++i) {
                 const currentTime = new Date();
+                
                 const str = (this.table[i][9]).split(" ")[0].split("/");
                 const mydate = new Date(str[2], str[1] - 1, str[0]);
 
@@ -444,7 +445,9 @@ export default {
             let total = 0;
             for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
                 const v = this.databaseCategories["categories"][j];
-                total += ((!v.count || v.count == 0) && (!v.simcount || v.simcount == 0)) ? 0 : 1;
+                const vc = Number(v.count === undefined ? 0 : v.count);
+                const vsc = Number(v.simcount === undefined ? 0 : v.simcount);
+                total += (vc + vsc <= 0) ? 0 : 1;
             }
             return total;
         },
@@ -504,6 +507,10 @@ export default {
         },
 
         reload() {
+            if (this.table != null && this.table.length != 0) {
+                return;
+            }
+
             const that = this;
             const key = widget.getPreference("_FileKey_").value;
 
