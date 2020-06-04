@@ -171,13 +171,35 @@ export default {
             });
         },
 
-        filterCertificates() {
+        filterCertificates(obsolete) {
             let count = 0;
+            let obs = 0;
 
-            for (let i = 0; i < this.table.length; ++i) {
+            const isObsolete = (firstname, lastname, date) => {
+                for (let i = 0; i < obsolete.length; ++i) {
+                    if (obsolete[i].Name.toLowerCase() ===
+                        firstname.toLowerCase() + " " + lastname.toLowerCase()) {
+                        if (date <= new Date(obsolete[i].Added)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+
+            for (let i = 1; i < this.table.length; ++i) {
                 const currentTime = new Date();
+
                 const str = (this.table[i][9]).split(" ")[0].split("/");
                 const mydate = new Date(str[2], str[1] - 1, str[0]);
+
+                const str2 = (this.table[i][8]).split(" ")[0].split("/");
+                const mydate2 = new Date(str2[2], str2[1] - 1, str2[0]);
+
+                if (isObsolete(this.table[i][2], this.table[i][3], mydate2)) {
+                    obs++;
+                    continue;
+                }
 
                 if (currentTime > mydate) {
                     // Expired
@@ -187,6 +209,7 @@ export default {
             }
 
             console.log("Expired: " + count);
+            console.log("Obsolete: " + obs);
         },
 
         reload() {
@@ -201,7 +224,11 @@ export default {
             http.send(null);
 
             this.table = CSVToArray(http.responseText, ";");
-            this.filterCertificates();
+            http.open("GET", "https://bcracker.dev/widgets/obsolete.php?key=" + key, false);
+            http.send(null);
+
+            const obsolete = JSON.parse(http.responseText);
+            this.filterCertificates(obsolete);
 
             http.open("GET", "https://bcracker.dev/widgets/cert_category.php?&key=" + key, false);
             http.send(null);
