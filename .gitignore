@@ -53,3 +53,14 @@ widgets/PartnersGatesKPI5/.vscode/extensions.json
 widgets/PartnersGatesKPI5/.vscode/launch.json
 widgets/PartnersGatesKPI5/.vscode/settings.json
 widgets/PartnersGatesKPI5/node_modules/*
+widgets/KPIAdministrator/.eslintignore
+widgets/KPIAdministrator/.eslintrc.json
+widgets/KPIAdministrator/.gitlab-ci.yml
+widgets/KPIAdministrator/.markdownlint.json
+widgets/KPIAdministrator/.prettierrc
+widgets/KPIAdministrator/.zipignore
+widgets/KPIAdministrator/README.md
+widgets/KPIAdministrator/.vscode/extensions.json
+widgets/KPIAdministrator/.vscode/launch.json
+widgets/KPIAdministrator/.vscode/settings.json
+widgets/KPIAdministrator/node_modules/*
