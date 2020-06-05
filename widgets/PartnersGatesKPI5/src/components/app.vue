@@ -129,8 +129,9 @@ export default {
                 for (let i = 0; i < obsolete.length; ++i) {
                     if (obsolete[i].Name.toLowerCase() ===
                         firstname.toLowerCase() + " " + lastname.toLowerCase()) {
-                        if (date <= new Date(obsolete[i].Added))
+                        if (date <= new Date(obsolete[i].Added)) {
                             return true;
+                        }
                     }
                 }
                 return false;
@@ -139,13 +140,13 @@ export default {
             for (let i = 1; i < this.table.length; ++i) {
                 const currentTime = new Date();
                 
-                const str = (this.table[i][9]).split(" ")[0].split("/");
-                const mydate = new Date(str[2], str[1] - 1, str[0]);
+                const str = (this.table[i][14]).split(" ")[0].split("/");
+                const mydate = new Date(str[2], str[0] - 1, str[1]);
 
-                const str2 = (this.table[i][8]).split(" ")[0].split("/");
+                const str2 = (this.table[i][13]).split(" ")[0].split("/");
                 const mydate2 = new Date(str2[2], str2[1] - 1, str2[0]);
 
-                if (isObsolete(this.table[i][2], this.table[i][3], mydate2)) {
+                if (isObsolete(this.table[i][4], this.table[i][5], mydate2)) {
                     obs++;
                     continue;
                 }
@@ -341,6 +342,11 @@ export default {
                     };
                 }
             }
+
+            return {
+                min: "NAN",
+                max: "NAN"
+            };
         },
 
         reload() {
@@ -379,13 +385,11 @@ export default {
             this.databaseCategories = {};
 
             for (let i = 1; i < this.table.length; i++) {
-                let partnerName = this.table[i][0];
+                let partnerName = this.table[i][1];
                 if (!partnerName) continue;
 
-                const partnerId = partnerName.split("[")[1].slice(0, -1);
-                partnerName = partnerName.split("[")[0].slice(0, -1);
-
-                const certName = this.table[i][7];
+                const partnerId = this.table[i][3].split("[")[1].substring(0, 15);
+                const certName = this.table[i][9];
 
                 let found = false;
                 let category = "Brand_Essentials";
@@ -409,16 +413,20 @@ export default {
                 }
 
                 if (!found) {
-                    console.error(certName + " doesn't exist in the list.");
+                    if (certName.startsWith("SMEC")) {
+                        this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
+                    } else  {
+                        console.error(certName + " doesn't exist in the list.");
+                    }
                 }
 
                 const cert = {
                         partnerId: partnerId,
                         certName: certName,
-                        certExpiration: this.table[i][9],
+                        certExpiration: this.table[i][14],
                         certProfile: this.table[i][11],
-                        certAxis: this.table[i][12],
-                        certCategory: this.table[i][13],
+                        certAxis: this.table[i][10],
+                        certCategory: this.table[i][12],
                         category: category,
                         subcategory: subcategory,
                         credits: credits
@@ -444,18 +452,16 @@ export default {
                 this.addCategoryItem("categories", category, subcategory, credits);
             }
 
-            for (let i = 5; i < smecs.length; i++) {
+            /*for (let i = 5; i < smecs.length; i++) {
                 let partnerName = smecs[i][10];
                 const valid = smecs[i][26];
 
                 if (!partnerName) continue;
 
-                // let partnerId = partnerName.split("[")[1].slice(0, -1);
-                partnerName = partnerName.split("[")[0].slice(0, -1);
                 if (valid === "Finished" && partnerName !== "3D") {
                     this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
                 }
-            }
+            }*/
 
             this.sortedDatabase.sort(
                 (aA, bB) => {
