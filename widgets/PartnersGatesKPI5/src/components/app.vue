@@ -124,6 +124,7 @@ export default {
         filterCertificates(obsolete) {
             let count = 0;
             let obs = 0;
+            let invalid = 0;
             
             const isObsolete = (firstname, lastname, date) => {
                 for (let i = 0; i < obsolete.length; ++i) {
@@ -136,10 +137,10 @@ export default {
                 }
                 return false;
             };
-
+            
             for (let i = 1; i < this.table.length; ++i) {
                 const currentTime = new Date();
-                
+
                 const str = (this.table[i][14]).split(" ")[0].split("/");
                 const mydate = new Date(str[2], str[0] - 1, str[1]);
 
@@ -156,10 +157,16 @@ export default {
                     ++count;
                     this.table.splice(i++, 1);
                 }
+                else if (this.table[i][15] === "NO") {
+                    // Invalid
+                    ++invalid;
+                    this.table.splice(i++, 1);
+                }
             }
 
             console.log("Expired: " + count);
             console.log("Obsolete: " + obs);
+            console.log("Invalid: " + invalid);
         },
 
         // Load the tenant data & its services URLs based on the ID
