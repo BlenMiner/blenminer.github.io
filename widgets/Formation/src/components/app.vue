@@ -174,6 +174,7 @@ export default {
         filterCertificates(obsolete) {
             let count = 0;
             let obs = 0;
+            let invalid = 0;
 
             const isObsolete = (firstname, lastname, date) => {
                 for (let i = 0; i < obsolete.length; ++i) {
@@ -205,11 +206,16 @@ export default {
                     // Expired
                     ++count;
                     this.table.splice(i++, 1);
+                } else if (this.table[i][15] === "NO") {
+                    // Invalid
+                    ++invalid;
+                    this.table.splice(i++, 1);
                 }
             }
 
             console.log("Expired: " + count);
             console.log("Obsolete: " + obs);
+            console.log("Invalid: " + invalid);
         },
 
         reload() {
