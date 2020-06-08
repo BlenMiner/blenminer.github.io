@@ -551,7 +551,7 @@ export default {
             }
 
             const that = this;
-            const key = "TjLQHpuCx0af4PGlnaum";//widget.getPreference("_FileKey_").value;
+            const key = widget.getPreference("_FileKey_").value;
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
