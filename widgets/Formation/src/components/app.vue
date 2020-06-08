@@ -281,6 +281,8 @@ export default {
                     } else {
                         console.error(certName + " doesn't exist in the list.");
                     }
+                } else {
+                    this.addCategoryItem(partnerName, category, subcategory, credits);
                 }
 
                 const cert = {
@@ -296,7 +298,6 @@ export default {
                 };
 
                 this.database[partnerName].push(cert);
-                this.addCategoryItem(partnerName, category, subcategory, credits);
             }
 
             /* for (let i = 5; i < smecs.length; i++) {
