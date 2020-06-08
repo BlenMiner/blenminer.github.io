@@ -243,15 +243,28 @@ export default {
         },
 
         getDistinc(partnerName) {
-            if (!this.databaseCategories || !this.databaseCategories[partnerName]) {
+            if (!this.databaseCategories || !this.databaseCategories[partnerName] ||
+                this.databaseCategories[partnerName].length == 0) {
                 return 0;
             }
 
+            let categoryName = this.databaseCategories[partnerName][0].category;
+            let count = 0;
             let total = 0;
+
             for (let j = 0; j < this.databaseCategories[partnerName].length; ++j) {
                 const v = this.databaseCategories[partnerName][j];
-                total += (!v.count || v == 0) ? 0 : 1;
+
+                if (v.category !== categoryName) {
+                    total += (count !== 0 ? 1 : 0);
+                    categoryName = v.category;
+                    count = 0;
+                }
+
+                count += (!v.count || v.count == 0) ? 0 : 1;
             }
+
+            total += (count !== 0 ? 1 : 0);
             return total;
         },
 
@@ -415,9 +428,11 @@ export default {
                 if (!found) {
                     if (certName.startsWith("SMEC")) {
                         this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
-                    } else  {
+                    } else {
                         console.error(certName + " doesn't exist in the list.");
                     }
+                } else {
+                    this.addCategoryItem(partnerName, category, subcategory, credits);
                 }
 
                 const cert = {
@@ -434,9 +449,7 @@ export default {
 
                 const res = this.getRanges(partnerName, ranges);
                 Vue.set(this.rangesData, partnerName, res);
-
                 this.database[partnerName].push(cert);
-                this.addCategoryItem(partnerName, category, subcategory, credits);
             }
 
             Vue.set(this.databaseCategories, "categories", []);
