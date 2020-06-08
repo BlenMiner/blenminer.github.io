@@ -24,23 +24,23 @@
                                     dark
                                     style="width:200px;"
                                 >
-                                    Sim KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getSimulatedDistinc()) }}
+                                    Sim KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getDistinc(true)) }}
                                 </v-chip>
                             </td>
                             <td class="text-right" width="300">Simulated Credits : {{ (getTotalCredits() + getSimulatedTotalCredits()).toFixed(1) }}</td>
                         </tr>
                         <tr>
-                            <td class="text-left" width="300">Distinct : {{ getDistinc() }}</td>
+                            <td class="text-left" width="300">Distinct : {{ getDistinc(false) }}</td>
                             <td class="text-center">
                                 <v-chip
                                     color="#00852c"
                                     dark
                                     style="width:200px;"
                                 >
-                                    KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc()) }}
+                                    KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc(false)) }}
                                 </v-chip>
                             </td>
-                            <td class="text-right" width="300">Simulated Distinct : {{ getSimulatedDistinc() }}</td>
+                            <td class="text-right" width="300">Simulated Distinct : {{ getDistinc(true) }}</td>
                         </tr>
                     </table>
                 </v-card-text>
@@ -289,6 +289,7 @@ export default {
         filterCertificates(obsolete) {
             let count = 0;
             let obs = 0;
+            let invalid = 0;
             
             const isObsolete = (firstname, lastname, date) => {
                 for (let i = 0; i < obsolete.length; ++i) {
@@ -301,10 +302,10 @@ export default {
                 }
                 return false;
             };
-
+            
             for (let i = 1; i < this.table.length; ++i) {
                 const currentTime = new Date();
-                
+
                 const str = (this.table[i][14]).split(" ")[0].split("/");
                 const mydate = new Date(str[2], str[0] - 1, str[1]);
 
@@ -321,10 +322,16 @@ export default {
                     ++count;
                     this.table.splice(i++, 1);
                 }
+                else if (this.table[i][15] === "NO") {
+                    // Invalid
+                    ++invalid;
+                    this.table.splice(i++, 1);
+                }
             }
 
             console.log("Expired: " + count);
             console.log("Obsolete: " + obs);
+            console.log("Invalid: " + invalid);
         },
 
         // Load the tenant data & its services URLs based on the ID
@@ -451,31 +458,35 @@ export default {
             return total;
         },
 
-        getDistinc() {
-            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
+        getDistinc(simulated) {
+            if (!this.databaseCategories || !this.databaseCategories["categories"] ||
+                this.databaseCategories["categories"].length == 0) {
                 return 0;
             }
 
+            let categoryName = this.databaseCategories["categories"][0].category;
+            let count = 0;
             let total = 0;
+
             for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
                 const v = this.databaseCategories["categories"][j];
-                total += (!v.count || v.count == 0) ? 0 : 1;
-            }
-            return total;
-        },
 
-        getSimulatedDistinc() {
-            if (!this.databaseCategories || !this.databaseCategories["categories"]) {
-                return 0;
+                if (v.category !== categoryName) {
+                    total += (count !== 0 ? 1 : 0);
+                    categoryName = v.category;
+                    count = 0;
+                }
+
+                if (simulated !== true) {
+                    count += (!v.count || v.count == 0) ? 0 : 1;
+                } else {
+                    const vc = Number(v.count === undefined ? 0 : v.count);
+                    const vsc = Number(v.simcount === undefined ? 0 : v.simcount);
+                    count += (vc + vsc <= 0) ? 0 : 1;
+                }
             }
 
-            let total = 0;
-            for (let j = 0; j < this.databaseCategories["categories"].length; ++j) {
-                const v = this.databaseCategories["categories"][j];
-                const vc = Number(v.count === undefined ? 0 : v.count);
-                const vsc = Number(v.simcount === undefined ? 0 : v.simcount);
-                total += (vc + vsc <= 0) ? 0 : 1;
-            }
+            total += (count !== 0 ? 1 : 0);
             return total;
         },
 
@@ -494,6 +505,7 @@ export default {
                         
                         if (v.category == element.category && v.subcategory == element.subcategory) {
                             v.count = element.count;
+                            break;
                         }
                     }
                 }
@@ -539,7 +551,7 @@ export default {
             }
 
             const that = this;
-            const key = widget.getPreference("_FileKey_").value;
+            const key = "TjLQHpuCx0af4PGlnaum";//widget.getPreference("_FileKey_").value;
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
@@ -606,6 +618,8 @@ export default {
                     } else {
                         console.error(certName + " doesn't exist in the list.");
                     }
+                } else {
+                    this.addCategoryItem(partnerName, category, subcategory, credits);
                 }
 
                 const cert = {
@@ -624,7 +638,6 @@ export default {
                 Vue.set(this.rangesData, partnerName, res);
 
                 this.database[partnerName].push(cert);
-                this.addCategoryItem(partnerName, category, subcategory, credits);
             }
 
             Vue.set(this.databaseCategories, "categories", []);
