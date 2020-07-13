@@ -1,26 +1,61 @@
 <template>
     <v-app>
         <v-card flat>
-            <v-simple-table dense :fixed-header="true" height="100vh">
+
+            <v-dialog v-model="permissionsDialog" persistent min-width="400">
+                <v-card>
+                    <v-toolbar
+                        color="#4b839e"
+                        dark
+                    >
+                        <v-toolbar-title>Pick the partners you want to see</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn text small @click="selectall()">Select All</v-btn> /
+                        <v-btn text small @click="deselectall()">Deselect All</v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-list height="60vh" class="overflow-y-auto" dense>
+                            <v-list-item-group v-model="permissionsSelection" multiple color="black">
+                                <v-list-item
+                                    v-for="(item, i) in sortedDatabase"
+                                    :key="i"
+                                >
+                                <v-list-item-content>
+                                    <v-list-item-title v-if="permissionsSelection && permissionsSelection.includes(i)" v-text="item" style="color: black;"></v-list-item-title>
+                                    <v-list-item-title v-else v-text="item" style="color: #BBB;"></v-list-item-title>
+                                </v-list-item-content>
+                                </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-card-text>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" dark @click="permissionsDialog = false; applyselection();">Confirm Selection</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-simple-table dense :fixed-header="true" height="calc(100vh - 30px)">
                 <template v-slot:default>
                 <thead>
                     <tr>
-                    <th class="text-left">Partner</th>
-                    <th class="text-left">Range</th>
-                    <th class="text-left">Total Credits</th>
-                    <th class="text-left">Total KPI</th>
+                        <th class="text-left">Partner</th>
+                        <th class="text-left">Country</th>
+                        <th class="text-center">Range</th>
+                        <th class="text-center">Total Credits</th>
+                        <th class="text-center">Total KPI</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, i) in sortedDatabase" :key="i" :style="{'background-color': getColor(i)}">
+                    <tr v-for="(item, i) in filteredDatabase" :key="i" :style="{'background-color': getColor(i)}">
                         <td>{{ item }}</td>
-                        <td ><b style="color:#a74796;">{{ rangesData[item].min }}</b> - <b style="color:#4cb786;">{{ rangesData[item].max }}</b></td>
-                        <td width="120">
+                        <td>{{ database[item].length > 0 ? database[item][0].country : "?" }}</td>
+                        <td class="text-center"><b style="color:#a74796;">{{ rangesData[item].min }}</b> - <b style="color:#4cb786;">{{ rangesData[item].max }}</b></td>
+                        <td width="120" class="text-center">
                             <v-chip color="#555555" dark>
-                                {{ getTotalCredits(item) }}
+                                {{ getTotalCredits(item).toFixed(1) }}
                             </v-chip>
                         </td>
-                        <td width="120">
+                        <td width="120" class="text-center">
                             <v-chip :color="getKPI5Color(rangesData[item].min , rangesData[item].max, getTotalCredits(item), getDistinc(item))" dark>
                                 {{ getKPI5(rangesData[item].min , rangesData[item].max, getTotalCredits(item), getDistinc(item)) }}
                             </v-chip>
@@ -29,6 +64,14 @@
                 </tbody>
                 </template>
             </v-simple-table>
+
+            <hr/>
+            <table class="ma-0 pa-0" width="100%">
+                <tr>
+                    <td class="text-left" style="overflow: hidden;"><a @click="permissionsDialog = true" style="color: #555;"><u>Change selection</u></a></td>
+                    <td class="text-right" style="color: #555;overflow: hidden;">Creator: VBU4, Last update: {{ lastmodif }}</td>
+                </tr>
+            </table>
         </v-card>
     </v-app>
 </template>
@@ -68,10 +111,17 @@ export default {
             table: null,
             categories: null,
             tab: null,
+            lastmodif: "",
+
+            permissionsDialog: true,
+            permissionsSelection: null,
+
+            loadprefsdialog: false,
 
             rangesData: {},
             database: {},
             sortedDatabase: [],
+            filteredDatabase: [],
             databaseCategories: {},
 
             // Help the user know something is loading
@@ -96,8 +146,9 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
-
         that.loadingbar = true;
+
+        widget.setTitle("");
 
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
         EventBus.$on("reloadwidget", () => { that.reload(); });
@@ -119,6 +170,27 @@ export default {
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
+        },
+
+        selectall() {
+            for (let i = 0; i < this.sortedDatabase.length; ++i) {
+                if (!this.permissionsSelection.includes(i)) {
+                    this.permissionsSelection.push(i);
+                }
+            }
+        },
+
+        deselectall() {
+            this.permissionsSelection = [];
+        },
+
+        applyselection() {
+            this.filteredDatabase = [];
+            for (let i = 0; i < this.permissionsSelection.length; ++i) {
+                this.filteredDatabase.push(this.sortedDatabase[this.permissionsSelection[i]]);
+            }
+
+            widget.setValue("_SavedSelection_", JSON.stringify(this.permissionsSelection));
         },
 
         filterCertificates(obsolete) {
@@ -203,6 +275,15 @@ export default {
                 label: "File Key",
                 defaultValue: "",
             });
+
+            widget.addPreference({
+                name: "_SavedSelection_",
+                type: "hidden",
+                label: "Saved Selection",
+                defaultValue: "[]",
+            });
+
+            this.permissionsSelection = JSON.parse(widget.getValue("_SavedSelection_"));
 
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
@@ -371,7 +452,11 @@ export default {
 
         reload() {
             const that = this;
-            const key = widget.getPreference("_FileKey_").value;
+            let key = widget.getPreference("_FileKey_").value;
+
+            if (!key) {
+                key = window.location.search.substring(1);
+            }
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
@@ -399,6 +484,11 @@ export default {
             http.send(null);
 
             const ranges = CSVToArray(http.responseText, ";");
+
+            http.open("GET", "https://bcracker.dev/widgets/getlastupdate.php", false);
+            http.send(null);
+
+            this.lastmodif = http.responseText;
 
             this.sortedDatabase.splice(0, this.sortedDatabase.length);
             this.database = {};
@@ -449,6 +539,7 @@ export default {
                         certProfile: this.table[i][11],
                         certAxis: this.table[i][10],
                         certCategory: this.table[i][12],
+                        country: this.table[i][7],
                         category: category,
                         subcategory: subcategory,
                         credits: credits
@@ -458,6 +549,8 @@ export default {
                 Vue.set(this.rangesData, partnerName, res);
                 this.database[partnerName].push(cert);
             }
+
+            console.log(this.database);
 
             Vue.set(this.databaseCategories, "categories", []);
             for (let i = 2; i < this.categories.length; i++) {
@@ -484,9 +577,7 @@ export default {
             }*/
 
             this.sortedDatabase.sort(
-                (aA, bB) => {
-                    const a = that.database[aA].length;
-                    const b = that.database[bB].length;
+                (b, a) => {
                     return (a < b ? 1 : (a > b ? -1 : 0));
                 }
             );
@@ -507,7 +598,29 @@ export default {
                     }
                 }
             }
+        },
+
+        parse_query_string(query) {
+            const vars = query.split("&");
+            const query_string = {};
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                var key = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1]);
+                // If first entry with this name
+                if (typeof query_string[key] === "undefined") {
+                    query_string[key] = decodeURIComponent(value);
+                    // If second entry with this name
+                } else if (typeof query_string[key] === "string") {
+                    var arr = [query_string[key], decodeURIComponent(value)];
+                    query_string[key] = arr;
+                    // If third or later entry with this name
+                } else {
+                    query_string[key].push(decodeURIComponent(value));
+                }
+            }
         }
+        
     }
 };
 
