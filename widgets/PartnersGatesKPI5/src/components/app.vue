@@ -207,9 +207,7 @@ export default {
 
         applyselection() {
             this.filteredDatabase = [];
-            this.permissionsSelection.sort((a, b) => {
-                return a > b;
-            });
+            this.permissionsSelection.sort();
             for (let i = 0; i < this.permissionsSelection.length; ++i) {
                 this.filteredDatabase.push(this.sortedDatabase[this.permissionsSelection[i]]);
             }
