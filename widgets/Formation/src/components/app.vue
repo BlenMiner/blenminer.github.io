@@ -68,9 +68,17 @@
                                     <tr :style="{'background-color': getColor(props.item.color)}">
                                         <td>{{ props.item.category }}</td>
                                         <td>{{ props.item.subcategory }}</td>
-                                        <td> {{ props.item.credits }} </td>
-                                        <td> {{ props.item.count }} </td>
-                                        <td>
+                                        <td class="text-center">
+                                            <v-chip color="#555555" dark>
+                                                {{ props.item.credits.toFixed(1) }}
+                                            </v-chip>
+                                        </td>
+                                        <td class="text-center">
+                                            <v-chip color="#777" dark>
+                                                {{ props.item.count }}
+                                            </v-chip>
+                                        </td>
+                                        <td class="text-center">
                                             <v-chip
                                                 :color="
                                                     (props.item.count * props.item.credits) >= 5 ? 'green' :
@@ -234,9 +242,7 @@ export default {
 
         applyselection() {
             this.filteredDatabase = [];
-            this.permissionsSelection.sort((a, b) => {
-                return a > b;
-            });
+            this.permissionsSelection.sort();
             for (let i = 0; i < this.permissionsSelection.length; ++i) {
                 this.filteredDatabase.push(this.sortedDatabase[this.permissionsSelection[i]]);
             }
@@ -342,13 +348,6 @@ export default {
             http.send(null);
 
             this.lastmodif = http.responseText;
-            /* http.open("GET", "https://bcracker.dev/widgets/smec.php?&key=" + key, false);
-            http.send(null); */
-
-            /* http.open("GET", "https://bcracker.dev/widgets/ranges.php", false);
-            http.send(null); */
-
-            // const smecs = CSVToArray(http.responseText, ";");
 
             this.sortedDatabase.splice(0, this.sortedDatabase.length);
             this.database = {};
@@ -406,19 +405,6 @@ export default {
 
                 this.database[partnerName].push(cert);
             }
-
-            /* for (let i = 5; i < smecs.length; i++) {
-                let partnerName = smecs[i][10];
-                const valid = smecs[i][26];
-
-                if (!partnerName) continue;
-
-                // let partnerId = partnerName.split("[")[1].slice(0, -1);
-                partnerName = partnerName.split("[")[0].slice(0, -1);
-                if (valid === "Finished" && partnerName !== "3D") {
-                    this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
-                }
-            } */
 
             this.sortedDatabase.sort(
                 (b, a) => {
