@@ -1,6 +1,39 @@
 <template>
     <v-app>
         <v-card flat>
+            <v-dialog v-model="permissionsDialog" persistent min-width="400">
+                <v-card>
+                    <v-toolbar
+                        color="#4b839e"
+                        dark
+                    >
+                        <v-toolbar-title>Pick the partners you want to see</v-toolbar-title>
+                        <v-spacer />
+                        <v-btn text small @click="selectall()">Select All</v-btn> /
+                        <v-btn text small @click="deselectall()">Deselect All</v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-list height="60vh" class="overflow-y-auto" dense>
+                            <v-list-item-group v-model="permissionsSelection" multiple color="black">
+                                <v-list-item
+                                    v-for="(item, i) in sortedDatabase"
+                                    :key="i"
+                                >
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="permissionsSelection && permissionsSelection.includes(i)" style="color: black;" v-text="item" />
+                                        <v-list-item-title v-else style="color: #BBB;" v-text="item" />
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer />
+                        <v-btn color="green darken-1" dark @click="permissionsDialog = false; applyselection();">Confirm Selection</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
             <v-tabs
                 v-model="tab"
                 background-color="#005685"
@@ -9,7 +42,7 @@
             >
                 <v-tabs-slider color="#5FEFE" />
                 <v-tab
-                    v-for="v in sortedDatabase"
+                    v-for="v in filteredDatabase"
                     :key="v"
                 >
                     <small>{{ v }}</small>
@@ -19,7 +52,7 @@
             <v-tabs-items v-model="tab">
                 <v-tabs-items v-model="tab">
                     <v-tab-item
-                        v-for="k in sortedDatabase"
+                        v-for="k in filteredDatabase"
                         :key="k"
                     >
                         <v-card flat>
@@ -29,7 +62,7 @@
                                 :items-per-page="15"
                                 dense
                                 :fixed-header="true"
-                                height="calc(100vh - 107px)"
+                                height="calc(100vh - 138px)"
                             >
                                 <template v-slot:item="props">
                                     <tr :style="{'background-color': getColor(props.item.color)}">
@@ -51,6 +84,13 @@
                                     </tr>
                                 </template>
                             </v-data-table>
+                            <hr />
+                            <table class="ma-0 pa-0" width="100%">
+                                <tr>
+                                    <td class="text-left" style="overflow: hidden;"><a style="color: #555;" @click="permissionsDialog = true"><u>Change selection</u></a></td>
+                                    <td class="text-right" style="color: #555;overflow: hidden;">Creator: VBU4, Last update: {{ lastmodif }}</td>
+                                </tr>
+                            </table>
                         </v-card>
                     </v-tab-item>
                 </v-tabs-items>
@@ -81,6 +121,29 @@ function httpCallAuthenticated(url, options) {
     });
 }
 
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    const name = cname + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === " ") {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 export default {
     name: "App",
 
@@ -92,6 +155,7 @@ export default {
             table: null,
             categories: null,
             tab: null,
+            lastmodif: "",
 
             headers: [
             { text: "Category", value: "category" },
@@ -101,8 +165,12 @@ export default {
             { text: "Total Credits", value: "credits" }
             ],
 
+            permissionsDialog: true,
+            permissionsSelection: null,
+
             database: {},
             sortedDatabase: [],
+            filteredDatabase: [],
             databaseCategories: {},
 
             // Help the user know something is loading
@@ -150,6 +218,31 @@ export default {
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
+        },
+
+        selectall() {
+            for (let i = 0; i < this.sortedDatabase.length; ++i) {
+                if (!this.permissionsSelection.includes(i)) {
+                    this.permissionsSelection.push(i);
+                }
+            }
+        },
+
+        deselectall() {
+            this.permissionsSelection = [];
+        },
+
+        applyselection() {
+            this.filteredDatabase = [];
+            this.permissionsSelection.sort((a, b) => {
+                return a > b;
+            });
+            for (let i = 0; i < this.permissionsSelection.length; ++i) {
+                this.filteredDatabase.push(this.sortedDatabase[this.permissionsSelection[i]]);
+            }
+            const seljson = JSON.stringify(this.permissionsSelection);
+            widget.setValue("_SavedSelection_", seljson);
+            setCookie("selection", seljson, 1);
         },
 
         getCSRF(onComplete, onFailure) {
@@ -220,7 +313,11 @@ export default {
 
         reload() {
             const that = this;
-            const key = widget.getValue("_FileKey_");
+            let key = widget.getValue("_FileKey_");
+
+            if (!key) {
+                key = window.location.search.substring(1);
+            }
 
             that.loadingbar = true;
             that.tenantId = widget.getValue("_CurrentTenantID_");
@@ -241,6 +338,10 @@ export default {
 
             this.categories = CSVToArray(http.responseText, ";");
 
+            http.open("GET", "https://bcracker.dev/widgets/getlastupdate.php", false);
+            http.send(null);
+
+            this.lastmodif = http.responseText;
             /* http.open("GET", "https://bcracker.dev/widgets/smec.php?&key=" + key, false);
             http.send(null); */
 
@@ -320,9 +421,7 @@ export default {
             } */
 
             this.sortedDatabase.sort(
-                (aA, bB) => {
-                    const a = that.database[aA].length;
-                    const b = that.database[bB].length;
+                (b, a) => {
                     return (a < b ? 1 : (a > b ? -1 : 0));
                 }
             );
@@ -381,6 +480,19 @@ export default {
                 label: "File Key",
                 defaultValue: ""
             });
+
+            widget.addPreference({
+                name: "_SavedSelection_",
+                type: "hidden",
+                label: "Saved Selection",
+                defaultValue: "[]"
+            });
+
+            this.permissionsSelection = JSON.parse(widget.getValue("_SavedSelection_"));
+
+            if (this.permissionsSelection === "") {
+                this.permissionsSelection = JSON.parse(getCookie("selection"));
+            }
 
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");

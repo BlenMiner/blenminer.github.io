@@ -139,8 +139,6 @@ export default {
             permissionsDialog: true,
             permissionsSelection: null,
 
-            loadprefsdialog: false,
-
             rangesData: {},
             database: {},
             sortedDatabase: [],
@@ -209,10 +207,12 @@ export default {
 
         applyselection() {
             this.filteredDatabase = [];
+            this.permissionsSelection.sort((a, b) => {
+                return a > b;
+            });
             for (let i = 0; i < this.permissionsSelection.length; ++i) {
                 this.filteredDatabase.push(this.sortedDatabase[this.permissionsSelection[i]]);
             }
-
             const seljson = JSON.stringify(this.permissionsSelection);
             widget.setValue("_SavedSelection_", seljson);
             setCookie("selection", seljson, 1);
