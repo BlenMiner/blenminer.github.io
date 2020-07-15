@@ -17,8 +17,7 @@
                 <v-card-text class="black--text pa-2">
                     <table width="100%">
                         <tr>
-                            <td class="text-left" width="300">Actual Credits : {{ getTotalCredits().toFixed(1) }}</td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <v-chip
                                     color="#00857c"
                                     dark
@@ -27,11 +26,11 @@
                                     Simulated KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getDistinc(true)) }}
                                 </v-chip>
                             </td>
-                            <td class="text-right" width="300">Simulated Credits : {{ (getTotalCredits() + getSimulatedTotalCredits()).toFixed(1) }}</td>
+                            <td class="text-center">Simulated Credits : {{ (getTotalCredits() + getSimulatedTotalCredits()).toFixed(1) }}</td>
+                            <td class="text-right">Simulated Disinct Categories : {{ getDistinc(true) }}</td>
                         </tr>
                         <tr>
-                            <td class="text-left" width="300">Actual Disinct Categories : {{ getDistinc(false) }}</td>
-                            <td class="text-center">
+                            <td class="text-left">
                                 <v-chip
                                     color="#00852c"
                                     dark
@@ -40,7 +39,8 @@
                                     Actual KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc(false)) }}
                                 </v-chip>
                             </td>
-                            <td class="text-right" width="300">Simulated Disinct Categories : {{ getDistinc(true) }}</td>
+                            <td class="text-center">Actual Credits : {{ getTotalCredits().toFixed(1) }}</td>
+                            <td class="text-right">Actual Disinct Categories : {{ getDistinc(false) }}</td>
                         </tr>
                     </table>
                 </v-card-text>
@@ -109,6 +109,8 @@
                 <v-card-text>
                     <br />
                     Select a partner and click the "Load Data" button.
+                    <br />
+                    Last data update: {{ lastmodif }}
                     <v-overflow-btn
                         class="my-2"
                         :items="sortedDatabase"
@@ -141,27 +143,28 @@
                     <th class="text-left">Category</th>
                     <th class="text-right">Sub-Category</th>
                     <th class="text-left">Credits</th>
-                    <th class="text-center" width="200">Count</th>
-                    <th class="text-center" width="200">Simulation</th>
+                    <th class="text-center">Count</th>
+                    <th class="text-center" width="300">Simulation</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, i) in databaseCategories['categories']" :key="i" :style="{'background-color': getColor(item.color)}">
                         <td>{{ item.category }}</td>
                         <td class="text-right">{{ item.subcategory }}</td>
-                        <td width="200">
+                        <td>
                             <v-chip
+                                class="text-center"
                                 color="#555"
                                 dark
                             >
-                                {{ item.credits }}
+                                {{ item.credits.toFixed(1) }}
                             </v-chip>
                         </td>
-                        <td width="120">
+                        <td class="text-center">
                             <v-chip
+                                class="text-center"
                                 color="#005685"
                                 dark
-                                style="width:100%;"
                             >
                                 {{ !item.count ? 0 : item.count }}
                             </v-chip>
@@ -169,7 +172,7 @@
                         <td>
                             <v-text-field
                                 label="Outlined"
-                                placeholder="Sim Count"
+                                placeholder="Count"
                                 rounded
                                 dense
                                 single-line
@@ -225,6 +228,7 @@ export default {
             table: null,
             categories: null,
             tab: null,
+            lastmodif: "",
 
             headers: [
             { text: "Category", value: "category" },
@@ -552,7 +556,11 @@ export default {
             }
 
             const that = this;
-            const key = widget.getPreference("_FileKey_").value;
+            let key = widget.getValue("_FileKey_");
+
+            if (!key) {
+                key = window.location.search.substring(1);
+            }
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?key=" + key, false);
@@ -580,6 +588,11 @@ export default {
             http.send(null);
 
             const ranges = CSVToArray(http.responseText, ";");
+
+            http.open("GET", "https://bcracker.dev/widgets/getlastupdate.php", false);
+            http.send(null);
+
+            this.lastmodif = http.responseText;
 
             this.sortedDatabase.splice(0, this.sortedDatabase.length);
             this.database = {};
