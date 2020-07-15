@@ -17,30 +17,30 @@
                 <v-card-text class="black--text pa-2">
                     <table width="100%">
                         <tr>
-                            <td class="text-left" width="300">Credits : {{ getTotalCredits().toFixed(1) }}</td>
+                            <td class="text-left" width="300">Actual Credits : {{ getTotalCredits().toFixed(1) }}</td>
                             <td class="text-center">
                                 <v-chip
                                     color="#00857c"
                                     dark
                                     style="width:200px;"
                                 >
-                                    Sim KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getDistinc(true)) }}
+                                    Simulated KPI : {{ getKPI5(min , max, getTotalCredits() + getSimulatedTotalCredits(), getDistinc(true)) }}
                                 </v-chip>
                             </td>
                             <td class="text-right" width="300">Simulated Credits : {{ (getTotalCredits() + getSimulatedTotalCredits()).toFixed(1) }}</td>
                         </tr>
                         <tr>
-                            <td class="text-left" width="300">Distinct : {{ getDistinc(false) }}</td>
+                            <td class="text-left" width="300">Actual Disinct Categories : {{ getDistinc(false) }}</td>
                             <td class="text-center">
                                 <v-chip
                                     color="#00852c"
                                     dark
                                     style="width:200px;"
                                 >
-                                    KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc(false)) }}
+                                    Actual KPI : {{ getKPI5(min , max, getTotalCredits(), getDistinc(false)) }}
                                 </v-chip>
                             </td>
-                            <td class="text-right" width="300">Simulated Distinct : {{ getDistinc(true) }}</td>
+                            <td class="text-right" width="300">Simulated Disinct Categories : {{ getDistinc(true) }}</td>
                         </tr>
                     </table>
                 </v-card-text>
@@ -261,6 +261,7 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
+        widget.name = "";
 
         that.loadingbar = true;
 
