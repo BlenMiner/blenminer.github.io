@@ -311,7 +311,7 @@ export default {
             this.permissionsSelection = JSON.parse(widget.getValue("_SavedSelection_"));
 
             if (this.permissionsSelection === "") {
-                this.permissionsSelection = getCookie("selection");
+                this.permissionsSelection = JSON.parse(getCookie("selection"));
             }
 
             // Loads the prefs if available
