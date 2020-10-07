@@ -304,7 +304,7 @@ export default {
             this.loadingbar += 2;
 
             const _3dspace = this.tenants[this.tenantId]["3DSpace"];
-            const collabspace = this.securityContext.split(".")[2];
+            // const collabspace = this.securityContext.split(".")[2];
 
             that.projects = {};
 
@@ -314,7 +314,12 @@ export default {
             httpCallAuthenticated(_3dspace + `/resources/e6w/service/json/PRG_Experience_MyProjects_List?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
-                    const items = JSON.parse(response).widget.datarecords.datagroups;
+                    const w = JSON.parse(response).widget;
+                    if (w === undefined) {
+                        that.loadingbar--;
+                    }
+
+                    const items = w.datarecords.datagroups;
 
                     for (let i = 0; i < items.length; i++) {
                         const id = items[i].physicalId;
@@ -330,8 +335,9 @@ export default {
                             owner: data.owner.value[0].value,
                             type: "Project Space"
                         });
-                        that.loadingbar--;
                     }
+
+                    that.loadingbar--;
                 },
 
                 onFailure: (response) => {
