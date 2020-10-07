@@ -314,9 +314,12 @@ export default {
             httpCallAuthenticated(_3dspace + `/resources/e6w/service/json/PRG_Experience_MyProjects_List?SecurityContext=${this.securityContext}`,
             {
                 onComplete: (response) => {
+                    that.loadingbar = 0;
+
                     const w = JSON.parse(response).widget;
                     if (w === undefined) {
-                        that.loadingbar--;
+                        that.loadingbar = 0;
+                        return;
                     }
 
                     const items = w.datarecords.datagroups;
@@ -336,12 +339,10 @@ export default {
                             type: "Project Space"
                         });
                     }
-
-                    that.loadingbar--;
                 },
 
                 onFailure: (response) => {
-                    that.loadingbar--;
+                    that.loadingbar = 0;
                 }
             });
 
