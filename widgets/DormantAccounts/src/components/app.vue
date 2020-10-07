@@ -40,9 +40,9 @@
                         <td> {{ item.partner }} </td>
                         <td> {{ item.name }} </td>
                         <td>
-                            <v-btn value="recent" width="500" style="justify-content: left;user-select: text;" small @click="expand(item)">
+                            <v-btn value="recent" width="400" style="justify-content: left;user-select: text;" small @click="expand(item)">
                                 <v-icon>mdi-history</v-icon>
-                                <span>{{ substring(item.history[0].subject, 50) }}</span>
+                                <span>{{ substring(item.history[0].subject, 43) }}</span>
                             </v-btn>
                         </td>
                         <td>
