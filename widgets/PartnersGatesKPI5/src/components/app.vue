@@ -335,7 +335,6 @@ export default {
             });
         },
 
-        
         getColor: function(counter) {
             if (counter % 2 === 1) {
                 return "white";

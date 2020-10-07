@@ -62,7 +62,7 @@
                                 :items-per-page="15"
                                 dense
                                 :fixed-header="true"
-                                height="calc(100vh - 138px)"
+                                height="100vh"
                             >
                                 <template v-slot:item="props">
                                     <tr :style="{'background-color': getColor(props.item.color)}">
@@ -318,6 +318,93 @@ export default {
             console.log("Invalid: " + invalid);
         },
 
+        reloadAsync() {
+            const that = this;
+            if (this.table !== null && this.categories !== null) {
+                this.sortedDatabase.splice(0, this.sortedDatabase.length);
+                this.database = {};
+                this.databaseCategories = {};
+
+                for (let i = 1; i < this.table.length; i++) {
+                    const partnerName = this.table[i][1];
+                    if (!partnerName) continue;
+
+                    const partnerId = this.table[i][3].split("[")[1].substring(0, 15);
+                    const certName = this.table[i][9];
+
+                    let found = false;
+                    let category = "Brand_Essentials";
+                    let subcategory = "Brand Articulate";
+                    let credits = "0,5";
+
+                    for (let j = 1; j < this.categories.length; ++j) {
+                        if (this.categories[j][0] === certName) {
+                            category = this.categories[j][1];
+                            subcategory = this.categories[j][2];
+                            credits = this.categories[j][3];
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (this.database[partnerName] === undefined) {
+                        this.sortedDatabase.push(partnerName);
+                        Vue.set(this.database, partnerName, []);
+                        Vue.set(this.databaseCategories, partnerName, []);
+                    }
+
+                    if (!found) {
+                        if (certName.startsWith("SMEC")) {
+                            this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
+                        } else {
+                            console.error(certName + " doesn't exist in the list.");
+                        }
+                    } else {
+                        this.addCategoryItem(partnerName, category, subcategory, credits);
+                    }
+
+                    const cert = {
+                            partnerId: partnerId,
+                            certName: certName,
+                            certExpiration: this.table[i][14],
+                            certProfile: this.table[i][11],
+                            certAxis: this.table[i][10],
+                            certCategory: this.table[i][12],
+                            category: category,
+                            subcategory: subcategory,
+                            credits: credits
+                    };
+
+                    this.database[partnerName].push(cert);
+                }
+
+                this.sortedDatabase.sort(
+                    (b, a) => {
+                        return (a < b ? 1 : (a > b ? -1 : 0));
+                    }
+                );
+
+                for (const val in this.databaseCategories) {
+                    this.databaseCategories[val].sort((a, b) => { return (a.category < b.category ? -1 : (a.category > b.category ? 1 : 0)); });
+
+                    if (this.databaseCategories[val].length > 0) {
+                        let last = this.databaseCategories[val][0];
+                        let counter = 0;
+
+                        for (let i = 0; i < this.databaseCategories[val].length; ++i) {
+                            if (last.category !== this.databaseCategories[val][i].category) {
+                                ++counter;
+                            }
+                            last = this.databaseCategories[val][i];
+                            last.color = counter;
+                        }
+                    }
+                }
+
+                that.loadingbar = false;
+            }
+        },
+
         reload() {
             const that = this;
             let key = widget.getValue("_FileKey_");
@@ -330,107 +417,37 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             const http = new XMLHttpRequest();
-            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?&key=" + key, false);
+            http.open("GET", "https://bcracker.dev/widgets/database_kpi.php?&key=" + key, true);
             http.send(null);
+            that.table = null;
+            http.onload = () => {
+                that.table = CSVToArray(http.responseText, ";");
 
-            this.table = CSVToArray(http.responseText, ";");
-            http.open("GET", "https://bcracker.dev/widgets/obsolete.php?key=" + key, false);
-            http.send(null);
-
-            const obsolete = JSON.parse(http.responseText);
-            this.filterCertificates(obsolete);
-
-            http.open("GET", "https://bcracker.dev/widgets/cert_category.php?&key=" + key, false);
-            http.send(null);
-
-            this.categories = CSVToArray(http.responseText, ";");
-
-            http.open("GET", "https://bcracker.dev/widgets/getlastupdate.php", false);
-            http.send(null);
-
-            this.lastmodif = http.responseText;
-
-            this.sortedDatabase.splice(0, this.sortedDatabase.length);
-            this.database = {};
-            this.databaseCategories = {};
-
-            for (let i = 1; i < this.table.length; i++) {
-                const partnerName = this.table[i][1];
-                if (!partnerName) continue;
-
-                const partnerId = this.table[i][3].split("[")[1].substring(0, 15);
-                const certName = this.table[i][9];
-
-                let found = false;
-                let category = "Brand_Essentials";
-                let subcategory = "Brand Articulate";
-                let credits = "0,5";
-
-                for (let j = 1; j < this.categories.length; ++j) {
-                    if (this.categories[j][0] === certName) {
-                        category = this.categories[j][1];
-                        subcategory = this.categories[j][2];
-                        credits = this.categories[j][3];
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (this.database[partnerName] === undefined) {
-                    this.sortedDatabase.push(partnerName);
-                    Vue.set(this.database, partnerName, []);
-                    Vue.set(this.databaseCategories, partnerName, []);
-                }
-
-                if (!found) {
-                    if (certName.startsWith("SMEC")) {
-                        this.addCategoryItem(partnerName, "Sales", "Sales_SMEC", "4");
-                    } else {
-                        console.error(certName + " doesn't exist in the list.");
-                    }
-                } else {
-                    this.addCategoryItem(partnerName, category, subcategory, credits);
-                }
-
-                const cert = {
-                        partnerId: partnerId,
-                        certName: certName,
-                        certExpiration: this.table[i][14],
-                        certProfile: this.table[i][11],
-                        certAxis: this.table[i][10],
-                        certCategory: this.table[i][12],
-                        category: category,
-                        subcategory: subcategory,
-                        credits: credits
+                const _http = new XMLHttpRequest();
+                _http.open("GET", "https://bcracker.dev/widgets/obsolete.php?key=" + key, true);
+                _http.send(null);
+                _http.onload = () => {
+                    const obsolete = JSON.parse(_http.responseText);
+                    this.filterCertificates(obsolete);
+                    that.reloadAsync();
                 };
+            };
 
-                this.database[partnerName].push(cert);
-            }
+            const certRequest = new XMLHttpRequest();
+            certRequest.open("GET", "https://bcracker.dev/widgets/cert_category.php?&key=" + key, true);
+            certRequest.send(null);
+            that.categories = null;
+            certRequest.onload = () => {
+                that.categories = CSVToArray(certRequest.responseText, ";");
+                that.reloadAsync();
+            };
 
-            this.sortedDatabase.sort(
-                (b, a) => {
-                    return (a < b ? 1 : (a > b ? -1 : 0));
-                }
-            );
-
-            for (const val in this.databaseCategories) {
-                this.databaseCategories[val].sort((a, b) => { return (a.category < b.category ? -1 : (a.category > b.category ? 1 : 0)); });
-
-                if (this.databaseCategories[val].length > 0) {
-                    let last = this.databaseCategories[val][0];
-                    let counter = 0;
-
-                    for (let i = 0; i < this.databaseCategories[val].length; ++i) {
-                        if (last.category !== this.databaseCategories[val][i].category) {
-                            ++counter;
-                        }
-                        last = this.databaseCategories[val][i];
-                        last.color = counter;
-                    }
-                }
-            }
-
-            that.loadingbar = false;
+            const lastupdateRequest = new XMLHttpRequest();
+            lastupdateRequest.open("GET", "https://bcracker.dev/widgets/getlastupdate.php", true);
+            lastupdateRequest.send(null);
+            lastupdateRequest.onload = () => {
+                that.lastmodif = lastupdateRequest.responseText;
+            };
         },
 
         // Load the tenant data & its services URLs based on the ID

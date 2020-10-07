@@ -265,7 +265,7 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
-        widget.name = "";
+        widget.name = "";ç
 
         that.loadingbar = true;
 

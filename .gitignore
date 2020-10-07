@@ -64,3 +64,14 @@ widgets/KPIAdministrator/.vscode/extensions.json
 widgets/KPIAdministrator/.vscode/launch.json
 widgets/KPIAdministrator/.vscode/settings.json
 widgets/KPIAdministrator/node_modules/*
+widgets/DormantAccounts/.eslintignore
+widgets/DormantAccounts/.eslintrc.json
+widgets/DormantAccounts/.gitlab-ci.yml
+widgets/DormantAccounts/.markdownlint.json
+widgets/DormantAccounts/.prettierrc
+widgets/DormantAccounts/.zipignore
+widgets/DormantAccounts/README.md
+widgets/DormantAccounts/.vscode/extensions.json
+widgets/DormantAccounts/.vscode/launch.json
+widgets/DormantAccounts/.vscode/settings.json
+widgets/DormantAccounts/node_modules/*
