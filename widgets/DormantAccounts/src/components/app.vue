@@ -38,11 +38,12 @@
                 <template v-slot:item="{item}">
                     <tr>
                         <td> {{ item.partner }} </td>
-                        <td> {{ item.name }} </td>
+                        <td> {{ item.client }} </td>
+                        <td> {{ item.clientID }} </td>
                         <td>
-                            <v-btn value="recent" width="400" style="justify-content: left;user-select: text;" small @click="expand(item)">
+                            <v-btn value="recent" small @click="expand(item)">
                                 <v-icon>mdi-history</v-icon>
-                                <span>{{ substring(item.history[0].subject, 43) }}</span>
+                                <span>History</span>
                             </v-btn>
                         </td>
                         <td>
@@ -89,7 +90,8 @@ export default {
 
             headers: [
                 { text: "Partner" },
-                { text: "Owner" },
+                { text: "Client" },
+                { text: "Client ID" },
                 { text: "Subject" },
                 { text: "Last Activity" }
             ],
@@ -196,8 +198,7 @@ export default {
                 for (let i = 1; i < t.length; ++i) {
                     if (t[i][11] === undefined) continue;
 
-                    const namePrototype = t[i][0].split(",");
-                    const name = namePrototype[0].toUpperCase() + " " + namePrototype[1];
+                    const client = t[i][3];
 
                     const s = t[i][11].split("/");
                     const tdate = s[1] + "/" + s[0] + "/" + s[2];
@@ -215,15 +216,16 @@ export default {
                         date: date
                     };
 
-                    if (dictionaryNames[name] !== undefined) {
-                        const j = dictionaryNames[name];
+                    if (dictionaryNames[client] !== undefined) {
+                        const j = dictionaryNames[client];
                         that.table[j].lastActivityDate = date;
                         that.table[j].lastActivity = different;
                         that.table[j].history.unshift(hist);
                     } else {
-                        dictionaryNames[name] = that.table.length;
+                        dictionaryNames[client] = that.table.length;
                         that.table.push({
-                            name: name,
+                            client: client,
+                            clientID: t[i][4],
                             partner: t[i][8],
                             lastActivityDate: date,
                             lastActivity: different,
@@ -233,9 +235,9 @@ export default {
                 }
 
                 that.table.sort((a, b) => {
-                    if (a.name < b.name) {
+                    if (a.client < b.client) {
                         return -1;
-                    } else if (a.name < b.name) {
+                    } else if (a.client < b.client) {
                         return 1;
                     }
                     return 0;
