@@ -1,58 +1,42 @@
 <template>
     <v-app>
-        <v-dialog
-            v-if="selected !== null"
-            v-model="dialog"
-            scrollable
-            max-width="60%"
+        <v-tabs
+            v-model="tab"
+            centered
+            dark
+            icons-and-text
         >
-            <v-card>
-                <v-card-title>History {{ selected.name }}</v-card-title>
-                <v-card-text style="height: 80vh;">
-                    <v-card v-for="(hist, i) in selected.history" :key="i" outlined class="ma-1" elevation="5">
-                        <v-list-item three-line>
-                            <v-list-item-content>
-                                <div class="overline text-right" style="user-select: text;">
-                                    DS Customer Number: {{ hist.dsCustomerNumber.replace(" ", "").replace(" ", "").replace(" ", "") }}
-                                    <br />
-                                    {{ hist.date.toLocaleString() }}
-                                </div>
-                                <v-list-item-title><h5 style="user-select: text;">{{ hist.subject }}</h5></v-list-item-title>
-                                <v-list-item-content style="user-select: text;">{{ hist.description }}</v-list-item-content>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-card>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
-        <v-card flat>
-            <v-data-table
-                :headers="headers"
-                :items="table"
-                :items-per-page="-1"
-                dense
-                :fixed-header="true"
-                :loading="loadingbar"
-                height="calc(100vh - 60px)"
-            >
-                <template v-slot:item="{item}">
-                    <tr>
-                        <td> {{ item.partner }} </td>
-                        <td> {{ item.client }} </td>
-                        <td> {{ item.clientID }} </td>
-                        <td>
-                            <v-btn value="recent" small @click="expand(item)">
-                                <v-icon>mdi-history</v-icon>
-                                <span>History</span>
-                            </v-btn>
-                        </td>
-                        <td>
-                            {{ item.lastActivity }}
-                        </td>
-                    </tr>
-                </template>
-            </v-data-table>
-        </v-card>
+            <v-tabs-slider />
+
+            <v-tab href="#tab-1">
+                Accounts History
+                <v-icon>mdi-phone</v-icon>
+            </v-tab>
+
+            <v-tab href="#tab-2">
+                Dormant Accounts
+                <v-icon>mdi-sleep</v-icon>
+            </v-tab>
+
+            <div width="200px">
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details
+                />
+            </div>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-1">
+                <costumer-table :table="table" :loadingbar="loadingbar" :search="search" />
+            </v-tab-item>
+            <v-tab-item value="tab-2">
+                <dormant-table :table="dTable" :loadingbar="dormantLoading" :search="search" />
+            </v-tab-item>
+        </v-tabs-items>
     </v-app>
 </template>
 
@@ -70,6 +54,8 @@ html, body {
 <script>
 /* eslint-disable no-console */
 import { EventBus, CSVToArray } from "../plugins/vuetify";
+import costumerTable from "./costumerTable.vue";
+import dormantTable from "./dormantTable.vue";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -81,25 +67,21 @@ export default {
     name: "App",
 
     components: {
+        costumerTable,
+        dormantTable
     },
 
     data: function() {
         return {
             lastmodif: "",
             table: [],
-
-            headers: [
-                { text: "Partner" },
-                { text: "Client" },
-                { text: "Client ID" },
-                { text: "Subject" },
-                { text: "Last Activity" }
-            ],
+            dTable: [],
+            tab: null,
+            search: "",
 
             // Help the user know something is loading
             loadingbar: true,
-            dialog: false,
-            selected: null,
+            dormantLoading: true,
 
             // Data loaded from DS and from preferences
             tenantId: -1,
@@ -119,6 +101,7 @@ export default {
         widget.name = "";
 
         that.loadingbar = true;
+        that.dormantLoading = true;
 
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
         EventBus.$on("reloadwidget", () => { that.reload(); });
@@ -145,11 +128,6 @@ export default {
 
             const s = str.substring(0, c);
             return s + (s.length < str.length ? "..." : "");
-        },
-
-        expand(item) {
-            this.dialog = true;
-            this.selected = item;
         },
 
         log(msg) {
@@ -185,12 +163,15 @@ export default {
             }
 
             that.loadingbar = true;
+            that.dormantLoading = true;
             that.tenantId = widget.getValue("_CurrentTenantID_");
+
+            that.table = [];
+            that.dTable = [];
 
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/dormant/activities.php?key=" + key, true);
             http.send(null);
-            that.table = [];
             http.onload = () => {
                 const t = CSVToArray(http.responseText, ";");
                 const dictionaryNames = {};
@@ -244,6 +225,44 @@ export default {
                 });
 
                 that.loadingbar = false;
+            };
+
+            const http2 = new XMLHttpRequest();
+            http2.open("GET", "https://bcracker.dev/widgets/dormant/p_activities.php?key=" + key, true);
+            http2.send(null);
+            http2.onload = () => {
+                const t = CSVToArray(http2.responseText, ";");
+
+                for (let i = 1; i < t.length; ++i) {
+                    if (t[i][7] || t[i][12]) continue;
+
+                    const client = {
+                        clientID: t[i][0],
+                        client: t[i][1],
+                        industry: t[i][5],
+
+                        ALC2019: t[i][6],
+                        YLC2019: t[i][8],
+                        RLC2019: t[i][9],
+
+                        ALC2018: t[i][11],
+                        YLC2018: t[i][13],
+                        RLC2018: t[i][14]
+                    };
+
+                    that.dTable.push(client);
+                }
+
+                that.dTable.sort((a, b) => {
+                    if (a.client < b.client) {
+                        return -1;
+                    } else if (a.client < b.client) {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                that.dormantLoading = false;
             };
         },
 
