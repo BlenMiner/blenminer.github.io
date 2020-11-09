@@ -2,6 +2,7 @@
     <div id="costumerTable">
         <v-dialog
             v-if="selected !== null"
+            id="histDialog"
             v-model="dialog"
             scrollable
             max-width="60%"
@@ -34,7 +35,7 @@
                 :fixed-header="true"
                 :loading="loadingbar"
                 :search="search"
-                height="calc(100vh - 131px)"
+                height="calc(100vh - 114px)"
             >
                 <template v-slot:item="{item}">
                     <tr>
@@ -83,6 +84,7 @@ export default {
 
     methods: {
         expand(item) {
+            this.dialog = false;
             this.dialog = true;
             this.selected = item;
         }

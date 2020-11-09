@@ -5,6 +5,7 @@
             centered
             dark
             icons-and-text
+            height="55px"
         >
             <v-tabs-slider />
 
@@ -169,6 +170,10 @@ export default {
             that.table = [];
             that.dTable = [];
 
+            const http2 = new XMLHttpRequest();
+            http2.open("GET", "https://bcracker.dev/widgets/dormant/p_activities.php?key=" + key, true);
+            http2.send(null);
+
             const http = new XMLHttpRequest();
             http.open("GET", "https://bcracker.dev/widgets/dormant/activities.php?key=" + key, true);
             http.send(null);
@@ -225,45 +230,78 @@ export default {
                 });
 
                 that.loadingbar = false;
-            };
 
-            const http2 = new XMLHttpRequest();
-            http2.open("GET", "https://bcracker.dev/widgets/dormant/p_activities.php?key=" + key, true);
-            http2.send(null);
-            http2.onload = () => {
-                const t = CSVToArray(http2.responseText, ";");
+                console.log("http2.onload");
 
-                for (let i = 1; i < t.length; ++i) {
-                    if (t[i][7] || t[i][12]) continue;
-
-                    const client = {
-                        clientID: t[i][0],
-                        client: t[i][1],
-                        industry: t[i][5],
-
-                        ALC2019: t[i][6],
-                        YLC2019: t[i][8],
-                        RLC2019: t[i][9],
-
-                        ALC2018: t[i][11],
-                        YLC2018: t[i][13],
-                        RLC2018: t[i][14]
+                if (http2.responseText) {
+                    that.loadDormantAccounts(http2.responseText);
+                } else {
+                    http2.onload = () => {
+                        that.loadDormantAccounts(http2.responseText);
                     };
-
-                    that.dTable.push(client);
                 }
-
-                that.dTable.sort((a, b) => {
-                    if (a.client < b.client) {
-                        return -1;
-                    } else if (a.client < b.client) {
-                        return 1;
-                    }
-                    return 0;
-                });
-
-                that.dormantLoading = false;
             };
+        },
+
+        findHistory(clientName, clientID) {
+            clientName = clientName.toLowerCase().replaceAll(" ", "");
+            clientID = clientID.toLowerCase().replaceAll(" ", "");
+
+            for (let i = 0; i < this.table.length; ++i) {
+                const client = this.table[i].client.toLowerCase().replaceAll(" ", "");
+                const cID = this.table[i].clientID.toLowerCase().replaceAll(" ", "");
+
+                if (cID.startsWith(clientID) ||
+                    client.startsWith(clientName)) {
+                    return this.table[i];
+                }
+            }
+
+            return null;
+        },
+
+        loadDormantAccounts(responseText) {
+            const that = this;
+            const t = CSVToArray(responseText, ";");
+
+            for (let i = 1; i < t.length; ++i) {
+                if (t[i][7] || t[i][12]) continue;
+
+                const client = {
+                    clientID: t[i][0],
+                    client: t[i][1],
+                    industry: t[i][5],
+
+                    ALC2019: t[i][6],
+                    YLC2019: t[i][8],
+                    RLC2019: t[i][9],
+
+                    ALC2018: t[i][11],
+                    YLC2018: t[i][13],
+                    RLC2018: t[i][14],
+
+                    hist: null
+                };
+
+                if (client.client === undefined) continue;
+
+                const history = this.findHistory(client.client, client.clientID);
+
+                client.hist = history;
+
+                that.dTable.push(client);
+            }
+
+            that.dTable.sort((a, b) => {
+                if (a.client < b.client) {
+                    return -1;
+                } else if (a.client < b.client) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            that.dormantLoading = false;
         },
 
         // Load the tenant data & its services URLs based on the ID
