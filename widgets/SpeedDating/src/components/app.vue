@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        Speed dating
+        {{ msg }}
     </v-app>
 </template>
 
@@ -32,6 +32,7 @@ export default {
         return {
             // Search
             search: null,
+            msg: "[NULL]",
 
             // Data loaded from DS and from preferences
             tenantId: -1,
@@ -99,27 +100,31 @@ export default {
             EventBus.$emit("reloadwidget");
         },
 
-        getCSRF(onComplete, onFailure) {
+        swymCommunities(onCompleted) {
             const that = this;
 
             // Retrive CSRF ticket
-            const _3dspace = that.tenants[that.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
+            const base = that.tenants[that.tenantId]["3DSwym"];
+            httpCallAuthenticated(base + "/api/community/listmycommunities",
             {
                 onComplete: (response) => {
                     const res = JSON.parse(response);
-                    onComplete(res.csrf.value);
+                    that.onCompleted(res);
+                    console.log(res);
                 },
 
                 onFailure: (response) => {
-                    that.log(response);
-                    onFailure();
+                    console.error(response);
                 }
             });
         },
 
         reload() {
             const that = this;
+
+            this.swymCommunities((res) => {
+                that.msg = res;
+            });
         }
     }
 };
