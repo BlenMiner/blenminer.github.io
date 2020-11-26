@@ -105,15 +105,15 @@ export default {
             const base = that.tenants[that.tenantId]["3DSwym"];
             const compaseBase = that.tenants[that.tenantId]["3DCompass"];
 
+            // Get a CRSF ticket
             httpCallAuthenticated(compaseBase + "/resources/AppsMngt/security/csrf", {
                 method: "GET",
 
                 onComplete: (response) => {
-                    console.log(response);
                     const res = JSON.parse(response);
                     const crsf = res["X-DS-CSRFTOKEN"];
-                    console.log("crsf: " + crsf);
 
+                    // Make the call with the ticket
                     httpCallAuthenticated(base + "/api/community/listmycommunities/creation_granted_for/post", {
                         method: "GET",
                         headers: { ENO_CSRF_TOKEN: crsf },
