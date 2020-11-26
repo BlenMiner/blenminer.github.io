@@ -28,11 +28,6 @@ function httpCallAuthenticated(url, options) {
 export default {
     name: "App",
 
-    components: {
-        costumerTable,
-        dormantTable
-    },
-
     data: function() {
         return {
             // Search
@@ -55,9 +50,6 @@ export default {
         const that = this;
         widget.name = "";
 
-        that.loadingbar = true;
-        that.dormantLoading = true;
-
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
         EventBus.$on("reloadwidget", () => { that.reload(); });
 
@@ -76,9 +68,35 @@ export default {
 
     methods: {
 
-        log(msg) {
-            this.snackbarMsg = msg;
-            this.snackbar = true;
+        tenantDataLoaded(data) {
+            this.tenants = [];
+            const _TenantOpts = [];
+
+            let j = 0;
+
+            // Load all the tenants
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]["3DSwym"] === undefined) continue;
+
+                _TenantOpts.push({
+                    value: `${j++}`,
+                    label: `${data[i].platformId} - ${data[i].displayName}`
+                });
+
+                this.tenants.push(data[i]);
+            }
+
+            // Setup your preferences...
+            widget.addPreference({
+                name: "_CurrentTenantID_",
+                type: "list",
+                label: "Tenant",
+                defaultValue: "0",
+                options: _TenantOpts
+            });
+
+            // Loads the prefs if available
+            EventBus.$emit("reloadwidget");
         },
 
         getCSRF(onComplete, onFailure) {
