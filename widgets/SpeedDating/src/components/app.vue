@@ -103,14 +103,17 @@ export default {
         swymCommunities(onCompleted) {
             const that = this;
 
-            // Retrive CSRF ticket
+            console.log("-----------");
+            console.log(that.tenants);
+            console.log("-----------");
+            console.log(that.tenants[that.tenantId]);
             const base = that.tenants[that.tenantId]["3DSwym"];
-            httpCallAuthenticated(base + "/api/community/listmycommunities",
-            {
+
+            httpCallAuthenticated(base + "/api/community/listmycommunities", {
                 onComplete: (response) => {
                     const res = JSON.parse(response);
-                    that.onCompleted(res);
                     console.log(res);
+                    that.onCompleted(response);
                 },
 
                 onFailure: (response) => {
