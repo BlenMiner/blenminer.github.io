@@ -116,7 +116,7 @@ export default {
                     // Make the call with the ticket
                     httpCallAuthenticated(base + "/api/community/listmycommunities/creation_granted_for/post", {
                         method: "GET",
-                        headers: { ENO_CSRF_TOKEN: crsf },
+                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf }, // ENO_CSRF_TOKEN
 
                         onComplete: (response) => {
                             const res = JSON.parse(response);
