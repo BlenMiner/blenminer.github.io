@@ -141,7 +141,13 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             this.swymCommunities((res) => {
-                that.msg = res;
+                that.msg = "[\n";
+
+                for (let i = 0; i < res.result.length; ++i) {
+                    that.msg += "\t" + res + "\n";
+                }
+
+                that.msg = "]";
             });
         }
     }
