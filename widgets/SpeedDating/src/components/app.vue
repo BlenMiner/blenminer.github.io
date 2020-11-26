@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <loading :value="loading" :message="'Loading'" :progresscolor="'#005685'" />
         {{ msg }}
     </v-app>
 </template>
@@ -13,11 +14,15 @@ html, body {
     margin: 0;
     background-color:#ffffff;
 }
+.loading-dialog {
+   background-color: #303030;
+}
 </style>
 
 <script>
 /* eslint-disable no-console */
 import { EventBus } from "../plugins/vuetify";
+import loading from "./loading.vue";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -28,11 +33,17 @@ function httpCallAuthenticated(url, options) {
 export default {
     name: "App",
 
+    components: {
+        loading
+    },
+
     data: function() {
         return {
             // Search
             search: null,
             msg: "[NULL]",
+
+            loading: false,
 
             // Data loaded from DS and from preferences
             tenantId: -1,
@@ -54,9 +65,14 @@ export default {
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
         EventBus.$on("reloadwidget", () => { that.reload(); });
 
+        that.loading = true;
+
         // Start loading bar aswell
         if (widget.id === undefined) {
-            that.tenantDataLoaded([{ id: -1 }]);
+            setTimeout(() => {
+                    that.tenantDataLoaded([{ id: -1 }]);
+                },
+                1000);
         } else {
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
@@ -101,6 +117,17 @@ export default {
         },
 
         swymCommunities(onCompleted) {
+            if (widget.id === undefined) {
+                onCompleted({
+                    result: [
+                        { id: "1245152", title: "hello" },
+                        { id: "1291515", title: "world" }
+                    ]
+                });
+
+                return;
+            }
+
             const that = this;
             const base = that.tenants[that.tenantId]["3DSwym"];
 
@@ -139,19 +166,16 @@ export default {
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
+            this.loading = true;
             this.swymCommunities((res) => {
                 const _Communities = [];
-                that.msg = "[\n";
 
                 for (let i = 0; i < res.result.length; ++i) {
-                    that.msg += "\t" + res.result[i] + "\n";
                     _Communities.push({
                         value: `${res.result[i].id}`,
                         label: `${res.result[i].title}`
                     });
                 }
-
-                that.msg += "]";
 
                 // Setup your preferences...
                 widget.addPreference({
@@ -161,6 +185,8 @@ export default {
                     defaultValue: "0",
                     options: _Communities
                 });
+
+                that.loading = false;
             });
         }
     }
