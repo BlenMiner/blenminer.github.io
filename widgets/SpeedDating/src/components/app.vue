@@ -103,20 +103,19 @@ export default {
         swymCommunities(onCompleted) {
             const that = this;
             const base = that.tenants[that.tenantId]["3DSwym"];
-            const compaseBase = that.tenants[that.tenantId]["3DCompass"];
 
             // Get a CRSF ticket
-            httpCallAuthenticated(compaseBase + "/resources/AppsMngt/security/csrf", {
+            httpCallAuthenticated(base + "/api/index/tk", {
                 method: "GET",
 
                 onComplete: (response) => {
                     const res = JSON.parse(response);
-                    const crsf = res["X-DS-CSRFTOKEN"];
+                    const crsf = res.result.ServerToken;
 
                     // Make the call with the ticket
                     httpCallAuthenticated(base + "/api/community/listmycommunities/creation_granted_for/post", {
                         method: "GET",
-                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf }, // ENO_CSRF_TOKEN
+                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
 
                         onComplete: (response) => {
                             const res = JSON.parse(response);
