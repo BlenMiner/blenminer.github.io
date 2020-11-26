@@ -75,3 +75,14 @@ widgets/DormantAccounts/.vscode/extensions.json
 widgets/DormantAccounts/.vscode/launch.json
 widgets/DormantAccounts/.vscode/settings.json
 widgets/DormantAccounts/node_modules/*
+widgets/SpeedDating/.eslintignore
+widgets/SpeedDating/.eslintrc.json
+widgets/SpeedDating/.gitlab-ci.yml
+widgets/SpeedDating/.markdownlint.json
+widgets/SpeedDating/.prettierrc
+widgets/SpeedDating/.zipignore
+widgets/SpeedDating/README.md
+widgets/SpeedDating/.vscode/extensions.json
+widgets/SpeedDating/.vscode/launch.json
+widgets/SpeedDating/.vscode/settings.json
+widgets/SpeedDating/node_modules/*
