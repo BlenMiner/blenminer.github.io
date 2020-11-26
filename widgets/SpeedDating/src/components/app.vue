@@ -140,13 +140,27 @@ export default {
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
             this.swymCommunities((res) => {
+                const _Communities = [];
                 that.msg = "[\n";
 
                 for (let i = 0; i < res.result.length; ++i) {
-                    that.msg += "\t" + res + "\n";
+                    that.msg += "\t" + res.result[i] + "\n";
+                    _Communities.push({
+                        value: `${res.result[i].id}`,
+                        label: `${res.result[i].title}`
+                    });
                 }
 
-                that.msg = "]";
+                that.msg += "]";
+
+                // Setup your preferences...
+                widget.addPreference({
+                    name: "_ComunityId_",
+                    type: "list",
+                    label: "Community",
+                    defaultValue: "0",
+                    options: _Communities
+                });
             });
         }
     }
