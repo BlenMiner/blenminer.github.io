@@ -102,11 +102,6 @@ export default {
 
         swymCommunities(onCompleted) {
             const that = this;
-
-            console.log("-----------");
-            console.log(that.tenants);
-            console.log("-----------");
-            console.log(that.tenants[that.tenantId]);
             const base = that.tenants[that.tenantId]["3DSwym"];
 
             httpCallAuthenticated(base + "/api/community/listmycommunities", {
@@ -124,6 +119,8 @@ export default {
 
         reload() {
             const that = this;
+
+            that.tenantId = widget.getValue("_CurrentTenantID_");
 
             this.swymCommunities((res) => {
                 that.msg = res;
