@@ -119,8 +119,7 @@ export default {
 
                         onComplete: (response) => {
                             const res = JSON.parse(response);
-                            console.log(res);
-                            onCompleted(response);
+                            onCompleted(res);
                         },
 
                         onFailure: (response) => {
