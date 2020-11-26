@@ -111,7 +111,7 @@ export default {
 
                 onComplete: (response) => {
                     const res = JSON.parse(response);
-                    const crsf = res["X-DS-SWYM-CSRFTOKEN"];
+                    const crsf = res["X-DS-CSRFTOKEN"];
 
                     // Make the call with the ticket
                     httpCallAuthenticated(base + "/api/community/listmycommunities/creation_granted_for/post", {
