@@ -210,20 +210,18 @@ export default {
         },
 
         swymPost(token, path, params) {
-            var request = new XMLHttpRequest();
-            request.onreadystatechange= function () {
-                if (request.readyState==4) {
-                    console.log("Did it work??");
+            fetch(path, {
+                method: "POST",
+                body: JSON.stringify({ params: params }),
+                headers: { 
+                    "Content-type": "application/json;charset=UTF-8",
+                    "X-DS-SWYM-CSRFTOKEN": token
                 }
-            };
-            
-            request.open("POST", path, true);
-            request.setRequestHeader("X-DS-SWYM-CSRFTOKEN", token);
-            request.setRequestHeader("Content-Type", "application/json");
-            request.setRequestHeader("Accept","text/plain");
-            request.send(JSON.stringify({
-                params: params
-            }));
+            }).then((response) => {
+                console.log(response);
+            }).catch(err => {
+                console.error(err);
+            });
         },
 
         reload() {
