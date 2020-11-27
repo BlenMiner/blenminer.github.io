@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <loading :value="loading" :message="'Loading'" :progresscolor="'#005685'" />
-        {{ msg }}
+        <v-btn @click="swymAddPost(tenantId, 'test', 'body', 0)">Add Post</v-btn>
     </v-app>
 </template>
 
@@ -20,7 +20,6 @@ html, body {
 </style>
 
 <script>
-/* eslint-disable no-console */
 import { EventBus } from "../plugins/vuetify";
 import loading from "./loading.vue";
 
@@ -161,13 +160,60 @@ export default {
             });
         },
 
+        swymAddPost(communityId, title, message, publish = 0) {
+            if (widget.id === undefined) {
+                return;
+            }
+
+            const that = this;
+            const base = that.tenants[that.tenantId]["3DSwym"];
+
+            const body = {
+                params: {
+                    community_id: communityId,
+                    message: message,
+                    published: publish,
+                    title: title
+                }
+            };
+
+            // Get a CRSF ticket
+            httpCallAuthenticated(base + "/api/index/tk", {
+                method: "GET",
+
+                onComplete: (response) => {
+                    const res = JSON.parse(response);
+                    const crsf = res.result.ServerToken;
+
+                    // Post the message
+                    httpCallAuthenticated(base + "/api/post/add", {
+                        method: "POST",
+                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
+                        data: JSON.stringify(body),
+
+                        onComplete: (response) => {
+                            console.log(response);
+                        },
+
+                        onFailure: (response) => {
+                            console.error(response);
+                        }
+                    });
+                },
+
+                onFailure: (response) => {
+                    console.error(response);
+                }
+            });
+        },
+
         reload() {
             const that = this;
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
 
-            this.loading = true;
-            this.swymCommunities((res) => {
+            that.loading = true;
+            that.swymCommunities((res) => {
                 const _Communities = [];
 
                 for (let i = 0; i < res.result.length; ++i) {
