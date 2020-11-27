@@ -175,7 +175,7 @@ export default {
                 title: title
             };
 
-            const formBody = FormData();
+            const formBody = new FormData();
             formBody.append("params", JSON.stringify(body))
 
             // Get a CRSF ticket
