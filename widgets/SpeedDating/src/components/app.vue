@@ -231,6 +231,12 @@ export default {
 
         submit () {
 
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+
             this.swymAddPost(this.communityId, "Speed Dating Card",
             `<p>
             <span style="text-decoration:underline;"><strong>${this.form.company}</strong> - ${this.form.commercialTeam}</span>
