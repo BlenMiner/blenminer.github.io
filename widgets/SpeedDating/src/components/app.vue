@@ -1,7 +1,107 @@
 <template>
     <v-app>
         <loading :value="loading" :message="'Loading'" :progresscolor="'#005685'" />
-        <v-btn @click="swymAddPost(communityId, 'test', 'body', 0)">Add Post</v-btn>
+
+        <v-snackbar
+            v-model="snackbar"
+            absolute
+            top
+            right
+            color="success"
+        >
+            <span>Post successful!</span>
+            <v-icon dark>
+                mdi-checkbox-marked-circle
+            </v-icon>
+        </v-snackbar>
+
+        <v-card flat>
+            <v-form
+                ref="form"
+                @submit.prevent="submit"
+            >
+                <v-container fluid>
+                <v-row>
+                    <v-col cols="12" class="py-0">
+                        <v-text-field
+                            v-model="form.company"
+                            :rules="rules.requiredstr"
+                            color="purple darken-2"
+                            label="Société"
+                            required
+                            outlined
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" class="py-0">
+                        <v-text-field
+                            v-model="form.commercialTeam"
+                            :rules="rules.requiredstr"
+                            color="blue darken-2"
+                            label="Equipe Commerciale"
+                            required
+                            outlined
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="12" class="py-0">
+                        <v-textarea
+                            v-model="form.presentCompany"
+                            :rules="rules.requiredstr"
+                            color="teal"
+                            required
+                            outlined
+                            placeholder="<Activités, localisation, secteur(s) d’activité, industrie, etc.>"
+                        >
+                            <template v-slot:label>
+                            <div>
+                                Présentation société
+                            </div>
+                            </template>
+                        </v-textarea>
+                    </v-col>
+
+                    <v-col cols="12"  class="py-0">
+                        <v-textarea
+                            v-model="form.opportunity"
+                            :rules="rules.requiredstr"
+                            color="teal"
+                            required
+                            outlined
+                            placeholder="< Business drivers, challenges, objectifs ciblés, processus ciblés à transformer, ISE, IPE, domaines fonctionnels, Brand(s), nombre d’utilisateurs, Cloud ou On Premise >"
+                        >
+                            <template v-slot:label>
+                            <div>
+                                Contexte Projet/Opportunité
+                            </div>
+                            </template>
+                        </v-textarea>
+                    </v-col>
+                </v-row>
+                </v-container>
+                <v-card-actions>
+                    <v-btn
+                        @click="resetForm"
+                        rounded
+                        width="45%"
+                        color="red"
+                        dark
+                    >
+                        Reset Form
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        :disabled="!formIsValid"
+                        color="primary"
+                        type="submit"
+                        rounded
+                        width="45%"
+                    >
+                        Post Form
+                    </v-btn>
+                </v-card-actions>
+            </v-form>
+        </v-card>
     </v-app>
 </template>
 
@@ -37,24 +137,48 @@ export default {
     },
 
     data: function() {
+        const defaultForm = Object.freeze({
+            company: '',
+            commercialTeam: '',
+            presentCompany: '',
+            opportunity: ''
+        })
+
         return {
             // Search
             search: null,
             msg: "[NULL]",
 
             loading: false,
+            snackbar: false,
 
             // Data loaded from DS and from preferences
             tenantId: 0,
             tenants: [],
 
-            communityId: ""
+            communityId: "",
+
+            // FORM STUFF
+            form: Object.assign({}, defaultForm),
+            rules: {
+                requiredstr: [val => (val || '').length > 0 || 'This field is required'],
+            },
+            defaultForm
         };
     },
 
     computed: {
         message: function() {
             return this.$store.state.message;
+        },
+
+        formIsValid () {
+            return (
+                this.form.company &&
+                this.form.commercialTeam &&
+                this.form.presentCompany &&
+                this.form.opportunity
+            );
         }
     },
 
@@ -85,6 +209,32 @@ export default {
     },
 
     methods: {
+
+        resetForm () {
+            this.form = Object.assign({}, this.defaultForm)
+            this.$refs.form.reset()
+        },
+
+        submit () {
+
+            this.swymAddPost(this.communityId, "Speed Dating Card",
+            `<p>
+            <span style="text-decoration:underline;"><strong>${this.form.company}</strong> - ${this.form.commercialTeam}</span>
+            </p>
+            <p>
+                <h3>Présentation société</h3>
+                <br/>
+                ${this.form.presentCompany} 
+            </p>
+            <p> 
+                <h3>Contexte Projet/Opportunité </h3>
+                <br/>
+                ${this.form.opportunity}
+            </p>`, 1);
+
+            this.snackbar = true
+            this.resetForm()
+        },
 
         tenantDataLoaded(data) {
             this.tenants = [];
