@@ -186,6 +186,8 @@ export default {
                         }
                     });
 
+                    console.log(datastr);
+
                     // Post the message
                     httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
