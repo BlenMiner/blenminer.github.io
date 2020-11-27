@@ -169,13 +169,14 @@ export default {
             const base = that.tenants[that.tenantId]["3DSwym"];
 
             const body = {
-                params: {
-                    community_id: communityId,
-                    message: message,
-                    published: publish,
-                    title: title
-                }
+                community_id: communityId,
+                message: message,
+                published: publish,
+                title: title
             };
+
+            const formBody = FormData();
+            formBody.append("params", JSON.stringify(body))
 
             // Get a CRSF ticket
             httpCallAuthenticated(base + "/api/index/tk", {
@@ -189,8 +190,8 @@ export default {
                     httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
                         headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
-                        data: JSON.stringify(body),
-                        type: "json",
+                        data: formBody,
+                        // type: "json",
 
                         onComplete: (response) => {
                             console.log(response);
