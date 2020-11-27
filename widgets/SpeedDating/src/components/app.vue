@@ -179,10 +179,10 @@ export default {
                     const crsf = res.result.ServerToken;
                     const datastr = JSON.stringify({
                         params: {
+                            title: title,
                             community_id: communityId,
                             message: message,
-                            published: publish,
-                            title: title
+                            published: publish.toString()
                         }
                     });
 
