@@ -43,6 +43,7 @@
                             label="Société"
                             required
                             outlined
+                            dense
                         ></v-text-field>
                     </v-col>
 
@@ -54,6 +55,7 @@
                             label="Equipe Commerciale"
                             required
                             outlined
+                            dense
                         ></v-text-field>
                     </v-col>
 
@@ -64,6 +66,7 @@
                             color="teal"
                             required
                             outlined
+                            rows="3"
                             placeholder="<Activités, localisation, secteur(s) d’activité, industrie, etc.>"
                         >
                             <template v-slot:label>
@@ -81,6 +84,7 @@
                             color="teal"
                             required
                             outlined
+                            rows="3"
                             placeholder="< Business drivers, challenges, objectifs ciblés, processus ciblés à transformer, ISE, IPE, domaines fonctionnels, Brand(s), nombre d’utilisateurs, Cloud ou On Premise >"
                         >
                             <template v-slot:label>
