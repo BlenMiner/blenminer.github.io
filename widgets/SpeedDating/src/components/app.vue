@@ -185,10 +185,10 @@ export default {
                     };
 
                     // Post the message
-                    /*httpCallAuthenticated(base + "/api/post/add", {
+                    httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
                         headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
-                        data: datastr,
+                        data: JSON.stringify({ params: params }),
                         type: "json",
 
                         onComplete: (response) => {
@@ -198,9 +198,9 @@ export default {
                         onFailure: (response) => {
                             console.error(response);
                         }
-                    });*/
+                    });
 
-                    that.swymPost(crsf, base + "/api/post/add", params);
+                    // that.swymPost(crsf, base + "/api/post/add", params);
                 },
 
                 onFailure: (response) => {
