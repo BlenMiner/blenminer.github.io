@@ -190,6 +190,7 @@ export default {
                         method: "POST",
                         headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
                         data: JSON.stringify(body),
+                        type: "json",
 
                         onComplete: (response) => {
                             console.log(response);
