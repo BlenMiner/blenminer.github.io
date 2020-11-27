@@ -15,6 +15,19 @@
             </v-icon>
         </v-snackbar>
 
+        <v-snackbar
+            v-model="snackbarerror"
+            absolute
+            top
+            right
+            color="error"
+        >
+            <span>Post failed</span>
+            <v-icon dark>
+                mdi-minus-box
+            </v-icon>
+        </v-snackbar>
+
         <v-card flat>
             <v-form
                 ref="form"
@@ -151,6 +164,7 @@ export default {
 
             loading: false,
             snackbar: false,
+            snackbarerror: false,
 
             // Data loaded from DS and from preferences
             tenantId: 0,
@@ -232,7 +246,6 @@ export default {
                 ${this.form.opportunity}
             </p>`, 1);
 
-            this.snackbar = true
             this.resetForm()
         },
 
@@ -343,11 +356,11 @@ export default {
                         // type: "json",
 
                         onComplete: (response) => {
-                            console.log(response);
+                            this.snackbar = true
                         },
 
                         onFailure: (response) => {
-                            console.error(response);
+                            this.snackbarerror = true
                         }
                     });
                 },
