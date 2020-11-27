@@ -217,7 +217,7 @@ export default {
                 }
             };
             
-            request.open("POST", url, true);
+            request.open("POST", path, true);
             request.setRequestHeader("X-DS-SWYM-CSRFTOKEN", token);
             request.setRequestHeader("Content-Type", "application/json");
             request.setRequestHeader("Accept","text/plain");
