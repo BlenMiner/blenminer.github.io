@@ -177,19 +177,15 @@ export default {
                 onComplete: (response) => {
                     const res = JSON.parse(response);
                     const crsf = res.result.ServerToken;
-                    const datastr = JSON.stringify({
-                        params: {
-                            title: title,
-                            community_id: communityId,
-                            message: message,
-                            published: publish.toString()
-                        }
-                    });
-
-                    console.log(datastr);
+                    const params = {
+                        title: title,
+                        community_id: communityId,
+                        message: message,
+                        published: publish.toString()
+                    };
 
                     // Post the message
-                    httpCallAuthenticated(base + "/api/post/add", {
+                    /*httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
                         headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
                         data: datastr,
@@ -202,13 +198,85 @@ export default {
                         onFailure: (response) => {
                             console.error(response);
                         }
-                    });
+                    });*/
+
+                    that.swymPost(crsf, base + "/api/post/add", params);
                 },
 
                 onFailure: (response) => {
                     console.error(response);
                 }
             });
+        },
+
+        async doHttp(params) {
+            let followRedirect = params.followRedirect;
+            if (typeof followRedirect === "undefined") followRedirect = false;
+            let url = params.url;
+            if (!url.startsWith("http:") && !url.startsWith("https:")) {
+                url = this.baseurl + url;
+            }
+            const headers = params.headers || {};
+            let bodyData = "";
+            if (params.method === "GET") {
+                if (url.indexOf("?") === -1) url += "?";
+                else url += "&";
+                url += querystring.stringify(params.data);
+            } else {
+                if (params.data instanceof FormData) {
+                    const fd = params.data;
+                    headers["Content-Type"] = fd.getHeaders()["content-type"];
+                    bodyData = fd.getBuffer();
+                } else if (!headers["Content-Type"] || headers["Content-Type"] === "") {
+                    headers["Content-Type"] = "application/x-www-form-urlencoded";
+                    bodyData = querystring.stringify(params.data);
+                } else {
+                    if (typeof params.data === "object" && !(params.data instanceof Buffer)) {
+                        bodyData = JSON.stringify(params.data);
+                    } else {
+                        bodyData = params.data;
+                    }
+                }
+                headers["Content-Length"] = Buffer.byteLength(bodyData);
+            }
+
+            try {
+                // call
+                const oUrl = new URL(url);
+                const options = {
+                    ...this.reqOpts,
+                    method: params.method,
+                    protocol: oUrl.protocol,
+                    hostname: oUrl.hostname,
+                    path: oUrl.pathname + oUrl.search,
+                    headers: headers
+                };
+
+                const resp = await this.promiseRequest(options, bodyData);
+                this.trace(`${params.method} ${params.url} (${resp.statusCode}) => Success`);
+                if (followRedirect && resp.statusCode === 302) {
+                    return await this.doHttp({ ...params, url: resp.headers["location"] });
+                } else return resp;
+            } catch (err) {
+                this.trace(`${params.method} ${params.url} => ${err.message}`);
+                throw err;
+            }
+        },
+
+        async request(method, url, data, headers, followRedirect) {
+            return await this.doHttp({ method: method, url: url, data: data, headers: headers, followRedirect: followRedirect });
+        },
+
+        async swymPost(token, path, params) {
+            // console.log(JSON.stringify(params));
+            const resp = await this.request("POST", path, { params: params }, { "Content-Type": "application/json", "X-DS-SWYM-CSRFTOKEN": token });
+            // console.log(resp);
+            const obj = JSON.parse(resp.content);
+            if (resp.statusCode === 200) {
+                return obj;
+            } else {
+                throw new Error(obj.errorcode + ": " + obj.errormsg);
+            }
         },
 
         reload() {
