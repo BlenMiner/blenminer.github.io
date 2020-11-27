@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <loading :value="loading" :message="'Loading'" :progresscolor="'#005685'" />
-        <v-btn @click="swymAddPost(tenantId, 'test', 'body', 0)">Add Post</v-btn>
+        <v-btn @click="swymAddPost(communityId, 'test', 'body', 0)">Add Post</v-btn>
     </v-app>
 </template>
 
@@ -45,8 +45,10 @@ export default {
             loading: false,
 
             // Data loaded from DS and from preferences
-            tenantId: -1,
-            tenants: []
+            tenantId: 0,
+            tenants: [],
+
+            communityId: ""
         };
     },
 
@@ -184,8 +186,6 @@ export default {
                         }
                     });
 
-                    console.log("Data: " + datastr);
-
                     // Post the message
                     httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
@@ -213,6 +213,7 @@ export default {
             const that = this;
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
+            that.communityId = widget.getValue("_ComunityId_");
 
             that.loading = true;
             that.swymCommunities((res) => {
@@ -230,7 +231,7 @@ export default {
                     name: "_ComunityId_",
                     type: "list",
                     label: "Community",
-                    defaultValue: "0",
+                    defaultValue: _Communities.length == 0 ? "0" : _Communities[0].value,
                     options: _Communities
                 });
 
