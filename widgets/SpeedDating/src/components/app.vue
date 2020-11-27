@@ -187,9 +187,10 @@ export default {
                     // Post the message
                     httpCallAuthenticated(base + "/api/post/add", {
                         method: "POST",
-                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf },
+                        headers: { "X-DS-SWYM-CSRFTOKEN": crsf,
+                                   "Content-type": "application/json; charset=UTF-8" },
                         data: JSON.stringify({ params: params }),
-                        type: "json",
+                        // type: "json",
 
                         onComplete: (response) => {
                             console.log(response);
@@ -199,28 +200,11 @@ export default {
                             console.error(response);
                         }
                     });
-
-                    // that.swymPost(crsf, base + "/api/post/add", params);
                 },
 
                 onFailure: (response) => {
                     console.error(response);
                 }
-            });
-        },
-
-        swymPost(token, path, params) {
-            fetch(path, {
-                method: "POST",
-                body: JSON.stringify({ params: params }),
-                headers: { 
-                    "Content-type": "application/json;charset=UTF-8",
-                    "X-DS-SWYM-CSRFTOKEN": token
-                }
-            }).then((response) => {
-                console.log(response);
-            }).catch(err => {
-                console.error(err);
             });
         },
 
