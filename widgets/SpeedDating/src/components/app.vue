@@ -359,7 +359,7 @@ export default {
             let message = "";
 
             for (let i = 0; i < this.formFields.length; ++i) {
-                message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].vale} </p>`;
+                message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].value} </p>`;
             }
 
             this.swymAddPost(this.communitiesIds[this.communityId], widget.getValue("_PostTitle_"), message, 1);
