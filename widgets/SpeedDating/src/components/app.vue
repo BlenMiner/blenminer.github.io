@@ -356,20 +356,13 @@ export default {
                 behavior: 'smooth'
             });
 
-            this.swymAddPost(this.communitiesIds[this.communityId], "Speed Dating Card",
-            `<p>
-            <span style="text-decoration:underline;"><strong>${this.form.company}</strong> - ${this.form.commercialTeam}</span>
-            </p>
-            <p>
-                <h3>Présentation société</h3>
-                <br/>
-                ${this.form.presentCompany} 
-            </p>
-            <p> 
-                <h3>Contexte Projet/Opportunité </h3>
-                <br/>
-                ${this.form.opportunity}
-            </p>`, 1);
+            let message = "";
+
+            for (let i = 0; i < this.formFields.length; ++i) {
+                message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].vale} </p>`;
+            }
+
+            this.swymAddPost(this.communitiesIds[this.communityId], widget.getValue("_PostTitle_"), message, 1);
 
             this.resetForm()
         },
@@ -422,6 +415,13 @@ export default {
                 label: "Tenant",
                 defaultValue: "0",
                 options: _TenantOpts
+            });
+
+            widget.addPreference({
+                name: "_PostTitle_",
+                type: "text",
+                label: "Post Title",
+                defaultValue: "My Form"
             });
 
             widget.addPreference({
