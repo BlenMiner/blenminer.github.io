@@ -303,6 +303,7 @@ export default {
 
                     widget.addPreference({
                         name: `_Field[${i}]_Type_`,
+                        label: `Field ${i} -----`,
                         type: "hidden"
                     });
 
