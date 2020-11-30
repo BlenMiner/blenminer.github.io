@@ -314,8 +314,10 @@ export default {
                 }
             }
 
-            // Make sure the existing ones exist??
-            for (let i = i; i < newv; ++i) {
+            console.log("Old field coud: " + oldv + ", new: " + newv);
+
+            // Make sure the existing ones exist
+            for (let i = 0; i < newv; ++i) {
                 widget.addPreference({
                     name: `_Field[${i}]_Type_`,
                     type: "list",
