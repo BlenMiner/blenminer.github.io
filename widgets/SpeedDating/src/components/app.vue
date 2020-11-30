@@ -303,7 +303,6 @@ export default {
 
                     widget.addPreference({
                         name: `_Field[${i}]_Type_`,
-                        label: `Field ${i} -----`,
                         type: "hidden"
                     });
 
@@ -321,6 +320,7 @@ export default {
                 widget.addPreference({
                     name: `_Field[${i}]_Type_`,
                     type: "list",
+                    label: "Field " + i,
                     options: [
                         { value: 0, label: "Text Field" },
                         { value: 1, label: "Rich Text Field" },
@@ -335,6 +335,7 @@ export default {
                 widget.addPreference({
                     name: `_Field[${i}]_Name_`,
                     type: "text",
+                    label: " ",
                     defaultValue: `Field ${i}`
                 });
             }
