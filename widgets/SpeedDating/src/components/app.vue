@@ -263,7 +263,7 @@ export default {
 
         formIsValid () {
             for (let i = 0; i < this.formFields.length; ++i) {
-                if (!this.formFields[i].value && this.formFields[i].type !== 3)
+                if (!this.formFields[i].value && this.formFields[i].type != 3)
                     return false;
             }
             return true;
@@ -359,7 +359,11 @@ export default {
             let message = "";
 
             for (let i = 0; i < this.formFields.length; ++i) {
-                message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].value} </p>`;
+                if (this.formFields[i].type == 3) {
+                    message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].value ? "☑" : "☐"} </p>`;
+                } else {
+                    message += `<p> <b>${this.formFields[i].name.split(";")[0]}:</b> ${this.formFields[i].value} </p>`;
+                }
             }
 
             this.swymAddPost(this.communitiesIds[this.communityId], widget.getValue("_PostTitle_"), message, 1);
