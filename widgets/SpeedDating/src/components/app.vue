@@ -1,6 +1,15 @@
 <template>
     <v-app>
-        <loading :value="loading" :message="'Loading'" :progresscolor="'#005685'" />
+        <v-row row justify-center style="position: absolute;">
+            <v-dialog v-model="loading" persistent content content-class="centered-dialog">
+                <v-container fill-height>
+                    <v-layout column justify-center align-center>
+                        <v-progress-circular indeterminate size="70" width="7" color="#005685"></v-progress-circular>
+                        <h1>Loading</h1>
+                    </v-layout>
+                </v-container>
+            </v-dialog>
+        </v-row>
 
         <v-snackbar
             v-model="snackbar"
@@ -28,73 +37,83 @@
             </v-icon>
         </v-snackbar>
 
-        <v-card flat>
+        <v-card flat class="py-0">
+            <v-autocomplete
+                auto-select-first
+                dense
+                filled
+                :items="communities"
+                label="Community"
+                v-model="communityId"
+            />
+
             <v-form
                 ref="form"
                 @submit.prevent="submit"
+                class="py-0"
             >
-                <v-container fluid>
-                <v-row>
-                    <v-col cols="12" class="py-0">
-                        <v-text-field
-                            v-model="form.company"
-                            :rules="rules.requiredstr"
-                            color="purple darken-2"
-                            label="Société"
-                            required
-                            outlined
-                            dense
-                        ></v-text-field>
-                    </v-col>
+                <v-container fluid class="py-0">
+                    <v-row>
+                        <v-col cols="6" class="py-0">
+                            <v-text-field
+                                v-model="form.company"
+                                :rules="rules.requiredstr"
+                                color="purple darken-2"
+                                label="Société"
+                                required
+                                outlined
+                                dense
+                            ></v-text-field>
+                        </v-col>
 
-                    <v-col cols="12" class="py-0">
-                        <v-text-field
-                            v-model="form.commercialTeam"
-                            :rules="rules.requiredstr"
-                            color="blue darken-2"
-                            label="Equipe Commerciale"
-                            required
-                            outlined
-                            dense
-                        ></v-text-field>
-                    </v-col>
+                        <v-col cols="6" class="py-0">
+                            <v-text-field
+                                v-model="form.commercialTeam"
+                                :rules="rules.requiredstr"
+                                color="blue darken-2"
+                                label="Equipe Commerciale"
+                                required
+                                outlined
+                                dense
+                            ></v-text-field>
+                        </v-col>
 
-                    <v-col cols="12" class="py-0">
-                        <v-textarea
-                            v-model="form.presentCompany"
-                            :rules="rules.requiredstr"
-                            color="teal"
-                            required
-                            outlined
-                            rows="3"
-                            placeholder="<Activités, localisation, secteur(s) d’activité, industrie, etc.>"
-                        >
-                            <template v-slot:label>
-                            <div>
-                                Présentation société
-                            </div>
-                            </template>
-                        </v-textarea>
-                    </v-col>
+                        <v-col cols="12" class="py-0">
+                            <v-textarea
+                                v-model="form.presentCompany"
+                                :rules="rules.requiredstr"
+                                color="teal"
+                                required
+                                outlined
+                                rows="3"
+                                placeholder="<Activités, localisation, secteur(s) d’activité, industrie, etc.>"
+                            >
+                                <template v-slot:label>
+                                <div>
+                                    Présentation société
+                                </div>
+                                </template>
+                            </v-textarea>
+                        </v-col>
 
-                    <v-col cols="12"  class="py-0">
-                        <v-textarea
-                            v-model="form.opportunity"
-                            :rules="rules.requiredstr"
-                            color="teal"
-                            required
-                            outlined
-                            rows="3"
-                            placeholder="< Business drivers, challenges, objectifs ciblés, processus ciblés à transformer, ISE, IPE, domaines fonctionnels, Brand(s), nombre d’utilisateurs, Cloud ou On Premise >"
-                        >
-                            <template v-slot:label>
-                            <div>
-                                Contexte Projet/Opportunité
-                            </div>
-                            </template>
-                        </v-textarea>
-                    </v-col>
-                </v-row>
+                        <v-col cols="12"  class="py-0">
+                            <v-textarea
+                                v-model="form.opportunity"
+                                :rules="rules.requiredstr"
+                                color="teal"
+                                required
+                                outlined
+                                rows="3"
+                                placeholder="< Business drivers, challenges, objectifs ciblés, processus ciblés à transformer, ISE, IPE, domaines fonctionnels, Brand(s), nombre d’utilisateurs, Cloud ou On Premise >"
+                            >
+                                <template v-slot:label>
+                                <div>
+                                    Contexte Projet/Opportunité
+                                </div>
+                                </template>
+                            </v-textarea>
+                        </v-col>
+                    </v-row>
                 </v-container>
                 <v-card-actions>
                     <v-btn
@@ -131,14 +150,19 @@ html, body {
     margin: 0;
     background-color:#ffffff;
 }
-.loading-dialog {
-   background-color: #303030;
+.dialog.centered-dialog,
+.v-dialog.centered-dialog
+{
+    background: whitesmoke;
+    box-shadow: none;
+    border-radius: 6px;
+    width: auto;
+    color: #222;
 }
 </style>
 
 <script>
 import { EventBus } from "../plugins/vuetify";
-import loading from "./loading.vue";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -148,10 +172,6 @@ function httpCallAuthenticated(url, options) {
 
 export default {
     name: "App",
-
-    components: {
-        loading
-    },
 
     data: function() {
         const defaultForm = Object.freeze({
@@ -174,6 +194,8 @@ export default {
             tenantId: 0,
             tenants: [],
 
+            communities: [],
+            communitiesIds: {},
             communityId: "",
 
             // FORM STUFF
@@ -195,7 +217,8 @@ export default {
                 this.form.company &&
                 this.form.commercialTeam &&
                 this.form.presentCompany &&
-                this.form.opportunity
+                this.form.opportunity &&
+                this.communityId
             );
         }
     },
@@ -234,6 +257,8 @@ export default {
         },
 
         submit () {
+            
+            this.setCookie("_CurrentCommunityID_", this.communityId, 365);
 
             window.scrollTo({
                 top: 0,
@@ -241,7 +266,7 @@ export default {
                 behavior: 'smooth'
             });
 
-            this.swymAddPost(this.communityId, "Speed Dating Card",
+            this.swymAddPost(this.communitiesIds[this.communityId], "Speed Dating Card",
             `<p>
             <span style="text-decoration:underline;"><strong>${this.form.company}</strong> - ${this.form.commercialTeam}</span>
             </p>
@@ -257,6 +282,29 @@ export default {
             </p>`, 1);
 
             this.resetForm()
+        },
+
+        setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        },
+
+        getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         },
 
         tenantDataLoaded(data) {
@@ -337,6 +385,7 @@ export default {
 
         swymAddPost(communityId, title, message, publish = 0) {
             if (widget.id === undefined) {
+                console.log("Post on community: " + communityId);
                 return;
             }
 
@@ -363,7 +412,6 @@ export default {
                         headers: { "X-DS-SWYM-CSRFTOKEN": crsf,
                                    "Content-type": "application/json; charset=UTF-8" },
                         data: JSON.stringify({ params: params }),
-                        // type: "json",
 
                         onComplete: (response) => {
                             this.snackbar = true
@@ -385,27 +433,21 @@ export default {
             const that = this;
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
-            that.communityId = widget.getValue("_ComunityId_");
+            that.communityId = that.getCookie("_CurrentCommunityID_");
+
 
             that.loading = true;
+            
             that.swymCommunities((res) => {
-                const _Communities = [];
-
+                that.communitiesIds = {};
                 for (let i = 0; i < res.result.length; ++i) {
-                    _Communities.push({
-                        value: `${res.result[i].id}`,
-                        label: `${res.result[i].title}`
-                    });
+                    that.communitiesIds[res.result[i].title] = res.result[i].id;
+                    that.communities.push(res.result[i].title);
                 }
 
-                // Setup your preferences...
-                widget.addPreference({
-                    name: "_ComunityId_",
-                    type: "list",
-                    label: "Community",
-                    defaultValue: _Communities.length == 0 ? "0" : _Communities[0].value,
-                    options: _Communities
-                });
+                if (res.result.length > 0 && !that.communitiesIds[that.communityId]) {
+                    that.communityId = res.result[0].title;
+                }
 
                 that.loading = false;
             });
