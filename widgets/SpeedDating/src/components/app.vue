@@ -54,64 +54,109 @@
             >
                 <v-container fluid class="py-0">
                     <v-row>
-                        <v-col cols="6" class="py-0">
+
+                        <v-col v-for="(item, i) in formFields" :key="i" :cols="item.type == 1 ? 12 : 6" class="py-0">
                             <v-text-field
-                                v-model="form.company"
+                                v-if="item.type == 0"
+                                v-model="item.value"
                                 :rules="rules.requiredstr"
                                 color="purple darken-2"
-                                label="Société"
+                                :label="item.name.split(';')[0]"
                                 required
                                 outlined
                                 dense
+                                :placeholder="item.name.split(';')[1]"
                             ></v-text-field>
-                        </v-col>
 
-                        <v-col cols="6" class="py-0">
+                            <v-textarea
+                                v-else-if="item.type == 1"
+                                v-model="item.value"
+                                :rules="rules.requiredstr"
+                                color="teal"
+                                required
+                                outlined
+                                rows="3"
+                                :placeholder="item.name.split(';')[1]"
+                            >
+                                <template v-slot:label>
+                                <div>
+                                    {{ item.name.split(';')[0] }}
+                                </div>
+                                </template>
+                            </v-textarea>
+
                             <v-text-field
-                                v-model="form.commercialTeam"
+                                v-if="item.type == 2"
+                                v-model="item.value"
                                 :rules="rules.requiredstr"
-                                color="blue darken-2"
-                                label="Equipe Commerciale"
+                                color="red darken-2"
+                                type="number"
+                                :label="item.name.split(';')[0]"
                                 required
                                 outlined
                                 dense
+                                :placeholder="item.name.split(';')[1]"
                             ></v-text-field>
-                        </v-col>
 
-                        <v-col cols="12" class="py-0">
-                            <v-textarea
-                                v-model="form.presentCompany"
+                            <v-checkbox
+                                v-if="item.type == 3"
+                                v-model="item.value"
+                                :label="item.name.split(';')[0]"
+                                :placeholder="item.name.split(';')[1]"
+                                class="ma-0"
+                            ></v-checkbox>
+
+                            <v-menu
+                                v-else-if="item.type == 4"
+                                v-model="item.model"
+                                :close-on-content-click="false"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="item.value"
+                                        :label="item.name.split(';')[0]"
+                                        :rules="rules.requiredstr"
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        required
+                                        outlined
+                                        dense
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="item.value"
+                                    no-title
+                                    scrollable
+                                >
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="item.model = false"
+                                    >
+                                        Close
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-menu>
+
+                            <v-text-field
+                                v-if="item.type == 5"
+                                v-model="item.value"
                                 :rules="rules.requiredstr"
-                                color="teal"
+                                color="green darken-2"
+                                type="number"
+                                prefix="€"
+                                :label="item.name.split(';')[0]"
                                 required
                                 outlined
-                                rows="3"
-                                placeholder="<Activités, localisation, secteur(s) d’activité, industrie, etc.>"
-                            >
-                                <template v-slot:label>
-                                <div>
-                                    Présentation société
-                                </div>
-                                </template>
-                            </v-textarea>
-                        </v-col>
-
-                        <v-col cols="12"  class="py-0">
-                            <v-textarea
-                                v-model="form.opportunity"
-                                :rules="rules.requiredstr"
-                                color="teal"
-                                required
-                                outlined
-                                rows="3"
-                                placeholder="< Business drivers, challenges, objectifs ciblés, processus ciblés à transformer, ISE, IPE, domaines fonctionnels, Brand(s), nombre d’utilisateurs, Cloud ou On Premise >"
-                            >
-                                <template v-slot:label>
-                                <div>
-                                    Contexte Projet/Opportunité
-                                </div>
-                                </template>
-                            </v-textarea>
+                                dense
+                                :placeholder="item.name.split(';')[1]"
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -198,6 +243,10 @@ export default {
             communitiesIds: {},
             communityId: "",
 
+            // New form stuff
+            formFields: [],
+            formDesiredLength: 0,
+
             // FORM STUFF
             form: Object.assign({}, defaultForm),
             rules: {
@@ -213,13 +262,11 @@ export default {
         },
 
         formIsValid () {
-            return (
-                this.form.company &&
-                this.form.commercialTeam &&
-                this.form.presentCompany &&
-                this.form.opportunity &&
-                this.communityId
-            );
+            for (let i = 0; i < this.formFields.length; ++i) {
+                if (!this.formFields[i].value && this.formFields[i].type !== 3)
+                    return false;
+            }
+            return true;
         }
     },
 
@@ -230,15 +277,13 @@ export default {
 
         EventBus.$on("onSearch", (txt) => { that.search = txt; });
         EventBus.$on("reloadwidget", () => { that.reload(); });
+        EventBus.$on("OnEventCountChanged", (old, newv) => { that.refreshPrefs(old, newv); });
 
         that.loading = true;
 
         // Start loading bar aswell
         if (widget.id === undefined) {
-            setTimeout(() => {
-                    that.tenantDataLoaded([{ id: -1 }]);
-                },
-                1000);
+            that.tenantDataLoaded([{ id: -1 }]);
         } else {
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
@@ -250,6 +295,47 @@ export default {
     },
 
     methods: {
+
+        refreshPrefs(oldv, newv) {
+            if (newv < oldv) {
+                for (let i = newv; i < oldv; ++i) {
+                    // Remove the lingering prefs
+
+                    widget.addPreference({
+                        name: `_Field[${i}]_Type_`,
+                        type: "hidden"
+                    });
+
+                    widget.addPreference({
+                        name: `_Field[${i}]_Name_`,
+                        type: "hidden"
+                    });
+                }
+            }
+
+            // Make sure the existing ones exist??
+            for (let i = i; i < newv; ++i) {
+                widget.addPreference({
+                    name: `_Field[${i}]_Type_`,
+                    type: "list",
+                    options: [
+                        { value: 0, label: "Text Field" },
+                        { value: 1, label: "Rich Text Field" },
+                        { value: 2, label: "Number Field" },
+                        { value: 3, label: "Checkbox Field" },
+                        { value: 4, label: "Date Field" },
+                        { value: 5, label: "Money Field" }
+                    ],
+                    defaultValue: 0
+                });
+
+                widget.addPreference({
+                    name: `_Field[${i}]_Name_`,
+                    type: "text",
+                    defaultValue: `Field ${i}`
+                });
+            }
+        },
 
         resetForm () {
             this.form = Object.assign({}, this.defaultForm)
@@ -333,6 +419,19 @@ export default {
                 defaultValue: "0",
                 options: _TenantOpts
             });
+
+            widget.addPreference({
+                name: "_FieldCount_",
+                type: "range",
+                label: "Fields Count (You need to apply for this to take effect)",
+                defaultValue: 0,
+                step: 1,
+                min: 0,
+                max: 50,
+                onchange: "OnEventCountChanged"
+            });
+
+            this.formDesiredLength = widget.getValue("_FieldCount_");
 
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
@@ -433,13 +532,70 @@ export default {
             const that = this;
 
             that.tenantId = widget.getValue("_CurrentTenantID_");
+            that.formDesiredLength = widget.getValue("_FieldCount_");
             that.communityId = that.getCookie("_CurrentCommunityID_");
 
-
             that.loading = true;
+
+            // Load preferences for field count
+            that.refreshPrefs(that.formDesiredLength, that.formDesiredLength);
+            that.formFields = [];
+
+            if (widget.id === undefined) {
+                that.formDesiredLength = 2;
+
+                that.formFields.push({
+                    type: 0,
+                    name: "Hello",
+                    value: ""
+                });
+
+                that.formFields.push({
+                    type: 1,
+                    name: "World;Some hints",
+                    value: ""
+                });
+
+                that.formFields.push({
+                    type: 4,
+                    name: "When???;Some hints",
+                    value: ""
+                });
+
+                that.formFields.push({
+                    type: 2,
+                    name: "Some number;Some hints",
+                    value: ""
+                });
+
+                that.formFields.push({
+                    type: 5,
+                    name: "MONEY MONEY;Some hints",
+                    value: ""
+                });
+
+                that.formFields.push({
+                    type: 3,
+                    name: "It's binary bro;Some hints",
+                    value: ""
+                });
+
+            } else {
+                for (let i = 0; i < that.formDesiredLength; ++i) {
+                    const fieldtype = widget.getValue(`_Field[${i}]_Type_`);
+                    const fieldName = widget.getValue(`_Field[${i}]_Name_`);
+
+                    that.formFields.push({
+                        type: fieldtype,
+                        name: fieldName,
+                        value: ""
+                    });
+                }
+            }
             
             that.swymCommunities((res) => {
                 that.communitiesIds = {};
+
                 for (let i = 0; i < res.result.length; ++i) {
                     that.communitiesIds[res.result[i].title] = res.result[i].id;
                     that.communities.push(res.result[i].title);

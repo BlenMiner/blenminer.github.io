@@ -36,6 +36,10 @@ export default function() {
         EventBus.$emit("reloadwidget");
     });
 
+    widget.addEvent("OnEventCountChanged", (old, newv) => {
+        EventBus.$emit("OnEventCountChanged", old, newv);
+    });
+
     widget.addEvent("onSearch", (searchQuery) => {
         EventBus.$emit("onSearch", searchQuery);
     });
