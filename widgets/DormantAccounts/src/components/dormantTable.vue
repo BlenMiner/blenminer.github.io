@@ -35,8 +35,11 @@
                 :fixed-header="true"
                 :loading="loadingbar"
                 :search="search"
-                height="calc(100vh - 114px)"
+                height="calc(100vh - 123px)"
             >
+                <template v-slot:footer>
+                    Last update: {{ date }}
+                </template>
                 <template v-slot:item="{item}">
                     <tr>
                         <td> {{ item.clientID }} </td>
@@ -52,7 +55,7 @@
 
                         <td class="text-center">
                             <v-btn v-if="item.hist" value="recent" small rounded @click="expand(item.hist)">
-                                {{ item.hist.lastActivity }}
+                                {{ item.hist.lastActivity }} DAYS AGO
                             </v-btn>
                             <div v-else>-</div>
                         </td>
@@ -71,7 +74,8 @@ export default {
     props: {
         table: Array,
         loadingbar: Boolean,
-        search: String
+        search: String,
+        date: String
     },
 
     data: function() {
@@ -83,15 +87,15 @@ export default {
                 { text: "Client ID", value: "clientID" },
                 { text: "Client", value: "client" },
 
-                { text: "ALC 2019", value: "ALC2019" },
-                { text: "YLC 2019", value: "YLC2019" },
-                { text: "RLC 2019", value: "RLC2019" },
+                { text: "ALC 2019", value: "N_ALC2019" },
+                { text: "YLC 2019", value: "N_YLC2019" },
+                { text: "RLC 2019", value: "N_RLC2019" },
 
-                { text: "ALC 2018", value: "ALC2018" },
-                { text: "YLC 2018", value: "YLC2018" },
-                { text: "RLC 2018", value: "RLC2018" },
+                { text: "ALC 2018", value: "N_ALC2018" },
+                { text: "YLC 2018", value: "N_YLC2018" },
+                { text: "RLC 2018", value: "N_RLC2018" },
 
-                { text: "History", value: "hist" }
+                { text: "History", value: "hist.lastActivity" }
             ]
         };
     },

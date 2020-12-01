@@ -35,8 +35,11 @@
                 :fixed-header="true"
                 :loading="loadingbar"
                 :search="search"
-                height="calc(100vh - 114px)"
+                height="calc(100vh - 123px)"
             >
+                <template v-slot:footer>
+                    Last update: {{ date }}
+                </template>
                 <template v-slot:item="{item}">
                     <tr>
                         <td> {{ item.clientID }} </td>
@@ -48,7 +51,7 @@
                             </v-btn>
                         </td>
                         <td>
-                            {{ item.lastActivity }}
+                            {{ item.lastActivity }} days ago
                         </td>
                     </tr>
                 </template>
@@ -65,7 +68,8 @@ export default {
     props: {
         table: Array,
         loadingbar: Boolean,
-        search: String
+        search: String,
+        date: String
     },
 
     data: function() {

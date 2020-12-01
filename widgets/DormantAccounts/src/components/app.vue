@@ -2,40 +2,19 @@
     <v-app>
         <v-tabs
             v-model="tab"
-            centered
             dark
-            icons-and-text
-            height="55px"
+            height="40px"
         >
-            <v-tabs-slider />
-
-            <v-tab href="#tab-1">
-                Accounts History
-                <v-icon>mdi-phone</v-icon>
-            </v-tab>
-
-            <v-tab href="#tab-2">
-                Dormant Accounts
-                <v-icon>mdi-sleep</v-icon>
-            </v-tab>
-
-            <div width="200px">
-                <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                />
-            </div>
+            <v-tab href="#tab-1"> <v-icon class="ma-2">mdi-sleep</v-icon> Dormant Accounts </v-tab>
+            <v-tab href="#tab-2"> <v-icon class="ma-2">mdi-phone</v-icon> Account History </v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
-                <costumer-table :table="table" :loadingbar="loadingbar" :search="search" />
+                <dormant-table :table="dTable" :loadingbar="dormantLoading" :search="search" :date="dateDa" />
             </v-tab-item>
             <v-tab-item value="tab-2">
-                <dormant-table :table="dTable" :loadingbar="dormantLoading" :search="search" />
+                <costumer-table :table="table" :loadingbar="loadingbar" :search="search" :date="dateAa" />
             </v-tab-item>
         </v-tabs-items>
     </v-app>
@@ -79,6 +58,9 @@ export default {
             dTable: [],
             tab: null,
             search: "",
+
+            dateAa: "",
+            dateDa: "",
 
             // Help the user know something is loading
             loadingbar: true,
@@ -170,6 +152,20 @@ export default {
             that.table = [];
             that.dTable = [];
 
+            const httpAA = new XMLHttpRequest();
+            httpAA.open("GET", "https://bcracker.dev/widgets/dormant/lastupdate_aa.php", true);
+            httpAA.send(null);
+            httpAA.onload = () => {
+                that.dateAa = httpAA.responseText;
+            };
+
+            const httpDA = new XMLHttpRequest();
+            httpDA.open("GET", "https://bcracker.dev/widgets/dormant/lastupdate_da.php", true);
+            httpDA.send(null);
+            httpDA.onload = () => {
+                that.dateDa = httpDA.responseText;
+            };
+
             const http2 = new XMLHttpRequest();
             http2.open("GET", "https://bcracker.dev/widgets/dormant/p_activities.php?key=" + key, true);
             http2.send(null);
@@ -192,7 +188,7 @@ export default {
                     const date = new Date(tdate);
                     const today = new Date();
 
-                    const different = ((today.getTime() - date.getTime()) / 86400000).toFixed(0).toString() + " days ago";
+                    const different = ((today.getTime() - date.getTime()) / 86400000).toFixed(0).toString();
 
                     const hist =
                     {
@@ -272,12 +268,18 @@ export default {
                     client: t[i][1],
                     industry: t[i][5],
 
+                    N_ALC2019: parseInt(t[i][6].replace(/ /g, "")),
                     ALC2019: t[i][6],
+                    N_YLC2019: parseInt(t[i][8].replace(/ /g, "")),
                     YLC2019: t[i][8],
+                    N_RLC2019: parseInt(t[i][9].replace(/ /g, "")),
                     RLC2019: t[i][9],
 
+                    N_ALC2018: parseInt(t[i][11].replace(/ /g, "")),
                     ALC2018: t[i][11],
+                    N_YLC2018: parseInt(t[i][13].replace(/ /g, "")),
                     YLC2018: t[i][13],
+                    N_RLC2018: parseInt(t[i][14].replace(/ /g, "")),
                     RLC2018: t[i][14],
 
                     hist: null
