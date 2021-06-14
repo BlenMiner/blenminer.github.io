@@ -261,7 +261,6 @@ export default {
         loadDormantAccounts(responseText) {
             const that = this;
             const t = CSVToArray(responseText, ";");
-            console.log(t);
 
             for (let i = 2; i < t.length; ++i) {
                 const client = {
