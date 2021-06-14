@@ -74,7 +74,6 @@
 
 export default {
     name: "DormantTable",
-
     props: {
         table: Array,
         loadingbar: Boolean,
