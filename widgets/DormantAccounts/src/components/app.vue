@@ -227,8 +227,6 @@ export default {
 
                 that.loadingbar = false;
 
-                console.log("http2.onload");
-
                 if (http2.responseText) {
                     that.loadDormantAccounts(http2.responseText);
                 } else {
@@ -256,34 +254,49 @@ export default {
             return null;
         },
 
+        toInt(table, i, j) {
+            return !table[i][j] ? 0 : parseInt(table[i][j].replace(/ /g, ""));
+        },
+
         loadDormantAccounts(responseText) {
             const that = this;
             const t = CSVToArray(responseText, ";");
+            console.log(t);
 
-            for (let i = 1; i < t.length; ++i) {
-                if (t[i][7] || t[i][12]) continue;
-
+            for (let i = 2; i < t.length; ++i) {
                 const client = {
                     clientID: t[i][0],
                     client: t[i][1],
-                    industry: t[i][5],
+                    industry: t[i][3],
 
-                    N_ALC2019: parseInt(t[i][6].replace(/ /g, "")),
-                    ALC2019: t[i][6],
-                    N_YLC2019: parseInt(t[i][8].replace(/ /g, "")),
-                    YLC2019: t[i][8],
-                    N_RLC2019: parseInt(t[i][9].replace(/ /g, "")),
-                    RLC2019: t[i][9],
+                    N_ALC2019: this.toInt(t, i, 4),
+                    ALC2019: t[i][4],
+                    N_PLC2019: this.toInt(t, i, 5),
+                    PLC2019: t[i][5],
+                    N_YLC2019: this.toInt(t, i, 6),
+                    YLC2019: t[i][6],
 
-                    N_ALC2018: parseInt(t[i][11].replace(/ /g, "")),
-                    ALC2018: t[i][11],
-                    N_YLC2018: parseInt(t[i][13].replace(/ /g, "")),
-                    YLC2018: t[i][13],
-                    N_RLC2018: parseInt(t[i][14].replace(/ /g, "")),
-                    RLC2018: t[i][14],
+                    N_ALC2020: this.toInt(t, i, 7),
+                    ALC2020: t[i][7],
+                    N_PLC2020: this.toInt(t, i, 8),
+                    PLC2020: t[i][8],
+                    N_YLC2020: this.toInt(t, i, 9),
+                    YLC2020: t[i][9],
+
+                    N_ALC2021: this.toInt(t, i, 10),
+                    ALC2021: t[i][10],
+                    N_PLC2021: this.toInt(t, i, 11),
+                    PLC2021: t[i][11],
+                    N_YLC2021: this.toInt(t, i, 12),
+                    YLC2021: t[i][12],
 
                     hist: null
                 };
+
+                if (client.N_PLC2021 > 0 || client.N_PLC2020 > 0 || client.N_PLC2019 > 0 ||
+                    client.N_YLC2021 > 0 || client.N_YLC2020 > 0 || client.N_YLC2019 > 0) {
+                    continue;
+                }
 
                 if (client.client === undefined) continue;
 

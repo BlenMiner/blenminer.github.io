@@ -45,14 +45,18 @@
                         <td> {{ item.clientID }} </td>
                         <td> {{ item.client }} </td>
 
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small> {{ item.ALC2019 }} </v-chip></td>
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small> {{ item.YLC2019 }} </v-chip></td>
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.RLC2019 }} </v-chip></td>
-
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small> {{ item.ALC2018 }} </v-chip></td>
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small> {{ item.YLC2018 }} </v-chip></td>
-                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.RLC2018 }} </v-chip></td>
-
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="#ffe500"> {{ item.ALC2021 }} </v-chip></td>
+                        <!-- <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.PLC2021 }} </v-chip></td>
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.YLC2021 }} </v-chip></td>
+                        -->
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="#ffee57"> {{ item.ALC2020 }} </v-chip></td>
+                        <!--<td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.PLC2020 }} </v-chip></td>
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.YLC2020 }} </v-chip></td>
+                        -->
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="#fff495"> {{ item.ALC2019 }} </v-chip></td>
+                        <!--<td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.PLC2019 }} </v-chip></td>
+                        <td class="text-center"><v-chip style="height:90%;width:100%;justify-content:center;" small color="yellow"> {{ item.YLC2019 }} </v-chip></td>
+                        -->
                         <td class="text-center">
                             <v-btn v-if="item.hist" value="recent" small rounded @click="expand(item.hist)">
                                 {{ item.hist.lastActivity }} DAYS AGO
@@ -87,13 +91,17 @@ export default {
                 { text: "Client ID", value: "clientID" },
                 { text: "Client", value: "client" },
 
-                { text: "ALC 2019", value: "N_ALC2019" },
-                { text: "YLC 2019", value: "N_YLC2019" },
-                { text: "RLC 2019", value: "N_RLC2019" },
+                { text: "ALC 2021", value: "N_ALC2021" },
+                // { text: "PLC 2021", value: "N_PLC2021" },
+                // { text: "YLC 2021", value: "N_YLC2021" },
 
-                { text: "ALC 2018", value: "N_ALC2018" },
-                { text: "YLC 2018", value: "N_YLC2018" },
-                { text: "RLC 2018", value: "N_RLC2018" },
+                { text: "ALC 2020", value: "N_ALC2020" },
+                // { text: "PLC 2020", value: "N_PLC2020" },
+                // { text: "YLC 2020", value: "N_YLC2020" },
+
+                { text: "ALC 2019", value: "N_ALC2019" },
+                // { text: "PLC 2019", value: "N_PLC2019" },
+                // { text: "YLC 2019", value: "N_YLC2019" },
 
                 { text: "History", value: "hist.lastActivity" }
             ]
