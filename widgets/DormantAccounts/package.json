@@ -19,10 +19,6 @@
         "lintMark": "markdownlint --config .markdownlint.json --ignore ./node_modules/** ./**/*.md",
         "lintMarkFix": "markdownlint --fix --config .markdownlint.json --ignore ./node_modules/** ./**/*.md"
     },
-    "repository": {
-        "type": "git",
-        "url": "git@itgit.dsone.3ds.com:widget-lab/widget-template-vue.git"
-    },
     "author": "widget-lab",
     "license": "MIT",
     "devDependencies": {

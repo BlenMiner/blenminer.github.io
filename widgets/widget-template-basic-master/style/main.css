@@ -1,0 +1,68 @@
+#content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+#sandbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-bottom: 2em;
+}
+
+#console {
+    border: solid 1px #005685;
+    color: #005685;
+    flex: auto;
+    overflow: auto;
+    padding: 0.8em;
+    white-space: nowrap;
+}
+
+.zone {
+    border: 1px solid gray;
+    padding: 2em;
+    margin: 1.2em;
+    text-align: center;
+    background: #b7e6ff;
+    width: 5em;
+}
+
+#data {
+    padding: 0.8em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+.rejected {
+    text-decoration: line-through;
+}
+
+#toolbar {
+    height: 1em;
+    padding: 1.2em;
+}
+
+#toolbar a {
+    border: solid 1px #005685;
+    background: #1498df;
+    margin: 0.5em;
+    padding: 0.5em;
+}
+
+table {
+    border-collapse: collapse;
+}
+table,
+th,
+td {
+    border: 1px solid gray;
+    padding: 0.5em;
+}
+th {
+    background: rgb(228, 228, 228);
+    font-weight: bold;
+}
