@@ -69,5 +69,10 @@
         "webpack-dev-server": "3.9.0",
         "webpack-merge": "4.2.2"
     },
-    "dependencies": {}
+    "dependencies": {
+        "chart.js": "^3.7.1",
+        "chartjs-adapter-moment": "^1.0.0",
+        "moment": "^2.29.1",
+        "xlsx": "^0.18.2"
+    }
 }

@@ -29,11 +29,9 @@
                 </v-content>
             </center>
             <v-content v-else>
-                <center>
-                    <v-card width="500px" height="500px">
-                        {{ fileId }}
-                    </v-card>
-                </center>
+                <div style="position: relative; width:100%; height:100vh;">
+                    <canvas id="generalChart" ref="generalChart"></canvas>
+                </div>
             </v-content>
         </v-content>
     </v-app>
@@ -47,6 +45,7 @@ html, body {
     padding: 0;
     margin: 0;
     background-color:#ffffff;
+    overflow: hidden;
 }
 
 #drop {
@@ -70,16 +69,47 @@ html, body {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
+
+section {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+
+  gap: 4px;
+  grid-auto-flow: column;
+}
+
 </style>
 
 <script>
 /* eslint-disable no-console */
 import { EventBus } from "../plugins/vuetify";
+import Chart from "chart.js/auto";
+import "chartjs-adapter-moment";
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
         WAFData.authenticatedRequest(url, options);
     });
+}
+
+function ExcelDateToJSDate(serial) {
+   const utcDays = Math.floor(serial - 25569);
+   const utcValue = utcDays * 86400;
+   const dateInfo = new Date(utcValue * 1000);
+
+   const fractionalDay = serial - Math.floor(serial) + 0.0000001;
+
+   let totalSeconds = Math.floor(86400 * fractionalDay);
+
+   const seconds = totalSeconds % 60;
+
+   totalSeconds -= seconds;
+
+   const hours = Math.floor(totalSeconds / (60 * 60));
+   const minutes = Math.floor(totalSeconds / 60) % 60;
+
+   return new Date(dateInfo.getFullYear(), dateInfo.getMonth(), dateInfo.getDate(), hours, minutes, seconds);
 }
 
 export default {
@@ -89,7 +119,7 @@ export default {
 
     data: function() {
         return {
-            loadingbar: true,
+            loadingbar: false,
 
             // For debugging reasons
             sampleText: "",
@@ -101,6 +131,7 @@ export default {
             snackbar: false,
 
             fileId: "",
+            fileSize: 2,
 
             // Data loaded from DS and from preferences
             tenantId: -1,
@@ -117,8 +148,6 @@ export default {
     // As soon as we get mounted start searching the tenant list
     mounted: function () {
         const that = this;
-
-        that.loadingbar = true;
 
         EventBus.$on("reloadwidget", () => { that.reload(); });
 
@@ -159,8 +188,106 @@ export default {
             this.snackbar = true;
         },
 
+        displaydata(sheet) {
+            const HEADER_ROW = 4;
+            const ACTUAL_ROW = Number.parseInt(widget.getValue("_ActualPlan_"));
+            const PLAN_ROW = Number.parseInt(widget.getValue("_RowPlan_"));
+            const PLAN_COL = Number.parseInt(widget.getValue("_StartCol_"));
+            const COL_COUNT = Number.parseInt(widget.getValue("_ColCount_"));
+
+            const generalChartElement = this.$refs.generalChart;
+
+            console.log(sheet);
+
+            const labels = [];
+            const plan = [];
+            const actual = [];
+
+            for (let i = 0; i < COL_COUNT; ++i) {
+                const number = sheet[HEADER_ROW][PLAN_COL + i];
+                const date = ExcelDateToJSDate(number);
+                labels.push(date);
+            }
+
+            for (let i = 0; i < COL_COUNT; ++i) {
+                plan.push(sheet[PLAN_ROW][PLAN_COL + i]);
+            }
+
+            for (let i = 0; i < COL_COUNT; ++i) {
+                actual.push(sheet[ACTUAL_ROW][PLAN_COL + i]);
+            }
+
+            // eslint-disable-next-line no-unused-vars
+            const generalChart = new Chart(generalChartElement, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Plan",
+                            data: plan,
+                            backgroundColor: [
+                                "rgba(54, 178, 8, 0.2)"
+                            ],
+                            borderColor: [
+                                "rgba(54, 178, 8, 1)"
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Actual",
+                            data: actual,
+                            backgroundColor: [
+                                "rgba(8, 104, 178, 0.2)"
+                            ],
+                            borderColor: [
+                                "rgba(8, 104, 178, 1)"
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { type: "time" }
+                    }
+                }
+            });
+
+            // console.log(plan);
+        },
+
+        loadgraph(fileUrl) {
+            const that = this;
+            that.loadingbar = true;
+
+            fetch(fileUrl).then(result => {
+                result.arrayBuffer().then(buffer => {
+                    that.fileSize = buffer.byteLength;
+
+                    const worker = new Worker("./static/excelLoader.js", { type: undefined });
+
+                    worker.onerror = error => {
+                        console.error(error.message);
+                    };
+
+                    worker.onmessage = e => {
+                        that.displaydata(e.data);
+                        worker.terminate();
+                        that.loadingbar = false;
+                    };
+
+                    worker.postMessage(buffer);
+                });
+            });
+        },
+
         reload() {
             const that = this;
+
+            if (that.loadingbar === true) return;
 
             that.loadingbar = true;
 
@@ -177,8 +304,8 @@ export default {
                         onComplete: (response) => {
                             const res = JSON.parse(response);
                             const fileUrl = res.url;
-
-                            console.log(res.extension + ":" + fileUrl);
+                            that.loadingbar = false;
+                            that.loadgraph(fileUrl);
                         },
 
                         onFailure: (response) => {
@@ -191,6 +318,7 @@ export default {
                 }
             } else {
                 that.loadingbar = false;
+                that.loadgraph("static/112 Engineering - Package Engineering Progress v3.1 (1).xlsm");
                 that.fileId = "1";
             }
         },
@@ -229,6 +357,38 @@ export default {
             }
 
             // Setup your preferences...
+            widget.addPreference({
+                name: "_RowPlan_",
+                type: "text",
+                label: "Plan Row",
+                defaultValue: "60",
+                options: _TenantOpts
+            });
+
+            widget.addPreference({
+                name: "_ActualPlan_",
+                type: "text",
+                label: "Actual Row",
+                defaultValue: "192",
+                options: _TenantOpts
+            });
+
+            widget.addPreference({
+                name: "_StartCol_",
+                type: "text",
+                label: "Actual Row",
+                defaultValue: "12",
+                options: _TenantOpts
+            });
+
+            widget.addPreference({
+                name: "_ColCount_",
+                type: "text",
+                label: "Actual Row",
+                defaultValue: "116",
+                options: _TenantOpts
+            });
+
             widget.addPreference({
                 name: "_CurrentTenantID_",
                 type: "list",
