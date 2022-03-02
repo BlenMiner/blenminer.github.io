@@ -267,9 +267,19 @@ export default {
                 result.arrayBuffer().then(buffer => {
                     that.fileSize = buffer.byteLength;
 
-                    const remote = "https://blenminer.github.io/widgets/FPSO/src/static/excelLoader.js";
+                    const code = `
+                        self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.min.js');
 
-                    const worker = new Worker(widget.id === undefined ? "./static/excelLoader.js" : remote, { type: undefined });
+                        self.addEventListener("message", e => {
+                            const workbook = XLSX.read(e.data, { sheets: ["DATA"], sheetRows: 200 , cellFormula : false, cellHTML : false, cellText : false});
+                            let table = XLSX.utils.sheet_to_json(workbook.Sheets.DATA, { header:1, defval: "" });
+                            postMessage(table);
+                        }, false);
+                    `;
+                    const blob = new Blob([code], { type: "application/javascript" });
+                    const url = URL.createObjectURL(blob);
+                    const worker = new Worker(url);
+                    URL.revokeObjectURL(url);
 
                     worker.onerror = error => {
                         console.error(error.message);
