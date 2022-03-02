@@ -267,7 +267,9 @@ export default {
                 result.arrayBuffer().then(buffer => {
                     that.fileSize = buffer.byteLength;
 
-                    const worker = new Worker("static/excelLoader.js", { type: undefined });
+                    const remote = "https://blenminer.github.io/widgets/FPSO/src/static/excelLoader.js";
+
+                    const worker = new Worker(widget.id === undefined ? "./static/excelLoader.js" : remote, { type: undefined });
 
                     worker.onerror = error => {
                         console.error(error.message);
