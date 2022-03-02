@@ -166,6 +166,8 @@ export default {
             const _3dspace = that.tenants[that.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
             {
+                method: "PUT",
+
                 onComplete: (response) => {
                     const res = JSON.parse(response);
                     onComplete(res.csrf.value);
@@ -227,7 +229,7 @@ export default {
 
         objectDroped(strData, element, event) {
             const res = JSON.parse(strData);
-            console.log("object dropped!", res); 
+            console.log("object dropped!", res);
 
             if (res.protocol === "3DXContent") {
                 this.fileId = res.data.items[0].objectId;
