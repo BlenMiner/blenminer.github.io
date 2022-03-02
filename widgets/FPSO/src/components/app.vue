@@ -166,7 +166,7 @@ export default {
             const _3dspace = that.tenants[that.tenantId]["3DSpace"];
             httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
             {
-                method:  "PUT",
+                method: "GET",
 
                 onComplete: (response) => {
                     const res = JSON.parse(response);
