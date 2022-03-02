@@ -135,7 +135,9 @@ export default {
 
             // Data loaded from DS and from preferences
             tenantId: -1,
-            tenants: []
+            tenants: [],
+
+            lastChart: null
         };
     },
 
@@ -217,8 +219,12 @@ export default {
                 actual.push(sheet[ACTUAL_ROW][PLAN_COL + i]);
             }
 
+            if (this.lastChart !== null) {
+                this.lastChart.destroy();
+            }
+
             // eslint-disable-next-line no-unused-vars
-            const generalChart = new Chart(generalChartElement, {
+            this.lastChart = new Chart(generalChartElement, {
                 type: "line",
                 data: {
                     labels: labels,
