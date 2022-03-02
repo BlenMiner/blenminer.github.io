@@ -271,7 +271,7 @@ export default {
                         self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.min.js');
 
                         self.addEventListener("message", e => {
-                            const workbook = XLSX.read(e.data, { sheets: ["DATA"], sheetRows: 200 , cellFormula : false, cellHTML : false, cellText : false});
+                            const workbook = XLSX.read(e.data, { sheets: ["DATA"] , cellFormula : false, cellHTML : false, cellText : false});
                             let table = XLSX.utils.sheet_to_json(workbook.Sheets.DATA, { header:1, defval: "" });
                             postMessage(table);
                         }, false);
@@ -298,6 +298,8 @@ export default {
 
         reload() {
             const that = this;
+
+            widget.setTitle(widget.getValue("_FileName_"));
 
             if (that.loadingbar === true) return;
 
@@ -388,7 +390,7 @@ export default {
             widget.addPreference({
                 name: "_StartCol_",
                 type: "text",
-                label: "Actual Row",
+                label: "Col Offset",
                 defaultValue: "12",
                 options: _TenantOpts
             });
@@ -396,7 +398,7 @@ export default {
             widget.addPreference({
                 name: "_ColCount_",
                 type: "text",
-                label: "Actual Row",
+                label: "Item Count",
                 defaultValue: "116",
                 options: _TenantOpts
             });
