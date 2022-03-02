@@ -1,8 +1,6 @@
 <template>
     <v-app>
         <v-content>
-            <preferences :headers="headers" :rows="items" />
-
             <!-- header progress bar -->
             <v-progress-linear
                 color="blue accent-4"
@@ -25,38 +23,17 @@
                 </v-btn>
             </v-snackbar>
 
-            <center v-show="fileId === ''">
+            <center v-if="fileId === ''">
                 <v-content style="height:100vh;width:100%;">
                     <div id="drop" ref="drop" width="90vh" height="90vh"></div>
                 </v-content>
             </center>
-            <v-content v-if="fileId !== ''">
-                <v-card height="100vh">
-                    <v-card-title>
-                        {{ fileName }}
-                        <v-spacer />
-                        <v-btn icon small @click="showSettings()"><v-icon>mdi-settings</v-icon></v-btn>
-                    </v-card-title>
-                    <v-data-table
-                        :headers="filteredheaders"
-                        :items="filteredrows"
-                        :search="search"
-                        class="elevation-1"
-                        height="calc(100vh - 139px)"
-                        loading="true"
-                    >
-                        <template v-slot:item.action="{ item }">
-                            <v-icon
-                                v-if="item"
-                                small
-                                class="mr-2"
-                                @click="hidetablerow(item)"
-                            >
-                                mdi-eye-off
-                            </v-icon>
-                        </template>
-                    </v-data-table>
-                </v-card>
+            <v-content v-else>
+                <center>
+                    <v-card width="500px" height="500px">
+                        {{ fileId }}
+                    </v-card>
+                </center>
             </v-content>
         </v-content>
     </v-app>
@@ -97,54 +74,7 @@ html, body {
 
 <script>
 /* eslint-disable no-console */
-import preferences from "./preferences.vue";
 import { EventBus } from "../plugins/vuetify";
-
-function CSVToArray(strData, strDelimiter) {
-    strDelimiter = (strDelimiter || ",");
-
-    const objPattern = new RegExp(
-        (
-            // Delimiters.
-            "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-
-            // Quoted fields.
-            "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-
-            // Standard fields.
-            "([^\"\\" + strDelimiter + "\\r\\n]*))"
-        ),
-        "gi"
-        );
-
-    const arrData = [[]];
-    let arrMatches = null;
-    let strMatchedValue = null;
-
-    while ((arrMatches = objPattern.exec(strData))) {
-        const strMatchedDelimiter = arrMatches[1];
-        if (
-            strMatchedDelimiter.length &&
-            (strMatchedDelimiter !== strDelimiter)
-            ) {
-            arrData.push([]);
-        }
-
-        if (arrMatches[2]) {
-            strMatchedValue = arrMatches[2].replace(
-                new RegExp("\"\"", "g"),
-                "\""
-                );
-        } else {
-            strMatchedValue = arrMatches[3];
-        }
-
-        arrData[arrData.length - 1].push(strMatchedValue);
-    }
-
-    // Return the parsed data.
-    return (arrData);
-}
 
 function httpCallAuthenticated(url, options) {
     requirejs(["DS/WAFData/WAFData"], (WAFData) => {
@@ -155,9 +85,7 @@ function httpCallAuthenticated(url, options) {
 export default {
     name: "App",
 
-    components: {
-        preferences
-    },
+    components: {},
 
     data: function() {
         return {
@@ -176,12 +104,7 @@ export default {
 
             // Data loaded from DS and from preferences
             tenantId: -1,
-            tenants: [],
-
-            filteredheaders: [],
-            filteredrows: [],
-            headers: [],
-            items: []
+            tenants: []
         };
     },
 
@@ -197,36 +120,12 @@ export default {
 
         that.loadingbar = true;
 
-        EventBus.$on("onSearch", (txt) => { that.search = txt; });
-
         EventBus.$on("reloadwidget", () => { that.reload(); });
-
-        EventBus.$on("changeheaders", (hiddencols) => {
-            const newHeader = [];
-            for (let i = 0; i < that.headers.length; i++) {
-                if (hiddencols[i] === undefined) {
-                    newHeader.push(that.headers[i]);
-                }
-            }
-            that.filteredheaders = newHeader;
-         });
-
-         EventBus.$on("changerowsvisibility", (hiddenrows) => {
-            const newRows = [];
-            for (let i = 0; i < that.items.length; i++) {
-                if (hiddenrows[i] === undefined) {
-                    newRows.push(that.items[i]);
-                }
-            }
-            that.filteredrows = newRows;
-         });
 
         // Start loading bar aswell
         if (widget.id === undefined) {
             setTimeout(() => { that.tenantDataLoaded([{ id: -1 }]); }, 500);
         } else {
-            this.projects = {};
-
             requirejs(["DS/i3DXCompassServices/i3DXCompassServices"], i3DXCompassServices => {
                 i3DXCompassServices.getPlatformServices({
                     platformId: undefined,
@@ -255,10 +154,6 @@ export default {
     },
 
     methods: {
-        showSettings() {
-            EventBus.$emit("settingsShow");
-        },
-
         log(msg) {
             this.snackbarMsg = msg;
             this.snackbar = true;
@@ -306,18 +201,9 @@ export default {
 
                                 onComplete: (response) => {
                                     const res = JSON.parse(response);
-                                    httpCallAuthenticated(res.data[0].dataelements.ticketURL,
-                                    {
-                                        onComplete: (datatxt) => {
-                                            that.displayFileData(datatxt);
-                                            that.loadingbar = false;
-                                        },
+                                    const fileUrl = res.data[0].dataelements.ticketURL;
 
-                                        onFailure: (response) => {
-                                            that.log(response);
-                                            that.loadingbar = false;
-                                        }
-                                    });
+                                    console.log(fileUrl);
                                 },
 
                                 onFailure: (response) => {
@@ -334,14 +220,14 @@ export default {
                     that.loadingbar = false;
                 }
             } else {
-                that.fileId = "1";
-                that.displayFileData("test 6,test 9,test2\n1,2,3\n4,5,6\naba,eba,ibi");
                 that.loadingbar = false;
+                that.fileId = "1";
             }
         },
 
         objectDroped(strData, element, event) {
             const res = JSON.parse(strData);
+            console.log("object dropped!", res);
 
             if (res.protocol === "3DXContent") {
                 this.fileId = res.data.items[0].objectId;
@@ -350,42 +236,6 @@ export default {
                 widget.setValue("_FileName_", this.fileName);
                 this.reload();
             }
-        },
-
-        displayFileData(datatxt) {
-            const data = CSVToArray(datatxt, ",");
-            this.headers = [];
-            this.filteredheaders = [];
-            this.items = [];
-
-            if (data.length === 0) {
-                return;
-            }
-
-            for (let j = 0; j < data[0].length; j++) {
-                const titleBlock = data[0][j];
-                const hdr = {
-                    text: titleBlock,
-                    value: `col_${j}`
-                };
-                this.headers.push(hdr);
-                this.filteredheaders.push(hdr);
-            }
-
-            this.headers.push({ text: "Actions", value: "action", sortable: false });
-            this.filteredheaders.push({ text: "Actions", value: "action", sortable: false });
-
-            for (let i = 1; i < data.length; i++) {
-                const item = {};
-                for (let j = 0; j < data[i].length; j++) {
-                    const block = data[i][j];
-                    item[`col_${j}`] = block;
-                }
-                this.items.push(item);
-                this.filteredrows.push(item);
-            }
-
-            EventBus.$emit("loadedtable", this.headers, this.items);
         },
 
         // Load the tenant data & its services URLs based on the ID
@@ -430,25 +280,8 @@ export default {
                 defaultValue: ""
             });
 
-            widget.addPreference({
-                name: "hidden_columns_list",
-                type: "hidden",
-                defaultValue: "{}"
-            });
-
-            widget.addPreference({
-                name: "hidden_rows_list",
-                type: "hidden",
-                defaultValue: "{}"
-            });
-
             // Loads the prefs if available
             EventBus.$emit("reloadwidget");
-        },
-
-        hidetablerow(item) {
-            const index = this.items.indexOf(item);
-            EventBus.$emit("removeandupdate", index);
         }
     }
 };
