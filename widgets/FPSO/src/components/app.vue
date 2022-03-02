@@ -159,27 +159,6 @@ export default {
             this.snackbar = true;
         },
 
-        getCSRF(onComplete, onFailure) {
-            const that = this;
-
-            // Retrive CSRF ticket
-            const _3dspace = that.tenants[that.tenantId]["3DSpace"];
-            httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
-            {
-                method: "GET",
-
-                onComplete: (response) => {
-                    const res = JSON.parse(response);
-                    onComplete(res.csrf.value);
-                },
-
-                onFailure: (response) => {
-                    that.log(response);
-                    onFailure();
-                }
-            });
-        },
-
         reload() {
             const that = this;
 
@@ -190,34 +169,23 @@ export default {
             that.fileName = widget.getValue("_FileName_");
 
             if (widget.id !== undefined) {
-                const _3dspace = that.tenants[that.tenantId]["3DSpace"];
+                const _3ddrive = that.tenants[that.tenantId]["3DDrive"];
 
                 if (that.fileId !== "") {
-                    // Retrieve a CSRF ticket & download the file!
-                    that.getCSRF(
-                        (csrf) => {
-                            httpCallAuthenticated(_3dspace + `/resources/v1/modeler/documents/${that.fileId}/files/DownloadTicket`,
-                            {
-                                method: "PUT",
-                                headers: { ENO_CSRF_TOKEN: csrf },
+                    httpCallAuthenticated(_3ddrive + `/resources/3ddrive/v1/bos/${that.fileId}/fileurl`,
+                    {
+                        onComplete: (response) => {
+                            const res = JSON.parse(response);
+                            const fileUrl = res.url;
 
-                                onComplete: (response) => {
-                                    const res = JSON.parse(response);
-                                    const fileUrl = res.data[0].dataelements.ticketURL;
-
-                                    console.log(fileUrl);
-                                },
-
-                                onFailure: (response) => {
-                                    that.log(response);
-                                    that.loadingbar = false;
-                                }
-                            });
+                            console.log(res.extension + ":" + fileUrl);
                         },
-                        () => {
+
+                        onFailure: (response) => {
+                            that.log(response);
                             that.loadingbar = false;
                         }
-                    );
+                    });
                 } else {
                     that.loadingbar = false;
                 }
@@ -250,7 +218,7 @@ export default {
 
             // Load all the tenants
             for (let i = 0; i < data.length; i++) {
-                if (data[i]["3DSpace"] === undefined) continue;
+                if (data[i]["3DDrive"] === undefined) continue;
 
                 _TenantOpts.push({
                     value: `${j++}`,
