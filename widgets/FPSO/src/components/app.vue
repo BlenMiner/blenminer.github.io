@@ -242,7 +242,7 @@ export default {
 
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
-            console.log("tenants: " + data);
+            console.log("tenants: ", data);
             this.tenants = [];
             const _TenantOpts = [];
 
