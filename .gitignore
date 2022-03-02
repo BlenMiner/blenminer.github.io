@@ -86,3 +86,14 @@ widgets/SpeedDating/.vscode/extensions.json
 widgets/SpeedDating/.vscode/launch.json
 widgets/SpeedDating/.vscode/settings.json
 widgets/SpeedDating/node_modules/*
+widgets/FPSO/.eslintignore
+widgets/FPSO/.eslintrc.json
+widgets/FPSO/.gitlab-ci.yml
+widgets/FPSO/.markdownlint.json
+widgets/FPSO/.prettierrc
+widgets/FPSO/.zipignore
+widgets/FPSO/README.md
+widgets/FPSO/.vscode/extensions.json
+widgets/FPSO/.vscode/launch.json
+widgets/FPSO/.vscode/settings.json
+widgets/FPSO/node_modules/*
