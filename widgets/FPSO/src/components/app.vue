@@ -197,7 +197,7 @@ export default {
 
             const generalChartElement = this.$refs.generalChart;
 
-            console.log(sheet);
+            // console.log(sheet);
 
             const labels = [];
             const plan = [];
