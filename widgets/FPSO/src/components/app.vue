@@ -302,6 +302,25 @@ export default {
             });
         },
 
+        getCSRF(onComplete, onFailure) {
+            const that = this;
+
+            // Retrive CSRF ticket
+            const _3dspace = that.tenants[that.tenantId]["3DSpace"];
+            httpCallAuthenticated(_3dspace + "/resources/v1/application/CSRF",
+            {
+                onComplete: (response) => {
+                    const res = JSON.parse(response);
+                    onComplete(res.csrf.value);
+                },
+
+                onFailure: (response) => {
+                    that.log(response);
+                    onFailure();
+                }
+            });
+        },
+
         reload() {
             const that = this;
 
@@ -316,23 +335,30 @@ export default {
             that.fileName = widget.getValue("_FileName_");
 
             if (widget.id !== undefined) {
-                const _3ddrive = that.tenants[that.tenantId]["3DDrive"];
+                const _3dspace = that.tenants[that.tenantId]["3DSpace"];
 
                 if (that.fileId !== "") {
-                    httpCallAuthenticated(_3ddrive + `/resources/3ddrive/v1/bos/${that.fileId}/fileurl`,
-                    {
-                        onComplete: (response) => {
-                            const res = JSON.parse(response);
-                            const fileUrl = res.url;
-                            that.loadingbar = false;
-                            that.loadgraph(fileUrl);
-                        },
+                    that.getCSRF(
+                        (csrf) => {
+                            httpCallAuthenticated(_3dspace + `/resources/v1/modeler/documents/${that.fileId}/files/DownloadTicket`,
+                            {
+                                method: "PUT",
+                                headers: { ENO_CSRF_TOKEN: csrf },
 
-                        onFailure: (response) => {
-                            that.log(response);
-                            that.loadingbar = false;
+                                onComplete: (response) => {
+                                    const res = JSON.parse(response);
+                                    const fileUrl = res.data[0].dataelements.ticketURL;
+                                    that.loadingbar = false;
+                                    that.loadgraph(fileUrl);
+                                },
+
+                                onFailure: (response) => {
+                                    that.log(response);
+                                    that.loadingbar = false;
+                                }
+                            });
                         }
-                    });
+                    );
                 } else {
                     that.loadingbar = false;
                 }
@@ -358,7 +384,6 @@ export default {
 
         // Load the tenant data & its services URLs based on the ID
         tenantDataLoaded(data) {
-            console.log("tenants: ", data);
             this.tenants = [];
             const _TenantOpts = [];
 
@@ -366,7 +391,7 @@ export default {
 
             // Load all the tenants
             for (let i = 0; i < data.length; i++) {
-                if (data[i]["3DDrive"] === undefined) continue;
+                if (data[i]["3DSpace"] === undefined) continue;
 
                 _TenantOpts.push({
                     value: `${j++}`,
