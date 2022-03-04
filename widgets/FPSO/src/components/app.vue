@@ -233,23 +233,25 @@ export default {
                             label: "Plan",
                             data: plan,
                             backgroundColor: [
-                                "rgba(54, 178, 8, 0.2)"
+                                "rgba(0, 176, 80, 1)"
                             ],
                             borderColor: [
-                                "rgba(54, 178, 8, 1)"
+                                "rgba(0, 176, 80, 1)"
                             ],
-                            borderWidth: 1
+                            pointRadius: 0,
+                            pointHitRadius: 50
                         },
                         {
                             label: "Actual",
                             data: actual,
                             backgroundColor: [
-                                "rgba(8, 104, 178, 0.2)"
+                                "rgba(0, 0, 255, 1)"
                             ],
                             borderColor: [
-                                "rgba(8, 104, 178, 1)"
+                                "rgba(0, 0, 255, 1)"
                             ],
-                            borderWidth: 1
+                            pointRadius: 0,
+                            pointHitRadius: 50
                         }
                     ]
                 },
