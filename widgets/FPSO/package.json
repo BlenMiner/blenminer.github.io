@@ -51,7 +51,7 @@
         "markdownlint-cli": "0.19.0",
         "material-design-icons-iconfont": "5.0.1",
         "mermaid": "8.4.2",
-        "mocha": "6.2.2",
+        "mocha": "10.2.0",
         "puppeteer": "2.0.0",
         "raw-loader": "3.1.0",
         "remarkable": "2.0.0",
